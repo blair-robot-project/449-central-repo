@@ -1,14 +1,64 @@
-group '1'
-version '1.0-SNAPSHOT'
+/**
+ * Build file for the FRC Team 449 Central Repository based on Jaci's GradleRIO.
+ *
+ * Dependencies include GradleRIO (containing wpilib), JSON In Java,
+ */
+
+/**
+ Template file for classes using GradleRIO
+ @author Jaci
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "GradleRIO"
+            url = "http://dev.imjac.in/maven"
+        }
+    }
+    dependencies {
+        classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+'
+        //Change this line if you wish to Update GradleRIO
+    }
+}
 
 apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'GradleRIO'                                 //Apply the GradleRIO plugin
 
-sourceCompatibility = 1.5
+gradlerio.robotClass = "org.usfirst.frc.team0449.Robot"   //The class for the main Robot Class. Used in manifest
+gradlerio.team = "0449"                                   //Your FRC team number (e.g. 5333 for team 'Can't C#', or 47 for Chief Delphi)
+//gradlerio.rioIP = "10.53.33.20"                         //Uncomment to specify the IP address of the RIO
 
 repositories {
     mavenCentral()
+    maven {
+        name = "GradleRIO"
+        url = "http://dev.imjac.in/maven"
+    }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
+    compile fileTree(dir: 'lib')
+}
+def robotManifest = {
+    attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+    attributes 'Robot-Class': gradlerio.robotClass
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest robotManifest
+}
+
+task genJavadoc(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives genJavadoc
 }
