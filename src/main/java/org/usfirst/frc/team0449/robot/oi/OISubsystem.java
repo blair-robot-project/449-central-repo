@@ -1,4 +1,7 @@
-package org.usfirst.frc.team0449.robot;
+package org.usfirst.frc.team0449.robot.oi;
+
+import org.usfirst.frc.team0449.robot.MappedSubsystem;
+import org.usfirst.frc.team0449.robot.RobotMap;
 
 public abstract class OISubsystem extends MappedSubsystem {
 	public OISubsystem(RobotMap map) {
