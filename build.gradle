@@ -8,57 +8,64 @@
  Template file for classes using GradleRIO
  @author Jaci
  */
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "GradleRIO"
-            url = "http://dev.imjac.in/maven"
-        }
-    }
-    dependencies {
-        classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+'
-        //Change this line if you wish to Update GradleRIO
-    }
-}
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//        maven {
+//            name = "GradleRIO"
+//            url = "http://dev.imjac.in/maven"
+//        }
+//    }
+//    dependencies {
+//        classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+'
+//        //Change this line if you wish to Update GradleRIO
+//    }
+//}
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'GradleRIO'                                 //Apply the GradleRIO plugin
+//apply plugin: 'GradleRIO'                                 //Apply the GradleRIO plugin
 
-gradlerio.robotClass = "org.usfirst.frc.team0449.Robot"   //The class for the main Robot Class. Used in manifest
-gradlerio.team = "0449"                                   //Your FRC team number (e.g. 5333 for team 'Can't C#', or 47 for Chief Delphi)
+/*
+gradlerio.robotClass = "org.usfirst.frc.team449.Robot"   //The class for the main Robot Class. Used in manifest
+gradlerio.team = "449"                                   //Your FRC team number (e.g. 5333 for team 'Can't C#', or 47 for Chief Delphi)
 //gradlerio.rioIP = "10.53.33.20"                         //Uncomment to specify the IP address of the RIO
+*/
 
 repositories {
     mavenCentral()
-    maven {
-        name = "GradleRIO"
-        url = "http://dev.imjac.in/maven"
+//    maven {
+//        name = "GradleRIO"
+//        url = "http://dev.imjac.in/maven"
+//    }
+
+    flatDir {
+        dirs System.properties['user.home'] + '/wpilib/java/current/lib'
     }
 }
 
 dependencies {
     compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
+    compile name: 'NetworkTables'
+    compile name: 'WPILib'
     compile fileTree(dir: 'lib')
 }
-def robotManifest = {
-    attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-    attributes 'Robot-Class': gradlerio.robotClass
-}
+//def robotManifest = {
+//    attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+//    attributes 'Robot-Class': gradlerio.robotClass
+//}
 
-jar {
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest robotManifest
-}
+//jar {
+//    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+//    manifest robotManifest
+//}
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives genJavadoc
-}
+//artifacts {
+//    archives genJavadoc
+//}
