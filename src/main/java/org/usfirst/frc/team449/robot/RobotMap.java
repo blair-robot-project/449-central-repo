@@ -280,6 +280,13 @@ public abstract class RobotMap {
 		 * max speed to run these motors at
 		 */
 		public double speed;
+
+		/**
+		 * the expected input range to the PID loop; kP, kI, and kD are adjusted
+		 * to be a percentage of the inputRange (kI = i / inputRange)
+		 */
+		public int inputRange;
+
 		public double rampRate;
 		public boolean rampRateEnabled;
 

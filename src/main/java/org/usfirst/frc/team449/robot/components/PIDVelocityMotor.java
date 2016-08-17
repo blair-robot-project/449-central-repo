@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,6 +13,7 @@ public class PIDVelocityMotor extends PIDComponent implements SpeedController {
 	private SpeedController motor;
 	private Encoder encoder;
 	private double integratedVelocity = 0;
+	private double v = 0;
 	private String velName;
 	private boolean inverted;
 	private double speed;
@@ -37,7 +39,9 @@ public class PIDVelocityMotor extends PIDComponent implements SpeedController {
 		super(p, i, d);
 		this.motor = motor;
 		this.encoder = encoder;
+		this.encoder.setPIDSourceType(PIDSourceType.kRate);
 		this.velName = name;
+
 	}
 
 	/**
@@ -71,20 +75,33 @@ public class PIDVelocityMotor extends PIDComponent implements SpeedController {
 	 * integrated by multiplying by the change in time and adding to a field in
 	 * this class
 	 *
-	 * @param v the output decided by the PIDSubsystem, which is the
+	 * @param output the output decided by the PIDSubsystem, which is the
 	 *          derivative of voltage (and velocity)
 	 */
 	@Override
-	protected void usePIDOutput(double v) {
-		this.integratedVelocity += v * DELTAT; // mult by delta t
-		this.integratedVelocity = Math.max(-1, Math.min(1, this.integratedVelocity));
-		if (getSetpoint() == 0 && Math.abs(returnPIDInput()) < zeroTolerance) {
-			this.integratedVelocity = 0;
-		}
-		this.motor.pidWrite(integratedVelocity);
-		SmartDashboard.putNumber(velName + " intvel", integratedVelocity);
-		SmartDashboard.putNumber(velName + " delv", v);
+	protected void usePIDOutput(double output) {
+		// If within zero tolerance, do not drive
+//		if  (getSetpoint() == 0 && Math.abs(output) < zeroTolerance) {
+//			output = 0;
+//		}
+//
+//		motor.pidWrite(output);
+
+//		integratedVelocity += output / 130;
+////		integratedVelocity += output;
+//		integratedVelocity = Math.max(-1, Math.min(1, integratedVelocity));
+//		if (getSetpoint() == 0 && Math.abs(returnPIDInput()) < zeroTolerance) {
+//			integratedVelocity = 0;
+//		}
+//
+//		motor.pidWrite(integratedVelocity);
+
+		motor.pidWrite(output / 130);
+
+		SmartDashboard.putNumber(velName + " v", output * 1000);
 		SmartDashboard.putNumber(velName + " ztol", zeroTolerance);
+//		v = integratedVelocity;
+		v = output / 130;
 	}
 
 	/**
@@ -180,5 +197,12 @@ public class PIDVelocityMotor extends PIDComponent implements SpeedController {
 	@Override
 	public void stopMotor() {
 		this.set(0);
+	}
+
+	public double getIntegratedVelocity() {
+		return integratedVelocity;
+	}
+	public double getV() {
+		return v;
 	}
 }

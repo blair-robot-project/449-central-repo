@@ -1,71 +1,34 @@
 /**
  * Build file for the FRC Team 449 Central Repository based on Jaci's GradleRIO.
- *
- * Dependencies include GradleRIO (containing wpilib), JSON In Java,
  */
-
-/**
- Template file for classes using GradleRIO
- @author Jaci
- */
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//        maven {
-//            name = "GradleRIO"
-//            url = "http://dev.imjac.in/maven"
-//        }
-//    }
-//    dependencies {
-//        classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+'
-//        //Change this line if you wish to Update GradleRIO
-//    }
-//}
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-//apply plugin: 'GradleRIO'                                 //Apply the GradleRIO plugin
-
-/*
-gradlerio.robotClass = "org.usfirst.frc.team449.Robot"   //The class for the main Robot Class. Used in manifest
-gradlerio.team = "449"                                   //Your FRC team number (e.g. 5333 for team 'Can't C#', or 47 for Chief Delphi)
-//gradlerio.rioIP = "10.53.33.20"                         //Uncomment to specify the IP address of the RIO
-*/
 
 repositories {
     mavenCentral()
-//    maven {
-//        name = "GradleRIO"
-//        url = "http://dev.imjac.in/maven"
-//    }
 
-    flatDir {
-        dirs System.properties['user.home'] + '/wpilib/java/current/lib'
+    maven {
+        name = "WPI"
+        url = "http://first.wpi.edu/FRC/roborio/maven/release"
     }
 }
 
 dependencies {
-    compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
-    compile name: 'NetworkTables'
-    compile name: 'WPILib'
+    // WPILib
+    compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:+:desktop'
+    compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:+:arm'
+    compile 'edu.wpi.first.wpilibj:wpilibJavaFinal:+'
+
+    // JSON parsing library
+    compile group: 'org.json', name: 'json', version: '20151123'
+
+    // Dependencies that do not have maven repos (navX)
     compile fileTree(dir: 'lib')
 }
-//def robotManifest = {
-//    attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-//    attributes 'Robot-Class': gradlerio.robotClass
-//}
-
-//jar {
-//    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-//    manifest robotManifest
-//}
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
-
-//artifacts {
-//    archives genJavadoc
-//}
