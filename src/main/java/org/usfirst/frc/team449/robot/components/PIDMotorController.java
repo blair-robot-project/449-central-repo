@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SpeedController;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.RobotMap;
 
@@ -82,8 +82,13 @@ public abstract class PIDMotorController extends MappedSubsystem {
         this.pidSourceDevice = source;
         this.pidSourceDevice.setPIDSourceType(setPIDSourceType());
         this.useAbsolute = useAbsolute;
+        ((SpeedController) pidOutputDevice).disable();
         pidController = new PIDController(p, i, d, f, this.pidSourceDevice, this.pidOutputDevice, period);
         pidController.setOutputRange(-maxAbsoluteSetpoint, maxAbsoluteSetpoint);
+        pidController.disable();
+        pidController.enable();
+        pidController.setSetpoint(0);
+        System.out.println("Source Type:" + pidSourceDevice.getPIDSourceType());
     }
 
     /**
@@ -124,7 +129,7 @@ public abstract class PIDMotorController extends MappedSubsystem {
         setpoint = setpoint > maxAbsoluteSetpoint ? maxAbsoluteSetpoint : setpoint;
         setpoint = setpoint < -maxAbsoluteSetpoint ? -maxAbsoluteSetpoint : setpoint;
 
-        // Set setpoing, inverting motor if necessary
+        // Set setpoint, inverting motor if necessary
         if (inverted) {
             pidController.setSetpoint(-setpoint);
         } else {
@@ -151,6 +156,8 @@ public abstract class PIDMotorController extends MappedSubsystem {
         } else {
             pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
         }
+
+        System.out.println("Set Relative Setpoint: " + String.valueOf(setpoint * maxAbsoluteSetpoint));
     }
 
     /**
@@ -185,21 +192,22 @@ public abstract class PIDMotorController extends MappedSubsystem {
         return pidController.getSetpoint() / maxAbsoluteSetpoint;
     }
 
-    /**
-     * Run by the {@link #pidController} to write to the pidOutputDevice device (motor). Do not call this method in outside of
-     * {@link #pidController}! Checks if <code>pidOutputDevice</code> is within zero tolerance: if so, writes zero to the pidOutputDevice
-     * device, if not, writes <code>pidOutputDevice</code> to the pidOutputDevice device.
-     *
-     * @param output pidOutputDevice to write to the pidOutputDevice device
-     */
-    public void usePIDOutput(double output) {
-        if (getAbsoluteSetpoint() == 0 && Math.abs(output) < zeroTolerance) {
-            output = 0;
-        }
-
-        motorWrite(output);
-        SmartDashboard.putNumber("pidOutputDevice: ", output);
-    }
+//    /**
+//     * Run by the {@link #pidController} to write to the pidOutputDevice device (motor). Do not call this method in outside of
+//     * {@link #pidController}! Checks if <code>pidOutputDevice</code> is within zero tolerance: if so, writes zero to the pidOutputDevice
+//     * device, if not, writes <code>pidOutputDevice</code> to the pidOutputDevice device.
+//     *
+//     * @param output pidOutputDevice to write to the pidOutputDevice device
+//     */
+//    public void usePIDOutput(double output) {
+//        if (getAbsoluteSetpoint() == 0 && Math.abs(output) < zeroTolerance) {
+//            output = 0;
+//        }
+//
+//        motorWrite(output);
+//        SmartDashboard.putNumber("pidOutputDevice: ", output);
+//        System.out.println("use pid output");
+//    }
 
     /**
      * Set the {@link #pidController}'s input range
@@ -256,5 +264,20 @@ public abstract class PIDMotorController extends MappedSubsystem {
      */
     public boolean getInverted() {
         return inverted;
+    }
+
+    /**
+     * Turn the motor controller off
+     */
+    public void reset() {
+        setAbsoluteSetpoint(0);
+        pidController.reset();
+        pidController.enable();
+        System.out.println("reset");
+    }
+
+    @Override
+    protected void initDefaultCommand() {
+        setDefaultCommand(new ZeroPIDMotorController(this));
     }
 }

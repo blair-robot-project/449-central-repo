@@ -55,6 +55,7 @@ public class MotorCluster extends Component implements SpeedController {
 		}
 
 		this.lastSet = output;
+		System.out.println("pid write: " + output);
 	}
 
 	@Override
@@ -75,6 +76,8 @@ public class MotorCluster extends Component implements SpeedController {
 		}
 
 		this.lastSet = speed;
+
+		System.out.println("set: " + speed);
 	}
 
 	@Override
