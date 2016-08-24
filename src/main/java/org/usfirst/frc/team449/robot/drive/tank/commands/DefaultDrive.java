@@ -21,7 +21,7 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
-		((TankDriveSubsystem) subsystem).reset();
+		((TankDriveSubsystem) subsystem).encoderReset();
 	}
 
 	@Override

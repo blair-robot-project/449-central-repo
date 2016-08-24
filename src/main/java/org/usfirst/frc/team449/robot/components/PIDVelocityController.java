@@ -29,8 +29,8 @@ public class PIDVelocityController extends PIDMotorController {
     public PIDVelocityController(RobotMap robotMap, double p, double i, double d, double f, double period,
                                  double maxAbsoluteSetpoint, double zeroTolerance, boolean inverted,
                                  boolean useAbsolute, PIDOutput pidOutputDevice, PIDSource source) {
-        super(robotMap, p, i, d, f, period, maxAbsoluteSetpoint, zeroTolerance, inverted, useAbsolute, pidOutputDevice,
-                source);
+        super(robotMap, p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint, f, period,
+                maxAbsoluteSetpoint, zeroTolerance, inverted, useAbsolute, pidOutputDevice, source);
     }
 
     /**
@@ -40,6 +40,7 @@ public class PIDVelocityController extends PIDMotorController {
      */
     @Override
     protected PIDSourceType setPIDSourceType() {
+        System.out.println("KRATE");
         return PIDSourceType.kRate;
     }
 

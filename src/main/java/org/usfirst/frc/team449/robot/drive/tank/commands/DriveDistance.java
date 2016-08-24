@@ -27,7 +27,7 @@ public class DriveDistance extends ReferencingCommand {
 	@Override
 	protected void initialize() {
 		System.out.println("DriveDistance init");
-		((TankDriveSubsystem) (subsystem)).reset();
+		((TankDriveSubsystem) (subsystem)).encoderReset();
 	}
 
 	@Override

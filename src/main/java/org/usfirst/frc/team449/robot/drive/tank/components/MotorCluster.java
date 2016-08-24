@@ -19,8 +19,8 @@ public class MotorCluster extends Component implements SpeedController {
 	 * @param total the number of SpeedControllers to hold in this glorified array
 	 */
 	public MotorCluster(int total) {
-		this.controllerList = new SpeedController[total];
-		this.lastSet = 0;
+		controllerList = new SpeedController[total];
+		lastSet = 0;
 	}
 
 	/**
@@ -29,8 +29,8 @@ public class MotorCluster extends Component implements SpeedController {
 	 * @param controllers the SpeedControllers to control
 	 */
 	public MotorCluster(SpeedController[] controllers) {
-		this.controllerList = controllers;
-		this.lastSet = 0;
+		controllerList = controllers;
+		lastSet = 0;
 	}
 
 	/**
@@ -48,19 +48,21 @@ public class MotorCluster extends Component implements SpeedController {
 		System.err.println("Motor cluster over capacity, not adding a new motor! (" + controllerList.length + ")");
 	}
 
+	public double getPIDOutput() {
+		return lastSet;
+	}
+
 	@Override
 	public void pidWrite(double output) {
-		for (int i = 0; i < this.controllerList.length; i++) {
+		for (int i = 0; i < controllerList.length; i++) {
 			controllerList[i].pidWrite(output);
 		}
-
-		this.lastSet = output;
-		System.out.println("pid write: " + output);
+		lastSet = output;
 	}
 
 	@Override
 	public double get() {
-		return this.lastSet;
+		return lastSet;
 	}
 
 	@Override
@@ -70,43 +72,39 @@ public class MotorCluster extends Component implements SpeedController {
 
 	@Override
 	public void set(double speed) {
-
-		for (int i = 0; i < this.controllerList.length; i++) {
+		for (int i = 0; i < controllerList.length; i++) {
 			controllerList[i].set(speed);
 		}
-
-		this.lastSet = speed;
-
-		System.out.println("set: " + speed);
+		lastSet = speed;
 	}
 
 	@Override
 	public void setInverted(boolean b) {
-		boolean changed = b != this.inverted;
+		boolean changed = b != inverted;
 		if (!changed) {
 			return;
 		}
 		this.inverted = b;
-		for (int i = 0; i < this.controllerList.length; i++) {
+		for (int i = 0; i < controllerList.length; i++) {
 			controllerList[i].setInverted(!controllerList[i].getInverted());
 		}
 	}
 
 	@Override
 	public boolean getInverted() {
-		return this.inverted;
+		return inverted;
 	}
 
 	@Override
 	public void disable() {
-		for (int i = 0; i < this.controllerList.length; i++) {
+		for (int i = 0; i < controllerList.length; i++) {
 			controllerList[i].disable();
 		}
 	}
 
 	@Override
 	public void stopMotor() {
-		for (int i = 0; i < this.controllerList.length; i++) {
+		for (int i = 0; i < controllerList.length; i++) {
 			controllerList[i].stopMotor();
 		}
 	}

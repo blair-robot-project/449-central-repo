@@ -157,7 +157,7 @@ public abstract class PIDMotorController extends MappedSubsystem {
             pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
         }
 
-        System.out.println("Set Relative Setpoint: " + String.valueOf(setpoint * maxAbsoluteSetpoint));
+//        System.out.println("Set Relative Setpoint: " + String.valueOf(setpoint * maxAbsoluteSetpoint));
     }
 
     /**
@@ -191,23 +191,6 @@ public abstract class PIDMotorController extends MappedSubsystem {
     public double getRelativeSetpoint() {
         return pidController.getSetpoint() / maxAbsoluteSetpoint;
     }
-
-//    /**
-//     * Run by the {@link #pidController} to write to the pidOutputDevice device (motor). Do not call this method in outside of
-//     * {@link #pidController}! Checks if <code>pidOutputDevice</code> is within zero tolerance: if so, writes zero to the pidOutputDevice
-//     * device, if not, writes <code>pidOutputDevice</code> to the pidOutputDevice device.
-//     *
-//     * @param output pidOutputDevice to write to the pidOutputDevice device
-//     */
-//    public void usePIDOutput(double output) {
-//        if (getAbsoluteSetpoint() == 0 && Math.abs(output) < zeroTolerance) {
-//            output = 0;
-//        }
-//
-//        motorWrite(output);
-//        SmartDashboard.putNumber("pidOutputDevice: ", output);
-//        System.out.println("use pid output");
-//    }
 
     /**
      * Set the {@link #pidController}'s input range
@@ -273,7 +256,7 @@ public abstract class PIDMotorController extends MappedSubsystem {
         setAbsoluteSetpoint(0);
         pidController.reset();
         pidController.enable();
-        System.out.println("reset");
+        System.out.println("encoderReset");
     }
 
     @Override

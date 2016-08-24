@@ -194,8 +194,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
      * @param right the normalized speed between -1 and 1 for the right cluster
      */
     public void setThrottle(double left, double right) {
-        SmartDashboard.putNumber("right js", right);
-        SmartDashboard.putNumber("left js", left);
+        SmartDashboard.putNumber("right js", rightCluster.getPIDOutput());
+        SmartDashboard.putNumber("left js", leftCluster.getPIDOutput());
         SmartDashboard.putNumber("right enc", rightEnc.getRate());
         SmartDashboard.putNumber("left enc", leftEnc.getRate());
         SmartDashboard.putNumber("right corr", rightVelCorrector.get());
@@ -205,6 +205,9 @@ public class TankDriveSubsystem extends DriveSubsystem {
 //        if (pidEnabled) {
         this.leftVC.setRelativeSetpoint(left);
         this.rightVC.setRelativeSetpoint(right);
+        System.out.println(left);
+        System.out.println(((TankDriveMap) map).leftCluster.inputRange);
+        System.out.println(left * ((TankDriveMap) map).leftCluster.inputRange);
 //        } else {
 //            this.leftCluster.set(left);
 //            this.rightCluster.set(right);
@@ -214,23 +217,22 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
         try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
             StringBuilder sb = new StringBuilder();
-            sb.append(new Date().getTime() - startTime);
+            sb.append(new Date().getTime() - startTime);    // 1
             sb.append(",");
-            sb.append(left);
+            sb.append(left * ((TankDriveMap) map).leftCluster.inputRange);  // 2
             sb.append(",");
-            sb.append(right);
+            sb.append(right * ((TankDriveMap) map).rightCluster.inputRange); // 3
             sb.append(",");
-            sb.append(leftVC.getAbsoluteSetpoint() * 1000);
+            sb.append(leftCluster.getPIDOutput() * ((TankDriveMap) map).leftCluster.inputRange); // 4
             sb.append(",");
-            sb.append(rightVC.getAbsoluteSetpoint() * 1000);
+            sb.append(rightCluster.getPIDOutput() * ((TankDriveMap) map).rightCluster.inputRange); // 5
             sb.append(",");
-            sb.append(leftEnc.getRate());
+            sb.append(leftEnc.getRate()); // 6
             sb.append(",");
-            sb.append(rightEnc.getRate());
+            sb.append(rightEnc.getRate()); // 7
             sb.append("\n");
 
             fw.write(sb.toString());
-//            System.out.println(sb.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -261,7 +263,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
         setDefaultCommand(new DefaultDrive(this, oi));
     }
 
-    public void reset() {
+    public void encoderReset() {
         this.leftEnc.reset();
         this.rightEnc.reset();
     }
@@ -270,7 +272,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
         return Math.abs(leftEnc.getDistance());
     }
 
-    public void motorControllerReset() {
+    public void subsystemReset() {
         rightVC.reset();
         leftVC.reset();
     }
