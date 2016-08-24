@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
-import org.usfirst.frc.team449.robot.RobotMap;
-
-import static edu.wpi.first.wpilibj.PIDSourceType.*;
 
 /**
  * Abstract class for PID controlled <code>SpeedController</code>s (motors).
@@ -18,10 +15,6 @@ import static edu.wpi.first.wpilibj.PIDSourceType.*;
  * </p>
  * <p>
  * <code>PIDMotorController</code>s can be used with both absolute and relative setpoints.
- * </p>
- * <p>
- * <code>PIDMotorController</code>s contain abstract methods to be overloaded to set the PID loop type
- * ({@link #setPIDSourceType()}) and to write directly to the motor object ({@link #motorWrite(double)}).
  * </p>
  */
 public class PIDMotorController {
@@ -42,7 +35,7 @@ public class PIDMotorController {
      */
     private double maxAbsoluteSetpoint;
     /**
-     * The built-in zero tolerance (to stop {@link #usePIDOutput(double)} once it is on target; this is indepedent of
+     * The built-in zero tolerance (to stop usePIDOutput(double) once it is on target; this is indepedent of
      * the <code>PIDController</code>'s zero tolerance that only specifies when the controller is
      * {@link PIDController#onTarget()}).
      */
@@ -73,13 +66,13 @@ public class PIDMotorController {
      */
     public PIDMotorController(double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
                               double zeroTolerance, boolean inverted, boolean useAbsolute, PIDOutput pidOutputDevice,
-                              PIDSource source) {
+                              PIDSource source, PIDSourceType pidSourceType) {
         this.maxAbsoluteSetpoint = maxAbsoluteSetpoint;
         this.zeroTolerance = zeroTolerance;
         this.inverted = inverted;
         this.pidOutputDevice = pidOutputDevice;
         this.pidSourceDevice = source;
-        this.pidSourceDevice.setPIDSourceType(setPIDSourceType());
+        this.pidSourceDevice.setPIDSourceType(pidSourceType);
         this.useAbsolute = useAbsolute;
         ((SpeedController) pidOutputDevice).disable();
         pidController = new PIDController(p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint,
@@ -88,18 +81,7 @@ public class PIDMotorController {
         pidController.disable();
         pidController.enable();
         pidController.setSetpoint(0);
-        System.out.println("Source Type:" + pidSourceDevice.getPIDSourceType());
     }
-
-    /**
-     * This method is run in the constructor to set the {@link #pidSourceDevice}'s {@link PIDSourceType}. This method should be
-     * overrided in velocity and displacement controllers with their respective values.
-     *
-     * @return motor controller's {@link PIDSourceType}
-     */
-    protected PIDSourceType setPIDSourceType() {
-        return PIDSourceType.kRate;
-    };
 
     /**
      * Method that writes to {@link #pidOutputDevice}.

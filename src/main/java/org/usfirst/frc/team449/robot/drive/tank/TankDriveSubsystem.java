@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.tank;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -80,9 +81,9 @@ public class TankDriveSubsystem extends DriveSubsystem {
         rightEnc.setDistancePerPulse(tankMap.rightCluster.encoder.dpp);
 
         rightVC = new PIDMotorController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
-                0, 0.05, 130.0, 5.0, false, false, rightCluster, rightEnc);
+                0, 0.05, 130.0, 5.0, false, false, rightCluster, rightEnc, PIDSourceType.kRate);
         leftVC = new PIDMotorController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
-                0, 0.05, 130.0, 5.0, false, false, leftCluster, leftEnc);
+                0, 0.05, 130.0, 5.0, false, false, leftCluster, leftEnc, PIDSourceType.kRate);
 
 
 //        initPid();
