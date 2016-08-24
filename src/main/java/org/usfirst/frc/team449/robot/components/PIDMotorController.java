@@ -35,12 +35,6 @@ public class PIDMotorController {
      */
     private double maxAbsoluteSetpoint;
     /**
-     * The built-in zero tolerance (to stop usePIDOutput(double) once it is on target; this is indepedent of
-     * the <code>PIDController</code>'s zero tolerance that only specifies when the controller is
-     * {@link PIDController#onTarget()}).
-     */
-    private double zeroTolerance;
-    /**
      * Whether the motor is inverted
      */
     private boolean inverted;
@@ -58,17 +52,15 @@ public class PIDMotorController {
      * @param f                   {@link #pidController}'s feedforward term
      * @param period              {@link #pidController}'s thread period
      * @param maxAbsoluteSetpoint {@link #pidController}'s input range
-     * @param zeroTolerance       built-in zero tolerance ({@link #zeroTolerance})
      * @param inverted            whether the motor is inverted
      * @param useAbsolute         whether {@link #set(double)} should use interpret its input as absolute (instead of relative)
      * @param pidOutputDevice     the motor controller's pidOutputDevice device (a motor)
      * @param source              the motor controller's input device (an encoder)
      */
     public PIDMotorController(double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
-                              double zeroTolerance, boolean inverted, boolean useAbsolute, PIDOutput pidOutputDevice,
+                              boolean inverted, boolean useAbsolute, PIDOutput pidOutputDevice,
                               PIDSource source, PIDSourceType pidSourceType) {
         this.maxAbsoluteSetpoint = maxAbsoluteSetpoint;
-        this.zeroTolerance = zeroTolerance;
         this.inverted = inverted;
         this.pidOutputDevice = pidOutputDevice;
         this.pidSourceDevice = source;
