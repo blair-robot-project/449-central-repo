@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.RobotMap;
+import org.usfirst.frc.team449.robot.components.PIDMotorController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
-import org.usfirst.frc.team449.robot.components.PIDVelocityController;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.tank.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.tank.components.MotorCluster;
@@ -29,8 +29,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
     private Encoder rightEnc;
     private Encoder leftEnc;
 
-    private PIDVelocityController rightVC;
-    private PIDVelocityController leftVC;
+    private PIDMotorController rightVC;
+    private PIDMotorController leftVC;
 
     private PIDOutputGetter leftVelCorrector;
     private PIDOutputGetter rightVelCorrector;
@@ -79,9 +79,9 @@ public class TankDriveSubsystem extends DriveSubsystem {
         rightEnc = new Encoder(tankMap.rightCluster.encoder.a, tankMap.rightCluster.encoder.b);
         rightEnc.setDistancePerPulse(tankMap.rightCluster.encoder.dpp);
 
-        rightVC = new PIDVelocityController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
+        rightVC = new PIDMotorController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
                 0, 0.05, 130.0, 5.0, false, false, rightCluster, rightEnc);
-        leftVC = new PIDVelocityController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
+        leftVC = new PIDMotorController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
                 0, 0.05, 130.0, 5.0, false, false, leftCluster, leftEnc);
 
 

@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 import org.usfirst.frc.team449.robot.RobotMap;
 
+import static edu.wpi.first.wpilibj.PIDSourceType.*;
+
 /**
  * Abstract class for PID controlled <code>SpeedController</code>s (motors).
  * <p>
@@ -22,7 +24,7 @@ import org.usfirst.frc.team449.robot.RobotMap;
  * ({@link #setPIDSourceType()}) and to write directly to the motor object ({@link #motorWrite(double)}).
  * </p>
  */
-public abstract class PIDMotorController {
+public class PIDMotorController {
     /**
      * <code>PIDController</code> that calculates pidWrite values
      */
@@ -80,7 +82,8 @@ public abstract class PIDMotorController {
         this.pidSourceDevice.setPIDSourceType(setPIDSourceType());
         this.useAbsolute = useAbsolute;
         ((SpeedController) pidOutputDevice).disable();
-        pidController = new PIDController(p, i, d, f, this.pidSourceDevice, this.pidOutputDevice, period);
+        pidController = new PIDController(p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint,
+                f / maxAbsoluteSetpoint, this.pidSourceDevice, this.pidOutputDevice, period);
         pidController.setOutputRange(-maxAbsoluteSetpoint, maxAbsoluteSetpoint);
         pidController.disable();
         pidController.enable();
@@ -94,7 +97,9 @@ public abstract class PIDMotorController {
      *
      * @return motor controller's {@link PIDSourceType}
      */
-    protected abstract PIDSourceType setPIDSourceType();
+    protected PIDSourceType setPIDSourceType() {
+        return PIDSourceType.kRate;
+    };
 
     /**
      * Method that writes to {@link #pidOutputDevice}.
