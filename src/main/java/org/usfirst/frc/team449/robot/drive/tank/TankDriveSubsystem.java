@@ -85,9 +85,6 @@ public class TankDriveSubsystem extends DriveSubsystem {
         leftVC = new PIDMotorController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
                 0, 0.05, 130.0, false, false, leftCluster, leftEnc, PIDSourceType.kRate);
 
-
-//        initPid();
-
         gyro = new AHRS(SPI.Port.kMXP);
 
         angleController = new PIDAngleController(tankMap.anglePID.p, tankMap.anglePID.i, tankMap.anglePID.d,
@@ -104,54 +101,10 @@ public class TankDriveSubsystem extends DriveSubsystem {
         driveStraightAngleController.setMinimumOutput(tankMap.driveStraightAnglePID.minimumOutput);
         driveStraightAngleController.setMinimumOutputEnabled(tankMap.driveStraightAnglePID.minimumOutputEnabled);
         SmartDashboard.putData("pid drive straight", driveStraightAngleController);
-//        this.setPidEnabled(true);
-
-//        try {
-//            fw = new FileWriter("/home/lvuser/driveLog.txt", true);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         startTime = new Date().getTime();
         System.out.println("TankDrive init finished");
     }
-
-    /*
-    public void initPid(double p, double i, double d) {
-        TankDriveMap tankMap = ((TankDriveMap) map);
-        this.leftClusterVelocity = new PIDVelocityMotor(p, i, d, leftCluster, leftEnc, "left");
-        this.leftClusterVelocity.setOutputRange(-tankMap.leftCluster.outputRange, tankMap.leftCluster.outputRange);
-        this.leftClusterVelocity.setSpeed(tankMap.leftCluster.speed);
-        this.leftClusterVelocity.setPercentTolerance(tankMap.leftCluster.percentTolerance);
-        this.leftClusterVelocity.setZeroTolerance(tankMap.leftCluster.zeroTolerance);
-        this.leftClusterVelocity.setInverted(tankMap.leftCluster.inverted);
-        this.leftClusterVelocity.setRampRate(tankMap.leftCluster.rampRate);
-        this.leftClusterVelocity.setRampRateEnabled(tankMap.leftCluster.rampRateEnabled);
-
-        this.rightClusterVelocity = new PIDVelocityMotor(p, i, d, rightCluster, rightEnc, "right");
-        this.rightClusterVelocity.setOutputRange(-tankMap.rightCluster.outputRange, tankMap.rightCluster.outputRange);
-        this.rightClusterVelocity.setSpeed(tankMap.rightCluster.speed);
-        this.rightClusterVelocity.setPercentTolerance(tankMap.rightCluster.percentTolerance);
-        this.rightClusterVelocity.setZeroTolerance(tankMap.rightCluster.zeroTolerance);
-        this.rightClusterVelocity.setInverted(tankMap.rightCluster.inverted);
-        this.rightClusterVelocity.setRampRate(tankMap.rightCluster.rampRate);
-        this.rightClusterVelocity.setRampRateEnabled(tankMap.rightCluster.rampRateEnabled);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("PID: ");
-        sb.append(p);
-        sb.append(i);
-        sb.append(d);
-        System.out.println(sb.toString());
-    }
-
-    public void initPid() {
-        TankDriveMap tankMap = ((TankDriveMap) map);
-        initPid(tankMap.leftCluster.p / tankMap.leftCluster.inputRange,
-                tankMap.leftCluster.i / tankMap.leftCluster.inputRange,
-                tankMap.leftCluster.d / tankMap.leftCluster.inputRange);
-    }
-    */
 
     public void zeroGyro() {
         gyro.zeroYaw();
@@ -183,10 +136,6 @@ public class TankDriveSubsystem extends DriveSubsystem {
         driveStraightAngleController.disable();
     }
 
-//    public void setPidEnabledP(boolean b) {
-//        setPidEnabled(b);
-//    }
-
     /**
      * sets the throttle for the left and right clusters as specified by the
      * parameters
@@ -203,16 +152,10 @@ public class TankDriveSubsystem extends DriveSubsystem {
         SmartDashboard.putNumber("left corr", leftVelCorrector.get());
         left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
         right += rightVelCorrector.get() * ((TankDriveMap) map).rightCluster.speed;
-//        if (pidEnabled) {
+
         this.leftVC.setRelativeSetpoint(left);
         this.rightVC.setRelativeSetpoint(right);
-        System.out.println(left);
-        System.out.println(((TankDriveMap) map).leftCluster.inputRange);
-        System.out.println(left * ((TankDriveMap) map).leftCluster.inputRange);
-//        } else {
-//            this.leftCluster.set(left);
-//            this.rightCluster.set(right);
-//        }
+
         SmartDashboard.putNumber("getangle", gyro.pidGet());
         SmartDashboard.putNumber("modded angle", gyro.pidGet());
 
@@ -277,26 +220,4 @@ public class TankDriveSubsystem extends DriveSubsystem {
         rightVC.reset();
         leftVC.reset();
     }
-
-//    /**
-//     * switch whether or not the controls consider PID (in case of encoder
-//     * failure)
-//     */
-//    public void togglePID() {
-//        setPidEnabled(!this.pidEnabled);
-//    }
-
-    /*
-    private void setPidEnabled(boolean pidEnabled) {
-        this.pidEnabled = pidEnabled;
-        if (pidEnabled) {
-            this.rightClusterVelocity.enable();
-            this.leftClusterVelocity.enable();
-        } else {
-            this.rightClusterVelocity.disable();
-            this.leftClusterVelocity.disable();
-        }
-        SmartDashboard.putBoolean("Drive PID", pidEnabled);
-    }
-    */
 }

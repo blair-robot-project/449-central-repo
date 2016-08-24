@@ -132,8 +132,6 @@ public class PIDMotorController implements SpeedController{
         } else {
             pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
         }
-
-//        System.out.println("Set Relative Setpoint: " + String.valueOf(setpoint * maxAbsoluteSetpoint));
     }
 
     /**
