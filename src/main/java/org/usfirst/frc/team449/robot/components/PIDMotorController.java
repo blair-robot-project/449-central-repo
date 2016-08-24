@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
@@ -23,7 +22,7 @@ import org.usfirst.frc.team449.robot.RobotMap;
  * ({@link #setPIDSourceType()}) and to write directly to the motor object ({@link #motorWrite(double)}).
  * </p>
  */
-public abstract class PIDMotorController extends MappedSubsystem {
+public abstract class PIDMotorController {
     /**
      * <code>PIDController</code> that calculates pidWrite values
      */
@@ -58,7 +57,6 @@ public abstract class PIDMotorController extends MappedSubsystem {
     /**
      * Instantiate a new <code>PIDMotorController</code>
      *
-     * @param robotMap            robot configuration map
      * @param p                   {@link #pidController}'s proportional term
      * @param i                   {@link #pidController}'s integral term
      * @param d                   {@link #pidController}'s derivative term
@@ -71,10 +69,9 @@ public abstract class PIDMotorController extends MappedSubsystem {
      * @param pidOutputDevice     the motor controller's pidOutputDevice device (a motor)
      * @param source              the motor controller's input device (an encoder)
      */
-    public PIDMotorController(RobotMap robotMap, double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
+    public PIDMotorController(double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
                               double zeroTolerance, boolean inverted, boolean useAbsolute, PIDOutput pidOutputDevice,
                               PIDSource source) {
-        super(robotMap);
         this.maxAbsoluteSetpoint = maxAbsoluteSetpoint;
         this.zeroTolerance = zeroTolerance;
         this.inverted = inverted;
@@ -257,10 +254,5 @@ public abstract class PIDMotorController extends MappedSubsystem {
         pidController.reset();
         pidController.enable();
         System.out.println("encoderReset");
-    }
-
-    @Override
-    protected void initDefaultCommand() {
-        setDefaultCommand(new ZeroPIDMotorController(this));
     }
 }

@@ -79,9 +79,9 @@ public class TankDriveSubsystem extends DriveSubsystem {
         rightEnc = new Encoder(tankMap.rightCluster.encoder.a, tankMap.rightCluster.encoder.b);
         rightEnc.setDistancePerPulse(tankMap.rightCluster.encoder.dpp);
 
-        rightVC = new PIDVelocityController(map, tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
+        rightVC = new PIDVelocityController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
                 0, 0.05, 130.0, 5.0, false, false, rightCluster, rightEnc);
-        leftVC = new PIDVelocityController(map, tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
+        leftVC = new PIDVelocityController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
                 0, 0.05, 130.0, 5.0, false, false, leftCluster, leftEnc);
 
 

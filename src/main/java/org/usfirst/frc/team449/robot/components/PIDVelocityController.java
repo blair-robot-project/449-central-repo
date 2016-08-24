@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.components;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
  * Class for velocity controlling {@link PIDMotorController}s. Is identical to {@link PIDMotorController}
@@ -13,7 +12,6 @@ public class PIDVelocityController extends PIDMotorController {
     /**
      * Instantiate a new <code>PIDVelocityController</code>
      *
-     * @param robotMap            robot configuration map
      * @param p                   {@link #pidController}'s proportional term
      * @param i                   {@link #pidController}'s integral term
      * @param d                   {@link #pidController}'s derivative term
@@ -26,10 +24,10 @@ public class PIDVelocityController extends PIDMotorController {
      * @param pidOutputDevice     the motor controller's pidOutputDevice device (a motor)
      * @param source              the motor controller's input device (an encoder)
      */
-    public PIDVelocityController(RobotMap robotMap, double p, double i, double d, double f, double period,
+    public PIDVelocityController(double p, double i, double d, double f, double period,
                                  double maxAbsoluteSetpoint, double zeroTolerance, boolean inverted,
                                  boolean useAbsolute, PIDOutput pidOutputDevice, PIDSource source) {
-        super(robotMap, p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint, f, period,
+        super(p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint, f, period,
                 maxAbsoluteSetpoint, zeroTolerance, inverted, useAbsolute, pidOutputDevice, source);
     }
 
@@ -42,13 +40,5 @@ public class PIDVelocityController extends PIDMotorController {
     protected PIDSourceType setPIDSourceType() {
         System.out.println("KRATE");
         return PIDSourceType.kRate;
-    }
-
-    /**
-     * {@link edu.wpi.first.wpilibj.command.Subsystem} method for setting a command that is run when a {@link PIDVelocityController}
-     * is constructed. This method is unused.
-     */
-    @Override
-    public void initDefaultCommand() {
     }
 }
