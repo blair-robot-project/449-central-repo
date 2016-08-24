@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
- * Abstract class for PID controlled <code>SpeedController</code>s (motors).
+ * Class for PID controlled <code>SpeedController</code>s (motors).
  * <p>
  * <code>PIDMotorController</code> objects contain a <code>PIDController</code> object that handles PID
  * calculations. The <code>PIDController</code> object runs in its own thread in the scheduler, independent of other
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  * <code>PIDMotorController</code>s can be used with both absolute and relative setpoints.
  * </p>
  */
-public class PIDMotorController {
+public class PIDMotorController implements SpeedController{
     /**
      * <code>PIDController</code> that calculates pidWrite values
      */
@@ -137,20 +137,6 @@ public class PIDMotorController {
     }
 
     /**
-     * Set the PID setpoint, either using an absolute setpoint or a relative setpoint, depending on the value of
-     * {@link #useAbsolute}.
-     *
-     * @param setpoint absolute or relative setpoint
-     */
-    public void set(double setpoint) {
-        if (useAbsolute) {
-            setAbsoluteSetpoint(setpoint);
-        } else {
-            setRelativeSetpoint(setpoint);
-        }
-    }
-
-    /**
      * Gets current absolute setpoint
      *
      * @return current absolute setpoint
@@ -208,7 +194,56 @@ public class PIDMotorController {
     }
 
     /**
-     * Set whether the motor is inverted
+     * Turn the motor controller off
+     */
+    public void reset() {
+        setAbsoluteSetpoint(0);
+        pidController.reset();
+        pidController.enable();
+        System.out.println("encoderReset");
+    }
+
+    /**
+     * {@link SpeedController} method for getting the relative set velocity. {@link SpeedController}'s expect a number
+     * between -1 and 1 so this method returns the relative setpoint (this is a wrapper on
+     * {@link #getRelativeSetpoint()}).
+     *
+     * @return relative setpoint
+     */
+    @Override
+    public double get() {
+        return getRelativeSetpoint();
+    }
+
+    /**
+     * Deprecated {@link SpeedController} method for setting relative set velocity.
+     *
+     * @deprecated use {@link #set(double)} instead
+     * @param velocity set velocity
+     * @param syncGroup update group (not used)
+     */
+    @Override
+    @Deprecated
+    public void set(double velocity, byte syncGroup) {
+        System.out.println("Warning, you are using a deprecated method void set(double, double). You will use method " +
+                "void set(double) instead.");
+        set(velocity);
+    }
+
+    /**
+     * {@link SpeedController} method for setting the relative set velocity. {@link SpeedController}'s expect a number
+     * between -1 and 1 so this method sets the relative setpoint (this is a wrapper on
+     * {@link #setRelativeSetpoint(double)}).
+     *
+     * @param velocity relative setpoint
+     */
+    @Override
+    public void set(double velocity) {
+        setRelativeSetpoint(velocity);
+    }
+
+    /**
+     * {@link SpeedController} method for setting whether the motor is inverted
      *
      * @param isInverted whether the motor is inverted ({@link #inverted}
      */
@@ -217,7 +252,7 @@ public class PIDMotorController {
     }
 
     /**
-     * Get whether the motor is inverted
+     * {@link SpeedController} method for getting whether the motor is inverted
      *
      * @return whether the motor is inverted ({@link #inverted}
      */
@@ -226,12 +261,24 @@ public class PIDMotorController {
     }
 
     /**
-     * Turn the motor controller off
+     * {@link SpeedController} method for disabling the speed controller
      */
-    public void reset() {
-        setAbsoluteSetpoint(0);
-        pidController.reset();
-        pidController.enable();
-        System.out.println("encoderReset");
+    @Override
+    public void disable() {
+        pidOutputDevice.pidWrite(0);
+    }
+
+    /**
+     * {@link SpeedController} method for stoping motor movement. Motor can be moved again by calling set without having
+     * to re-enable the motor.
+     */
+    @Override
+    public void stopMotor() {
+        set(0);
+    }
+
+    @Override
+    public void pidWrite(double velocity) {
+        set(velocity);
     }
 }
