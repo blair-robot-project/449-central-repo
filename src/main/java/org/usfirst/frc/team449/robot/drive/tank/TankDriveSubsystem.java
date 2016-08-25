@@ -23,15 +23,16 @@ import java.util.Date;
  * a Drive subsystem that operates with a tank drive
  */
 public class TankDriveSubsystem extends DriveSubsystem {
+    private PIDMotorClusterController rightClusterController;
+    private PIDMotorClusterController leftClusterController;
+
     private PIDOutputGetter leftVelCorrector;
     private PIDOutputGetter rightVelCorrector;
 
     private PIDAngleController angleController;
     private PIDAngleController driveStraightAngleController;
-    private AHRS gyro;
 
-    private PIDMotorClusterController rc;
-    private PIDMotorClusterController lc;
+    private AHRS gyro;
 
     private OISubsystem oi;
 
@@ -47,7 +48,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
         }
         TankDriveMap tankMap = (TankDriveMap) map;
 
-        rc = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
+        rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
                 0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
@@ -72,7 +73,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
             }
         };
 
-        lc = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
+        leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
                 0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
@@ -100,7 +101,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
         gyro = new AHRS(SPI.Port.kMXP);
 
         angleController = new PIDAngleController(tankMap.anglePID.p, tankMap.anglePID.i, tankMap.anglePID.d,
-                lc, rc, gyro);
+                leftClusterController, rightClusterController, gyro);
         angleController.setAbsoluteTolerance(tankMap.anglePID.absoluteTolerance);
         angleController.setMinimumOutput(tankMap.anglePID.minimumOutput);
         angleController.setMinimumOutputEnabled(tankMap.anglePID.minimumOutputEnabled);
@@ -124,8 +125,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
     public void disableAngleController() {
         angleController.disable();
-        this.lc.set(0);
-        this.rc.set(0);
+        this.leftClusterController.set(0);
+        this.rightClusterController.set(0);
     }
 
     public void enableAngleController() {
@@ -158,10 +159,10 @@ public class TankDriveSubsystem extends DriveSubsystem {
     public void setThrottle(double left, double right) {
         SmartDashboard.putNumber("left throttle", left);
         SmartDashboard.putNumber("right throttle", right);
-        SmartDashboard.putNumber("right setpoint", rc.getAbsoluteSetpoint());
-        SmartDashboard.putNumber("left setpoint", lc.getAbsoluteSetpoint());
-        SmartDashboard.putNumber("right enc", lc.getMotorCLusterPIDOutput());
-        SmartDashboard.putNumber("left enc", lc.getMotorCLusterPIDOutput());
+        SmartDashboard.putNumber("right setpoint", rightClusterController.getAbsoluteSetpoint());
+        SmartDashboard.putNumber("left setpoint", leftClusterController.getAbsoluteSetpoint());
+        SmartDashboard.putNumber("right enc", leftClusterController.getPIDOutput());
+        SmartDashboard.putNumber("left enc", leftClusterController.getPIDOutput());
         SmartDashboard.putNumber("right correction", rightVelCorrector.get());
         SmartDashboard.putNumber("left correction", leftVelCorrector.get());
         SmartDashboard.putNumber("getangle", gyro.pidGet());
@@ -169,8 +170,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
         left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
         right += rightVelCorrector.get() * ((TankDriveMap) map).rightCluster.speed;
 
-        lc.setRelativeSetpoint(left);
-        rc.setRelativeSetpoint(right);
+        leftClusterController.setRelativeSetpoint(left);
+        rightClusterController.setRelativeSetpoint(right);
 
         try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
             StringBuilder sb = new StringBuilder();
@@ -180,13 +181,13 @@ public class TankDriveSubsystem extends DriveSubsystem {
             sb.append(",");
             sb.append(right * ((TankDriveMap) map).rightCluster.inputRange); // 3
             sb.append(",");
-            sb.append(lc.getMotorCLusterPIDOutput() * ((TankDriveMap) map).leftCluster.inputRange); // 4
+            sb.append(leftClusterController.getPIDOutput() * ((TankDriveMap) map).leftCluster.inputRange); // 4
             sb.append(",");
-            sb.append(rc.getMotorCLusterPIDOutput() * ((TankDriveMap) map).rightCluster.inputRange); // 5
+            sb.append(rightClusterController.getPIDOutput() * ((TankDriveMap) map).rightCluster.inputRange); // 5
             sb.append(",");
-            sb.append(lc.getSourceMeasuredValue()); // 6
+            sb.append(leftClusterController.getSourceMeasuredValue()); // 6
             sb.append(",");
-            sb.append(rc.getSourceMeasuredValue()); // 7
+            sb.append(rightClusterController.getSourceMeasuredValue()); // 7
             sb.append("\n");
             fw.write(sb.toString());
         } catch (IOException e) {
@@ -220,16 +221,16 @@ public class TankDriveSubsystem extends DriveSubsystem {
     }
 
     public void encoderReset() {
-        ((Encoder) lc.pidSourceDevice).reset();
-        ((Encoder) rc.pidSourceDevice).reset();
+        ((Encoder) leftClusterController.pidSourceDevice).reset();
+        ((Encoder) rightClusterController.pidSourceDevice).reset();
     }
 
     public double getDistance() {
-        return Math.abs(((Encoder) lc.pidSourceDevice).getDistance());
+        return Math.abs(((Encoder) leftClusterController.pidSourceDevice).getDistance());
     }
 
     public void subsystemReset() {
-        lc.reset();
-        rc.reset();
+        leftClusterController.reset();
+        rightClusterController.reset();
     }
 }

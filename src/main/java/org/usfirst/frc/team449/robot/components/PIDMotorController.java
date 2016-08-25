@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * <code>PIDMotorController</code>s can be used with both absolute and relative setpoints.
  * </p>
  */
-public abstract class PIDMotorController implements SpeedController{
+public abstract class PIDMotorController implements SpeedController {
     /**
      * <code>PIDController</code> that calculates pidWrite values
      */
@@ -95,6 +95,13 @@ public abstract class PIDMotorController implements SpeedController{
      * @return constructed {@link PIDOutput} device
      */
     public abstract PIDOutput constructPIDOutputDevice();
+
+    /**
+     * Abstract method for getting the value being written to {@link #pidOutputDevice}.
+     *
+     * @return value written to {@link #pidOutputDevice}
+     */
+    public abstract double getPIDOutput();
 
     /**
      * Method that writes to {@link #pidOutputDevice}.
@@ -307,6 +314,11 @@ public abstract class PIDMotorController implements SpeedController{
         set(0);
     }
 
+    /**
+     * {@link PIDOutput} method for writing a velocity to the output device
+     *
+     * @param velocity velocity to write to the output device
+     */
     @Override
     public void pidWrite(double velocity) {
         set(velocity);

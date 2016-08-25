@@ -8,110 +8,146 @@ import org.usfirst.frc.team449.robot.components.Component;
  * A cluster of motors, or SpeedControllers, used for tank drive generally.
  */
 public class MotorCluster extends Component implements SpeedController {
-	private final SpeedController[] controllerList;
-	private boolean inverted;
-	private double lastSet = 0;
+    private final SpeedController[] controllerList;
+    private boolean inverted;
+    private double lastSet = 0;
 
-	/**
-	 * construct a MotorCluster to hold a total of <code>total</code>
-	 * SpeedControllers
-	 *
-	 * @param total the number of SpeedControllers to hold in this glorified array
-	 */
-	public MotorCluster(int total) {
-		controllerList = new SpeedController[total];
-		lastSet = 0;
-	}
+    /**
+     * construct a MotorCluster to hold a total of <code>total</code>
+     * SpeedControllers
+     *
+     * @param total the number of SpeedControllers to hold in this glorified array
+     */
+    public MotorCluster(int total) {
+        controllerList = new SpeedController[total];
+        lastSet = 0;
+    }
 
-	/**
-	 * construct a MotorCluster to control the given SpeedControllers
-	 *
-	 * @param controllers the SpeedControllers to control
-	 */
-	public MotorCluster(SpeedController[] controllers) {
-		controllerList = controllers;
-		lastSet = 0;
-	}
+    /**
+     * construct a MotorCluster to control the given SpeedControllers
+     *
+     * @param controllers the SpeedControllers to control
+     */
+    public MotorCluster(SpeedController[] controllers) {
+        controllerList = controllers;
+        lastSet = 0;
+    }
 
-	/**
-	 * add a motor that will be considered a part of the cluster
-	 *
-	 * @param controller the motorController
-	 */
-	public void addSlave(SpeedController controller) {
-		for (int i = 0; i < controllerList.length; i++) {
-			if (controllerList[i] == null) {
-				controllerList[i] = controller;
-				return;
-			}
-		}
-		System.err.println("Motor cluster over capacity, not adding a new motor! (" + controllerList.length + ")");
-	}
+    /**
+     * add a motor that will be considered a part of the cluster
+     *
+     * @param controller the motorController
+     */
+    public void addSlave(SpeedController controller) {
+        for (int i = 0; i < controllerList.length; i++) {
+            if (controllerList[i] == null) {
+                controllerList[i] = controller;
+                return;
+            }
+        }
+        System.err.println("Motor cluster over capacity, not adding a new motor! (" + controllerList.length + ")");
+    }
 
-	public double getPIDOutput() {
-		return lastSet;
-	}
+    /**
+     * Write to the motors
+     *
+     * @param output value to write to the motors
+     */
+    // TODO: figure out why this needs to be here; this doesn't implement PIDOutput, why does it need a PIDOutput method?
+    @Override
+    public void pidWrite(double output) {
+        for (int i = 0; i < controllerList.length; i++) {
+            controllerList[i].pidWrite(output);
+        }
+        lastSet = output;
+        SmartDashboard.putNumber("MotorCluster Write: ", lastSet);
+    }
 
-	public int getNumMotors() {
-		return controllerList.length;
-	}
+    /**
+     * {@link SpeedController} method for getting the last value written to the motors
+     *
+     * @return last value written to the motors
+     */
+    @Override
+    public double get() {
+        return lastSet;
+    }
 
-	@Override
-	public void pidWrite(double output) {
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].pidWrite(output);
-		}
-		lastSet = output;
-		SmartDashboard.putNumber("MotorCluster Write: ", lastSet);
-	}
+    /**
+     * Deprecated {@link SpeedController} method for setting relative set velocity.
+     *
+     * @param velocity  set velocity
+     * @param syncGroup update group (not used)
+     * @deprecated use {@link #set(double)} instead
+     */
+    @Override
+    @Deprecated
+    public void set(double velocity, byte syncGroup) {
+        System.out.println("Warning, you are using a deprecated method void set(double, double). You will use method " +
+                "void set(double) instead.");
+        set(velocity);
+    }
 
-	@Override
-	public double get() {
-		return lastSet;
-	}
+    /**
+     * Write a velocity to the motors
+     * @param velocity velocity to write to the motors
+     */
+    @Override
+    public void set(double velocity) {
+        for (int i = 0; i < controllerList.length; i++) {
+            controllerList[i].set(velocity);
+        }
+        lastSet = velocity;
+        SmartDashboard.putNumber("MotorCluster Set: ", lastSet);
+    }
 
-	@Override
-	public void set(double speed, byte syncGroup) {
-		System.out.println("This shit is deprecated and shouldn't be called.\n TL;DR: YOU DONE FUCKED UP");
-	}
+    /**
+     * {@link SpeedController} method for setting whether the motor cluster is inverted. This method checks if the set value
+     * is the same as the current value before setting each individual motor for efficiency sake since there are
+     * multiple motors.
+     *
+     * @param isInverted whether the motor cluster is inverted ({@link #inverted}
+     */
+    @Override
+    public void setInverted(boolean isInverted) {
+        boolean changed = isInverted != inverted;
+        if (!changed) {
+            return;
+        }
+        this.inverted = isInverted;
+        for (int i = 0; i < controllerList.length; i++) {
+            controllerList[i].setInverted(!controllerList[i].getInverted());
+        }
+    }
 
-	@Override
-	public void set(double speed) {
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].set(speed);
-		}
-		lastSet = speed;
-		SmartDashboard.putNumber("MotorCluster Set: ", lastSet);
-	}
+    /**
+     * {@link SpeedController} method for getting whether the motor cluster is inverted
+     *
+     * @return whether the motor cluster is inverted ({@link #inverted}
+     */
+    @Override
+    public boolean getInverted() {
+        return inverted;
+    }
 
-	@Override
-	public void setInverted(boolean b) {
-		boolean changed = b != inverted;
-		if (!changed) {
-			return;
-		}
-		this.inverted = b;
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].setInverted(!controllerList[i].getInverted());
-		}
-	}
+    /**
+     * {@link SpeedController} method for disabling the motor cluster
+     */
+    @Override
+    public void disable() {
+        for (int i = 0; i < controllerList.length; i++) {
+            controllerList[i].disable();
+        }
+    }
 
-	@Override
-	public boolean getInverted() {
-		return inverted;
-	}
-
-	@Override
-	public void disable() {
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].disable();
-		}
-	}
-
-	@Override
-	public void stopMotor() {
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].stopMotor();
-		}
-	}
+    /**
+     * {@link SpeedController} method for stoping motor movement. Motor can be moved again by calling set without having
+     * to re-enable the motor.
+     */
+    @Override
+    public void stopMotor() {
+        for (int i = 0; i < controllerList.length; i++) {
+            controllerList[i].stopMotor();
+        }
+    }
 }
