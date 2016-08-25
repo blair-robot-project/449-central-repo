@@ -49,7 +49,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
         TankDriveMap tankMap = (TankDriveMap) map;
 
         rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
-                0, 0.05, 130.0, true, false, PIDSourceType.kRate) {
+                0, 0.05, 130.0, tankMap.rightCluster.inverted, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
                 return tankMap.rightCluster.cluster.motors.length;
@@ -57,7 +57,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
             @Override
             public boolean getOutputDeviceInverted() {
-                return true;
+                return tankMap.rightCluster.cluster.INVERTED;
             }
 
             @Override
@@ -65,7 +65,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
                 VictorSP motor; // declare before loop to save garbage collection time
                 for (int i = 0; i < tankMap.rightCluster.cluster.motors.length; i++) {
                     motor = new VictorSP(tankMap.rightCluster.cluster.motors[i].PORT);
-                    motor.setInverted(false);   // motors should not be inverted, motor cluster should be
+                    motor.setInverted(tankMap.rightCluster.cluster.motors[i].INVERTED);
                     addMotorClusterSlave(motor);
                 }
             }
@@ -79,7 +79,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
         };
 
         leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
-                0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
+                0, 0.05, 130.0, tankMap.leftCluster.inverted, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
                 return tankMap.leftCluster.cluster.motors.length;
@@ -87,7 +87,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
             @Override
             public boolean getOutputDeviceInverted() {
-                return true;
+                return tankMap.leftCluster.cluster.INVERTED;
             }
 
             @Override
@@ -95,7 +95,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
                 VictorSP motor; // declare before loop to save garbage collection time
                 for (int i = 0; i < tankMap.leftCluster.cluster.motors.length; i++) {
                     motor = new VictorSP(tankMap.leftCluster.cluster.motors[i].PORT);
-                    motor.setInverted(false);   // motors should not be inverted, motor cluster should be
+                    motor.setInverted(tankMap.leftCluster.cluster.motors[i].INVERTED);
                     addMotorClusterSlave(motor);
                 }
             }
