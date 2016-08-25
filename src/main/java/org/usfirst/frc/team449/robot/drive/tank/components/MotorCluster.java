@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.tank.components;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.components.Component;
 
 /**
@@ -9,7 +10,6 @@ import org.usfirst.frc.team449.robot.components.Component;
 public class MotorCluster extends Component implements SpeedController {
 	private final SpeedController[] controllerList;
 	private boolean inverted;
-
 	private double lastSet = 0;
 
 	/**
@@ -52,12 +52,17 @@ public class MotorCluster extends Component implements SpeedController {
 		return lastSet;
 	}
 
+	public int getNumMotors() {
+		return controllerList.length;
+	}
+
 	@Override
 	public void pidWrite(double output) {
 		for (int i = 0; i < controllerList.length; i++) {
 			controllerList[i].pidWrite(output);
 		}
 		lastSet = output;
+		SmartDashboard.putNumber("MotorCluster Write: ", lastSet);
 	}
 
 	@Override
@@ -76,6 +81,7 @@ public class MotorCluster extends Component implements SpeedController {
 			controllerList[i].set(speed);
 		}
 		lastSet = speed;
+		SmartDashboard.putNumber("MotorCluster Set: ", lastSet);
 	}
 
 	@Override

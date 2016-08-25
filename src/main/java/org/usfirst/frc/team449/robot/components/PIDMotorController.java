@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class for PID controlled <code>SpeedController</code>s (motors).
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  * <code>PIDMotorController</code>s can be used with both absolute and relative setpoints.
  * </p>
  */
-public class PIDMotorController implements SpeedController{
+public abstract class PIDMotorController implements SpeedController{
     /**
      * <code>PIDController</code> that calculates pidWrite values
      */
@@ -27,9 +28,10 @@ public class PIDMotorController implements SpeedController{
      */
     private PIDOutput pidOutputDevice;
     /**
-     * The input device (an encoder)
+     * The input device (an encoder). This is public so that subsystems can directly access the output device to do
+     * things like reseting it, reading displacement/rate when the source type is rate/displacement, etc.
      */
-    private PIDSource pidSourceDevice;
+    public PIDSource pidSourceDevice;
     /**
      * The maximmum input value (the input range)
      */
@@ -53,20 +55,25 @@ public class PIDMotorController implements SpeedController{
      * @param period              {@link #pidController}'s thread period
      * @param maxAbsoluteSetpoint {@link #pidController}'s input range
      * @param inverted            whether the motor is inverted
-     * @param useAbsolute         whether {@link #set(double)} should use interpret its input as absolute (instead of relative)
-     * @param pidOutputDevice     the motor controller's pidOutputDevice device (a motor)
-     * @param source              the motor controller's input device (an encoder)
+     * @param useAbsolute         whether {@link #set(double)} should use interpret its input as absolute (instead of
+     *                            relative)
      */
     public PIDMotorController(double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
-                              boolean inverted, boolean useAbsolute, PIDOutput pidOutputDevice,
-                              PIDSource source, PIDSourceType pidSourceType) {
+                              boolean inverted, boolean useAbsolute, PIDSourceType pidSourceType) {
+        // Constants
         this.maxAbsoluteSetpoint = maxAbsoluteSetpoint;
         this.inverted = inverted;
-        this.pidOutputDevice = pidOutputDevice;
-        this.pidSourceDevice = source;
-        this.pidSourceDevice.setPIDSourceType(pidSourceType);
         this.useAbsolute = useAbsolute;
+
+        // Set up PID source device
+        pidSourceDevice = constructPIDSourceDevice();
+        pidSourceDevice.setPIDSourceType(pidSourceType);
+
+        // Set up PID output device
+        pidOutputDevice = constructPIDOutputDevice();
         ((SpeedController) pidOutputDevice).disable();
+
+        // Set up PID controller
         pidController = new PIDController(p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint,
                 f / maxAbsoluteSetpoint, this.pidSourceDevice, this.pidOutputDevice, period);
         pidController.setOutputRange(-maxAbsoluteSetpoint, maxAbsoluteSetpoint);
@@ -74,6 +81,20 @@ public class PIDMotorController implements SpeedController{
         pidController.enable();
         pidController.setSetpoint(0);
     }
+
+    /**
+     * Abstract method overrided in subclass to feed PID motor controller its source device
+     *
+     * @return constructed {@link PIDSource} device
+     */
+    public abstract PIDSource constructPIDSourceDevice();
+
+    /**
+     * Abstract method overrided in subclasses to feed PID motor controller its output device.
+     *
+     * @return constructed {@link PIDOutput} device
+     */
+    public abstract PIDOutput constructPIDOutputDevice();
 
     /**
      * Method that writes to {@link #pidOutputDevice}.
@@ -132,6 +153,8 @@ public class PIDMotorController implements SpeedController{
         } else {
             pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
         }
+
+        SmartDashboard.putNumber("pidController.setSetpoint: ", setpoint * maxAbsoluteSetpoint);
     }
 
     /**
@@ -150,6 +173,15 @@ public class PIDMotorController implements SpeedController{
      */
     public double getRelativeSetpoint() {
         return pidController.getSetpoint() / maxAbsoluteSetpoint;
+    }
+
+    /**
+     * Gets the real world value measured by the PID source device
+     *
+     * @return value measured by {@link #pidSourceDevice}
+     */
+    public double getSourceMeasuredValue() {
+        return pidSourceDevice.pidGet();
     }
 
     /**
@@ -216,9 +248,9 @@ public class PIDMotorController implements SpeedController{
     /**
      * Deprecated {@link SpeedController} method for setting relative set velocity.
      *
-     * @deprecated use {@link #set(double)} instead
-     * @param velocity set velocity
+     * @param velocity  set velocity
      * @param syncGroup update group (not used)
+     * @deprecated use {@link #set(double)} instead
      */
     @Override
     @Deprecated

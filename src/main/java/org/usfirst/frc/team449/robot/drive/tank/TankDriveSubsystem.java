@@ -2,17 +2,17 @@ package org.usfirst.frc.team449.robot.drive.tank;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.RobotMap;
-import org.usfirst.frc.team449.robot.components.PIDMotorController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.tank.commands.DefaultDrive;
-import org.usfirst.frc.team449.robot.drive.tank.components.MotorCluster;
 import org.usfirst.frc.team449.robot.drive.tank.components.PIDAngleController;
+import org.usfirst.frc.team449.robot.drive.tank.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 import java.io.FileWriter;
@@ -23,23 +23,15 @@ import java.util.Date;
  * a Drive subsystem that operates with a tank drive
  */
 public class TankDriveSubsystem extends DriveSubsystem {
-    //    private PIDVelocityMotor rightClusterVelocity;
-//    private PIDVelocityMotor leftClusterVelocity;
-    private MotorCluster rightCluster;
-    private MotorCluster leftCluster;
-    private Encoder rightEnc;
-    private Encoder leftEnc;
-
-    private PIDMotorController rightVC;
-    private PIDMotorController leftVC;
-
     private PIDOutputGetter leftVelCorrector;
     private PIDOutputGetter rightVelCorrector;
 
     private PIDAngleController angleController;
     private PIDAngleController driveStraightAngleController;
     private AHRS gyro;
-    private boolean pidEnabled = true;
+
+    private PIDMotorClusterController rc;
+    private PIDMotorClusterController lc;
 
     private OISubsystem oi;
 
@@ -53,42 +45,62 @@ public class TankDriveSubsystem extends DriveSubsystem {
             System.err.println(
                     "TankDrive has a map of class " + map.getClass().getSimpleName() + " and not TankDriveMap");
         }
-
         TankDriveMap tankMap = (TankDriveMap) map;
-        // initialize motor clusters and add slaves
-        VictorSP motor;
-        // left pid
-        leftCluster = new MotorCluster(tankMap.leftCluster.cluster.motors.length);
-        for (int i = 0; i < tankMap.leftCluster.cluster.motors.length; i++) {
-            motor = new VictorSP(tankMap.leftCluster.cluster.motors[i].PORT);
-            motor.setInverted(tankMap.leftCluster.cluster.motors[i].INVERTED);
-            leftCluster.addSlave(motor);
-        }
-        leftCluster.setInverted(tankMap.leftCluster.cluster.INVERTED);
-        leftEnc = new Encoder(tankMap.leftCluster.encoder.a, tankMap.leftCluster.encoder.b);
-        leftEnc.setDistancePerPulse(tankMap.leftCluster.encoder.dpp);
 
+        rc = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
+                0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
+            @Override
+            public int getNumMotors() {
+                return tankMap.rightCluster.cluster.motors.length;
+            }
 
-        // right pid
-        rightCluster = new MotorCluster(tankMap.rightCluster.cluster.motors.length);
-        for (int i = 0; i < tankMap.rightCluster.cluster.motors.length; i++) {
-            motor = new VictorSP(tankMap.rightCluster.cluster.motors[i].PORT);
-            motor.setInverted(tankMap.rightCluster.cluster.motors[i].INVERTED);
-            rightCluster.addSlave(motor);
-        }
-        rightCluster.setInverted(tankMap.rightCluster.cluster.INVERTED);
-        rightEnc = new Encoder(tankMap.rightCluster.encoder.a, tankMap.rightCluster.encoder.b);
-        rightEnc.setDistancePerPulse(tankMap.rightCluster.encoder.dpp);
+            @Override
+            public void populateMotorCluster() {
+                VictorSP motor; // declare before loop to save garbage collection time
+                for (int i = 0; i < tankMap.rightCluster.cluster.motors.length; i++) {
+                    motor = new VictorSP(tankMap.rightCluster.cluster.motors[i].PORT);
+                    motor.setInverted(tankMap.rightCluster.cluster.motors[i].INVERTED);
+                    addMotorClusterSlave(motor);
+                }
+            }
 
-        rightVC = new PIDMotorController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
-                0, 0.05, 130.0, false, false, rightCluster, rightEnc, PIDSourceType.kRate);
-        leftVC = new PIDMotorController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
-                0, 0.05, 130.0, false, false, leftCluster, leftEnc, PIDSourceType.kRate);
+            @Override
+            public PIDSource constructPIDSourceDevice() {
+                Encoder enc = new Encoder(tankMap.rightCluster.encoder.a, tankMap.rightCluster.encoder.b);
+                enc.setDistancePerPulse(tankMap.rightCluster.encoder.dpp);
+                return enc;
+            }
+        };
+
+        lc = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
+                0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
+            @Override
+            public int getNumMotors() {
+                return tankMap.leftCluster.cluster.motors.length;
+            }
+
+            @Override
+            public void populateMotorCluster() {
+                VictorSP motor; // declare before loop to save garbage collection time
+                for (int i = 0; i < tankMap.leftCluster.cluster.motors.length; i++) {
+                    motor = new VictorSP(tankMap.leftCluster.cluster.motors[i].PORT);
+                    motor.setInverted(tankMap.leftCluster.cluster.motors[i].INVERTED);
+                    addMotorClusterSlave(motor);
+                }
+            }
+
+            @Override
+            public PIDSource constructPIDSourceDevice() {
+                Encoder enc = new Encoder(tankMap.leftCluster.encoder.a, tankMap.leftCluster.encoder.b);
+                enc.setDistancePerPulse(tankMap.leftCluster.encoder.dpp);
+                return enc;
+            }
+        };
 
         gyro = new AHRS(SPI.Port.kMXP);
 
         angleController = new PIDAngleController(tankMap.anglePID.p, tankMap.anglePID.i, tankMap.anglePID.d,
-                leftCluster, rightCluster, gyro);
+                lc, rc, gyro);
         angleController.setAbsoluteTolerance(tankMap.anglePID.absoluteTolerance);
         angleController.setMinimumOutput(tankMap.anglePID.minimumOutput);
         angleController.setMinimumOutputEnabled(tankMap.anglePID.minimumOutputEnabled);
@@ -112,8 +124,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
     public void disableAngleController() {
         angleController.disable();
-        this.leftVC.set(0);
-        this.rightVC.set(0);
+        this.lc.set(0);
+        this.rc.set(0);
     }
 
     public void enableAngleController() {
@@ -144,20 +156,21 @@ public class TankDriveSubsystem extends DriveSubsystem {
      * @param right the normalized speed between -1 and 1 for the right cluster
      */
     public void setThrottle(double left, double right) {
-        SmartDashboard.putNumber("right js", rightCluster.getPIDOutput());
-        SmartDashboard.putNumber("left js", leftCluster.getPIDOutput());
-        SmartDashboard.putNumber("right enc", rightEnc.getRate());
-        SmartDashboard.putNumber("left enc", leftEnc.getRate());
-        SmartDashboard.putNumber("right corr", rightVelCorrector.get());
-        SmartDashboard.putNumber("left corr", leftVelCorrector.get());
+        SmartDashboard.putNumber("left throttle", left);
+        SmartDashboard.putNumber("right throttle", right);
+        SmartDashboard.putNumber("right setpoint", rc.getAbsoluteSetpoint());
+        SmartDashboard.putNumber("left setpoint", lc.getAbsoluteSetpoint());
+        SmartDashboard.putNumber("right enc", lc.getMotorCLusterPIDOutput());
+        SmartDashboard.putNumber("left enc", lc.getMotorCLusterPIDOutput());
+        SmartDashboard.putNumber("right correction", rightVelCorrector.get());
+        SmartDashboard.putNumber("left correction", leftVelCorrector.get());
+        SmartDashboard.putNumber("getangle", gyro.pidGet());
+
         left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
         right += rightVelCorrector.get() * ((TankDriveMap) map).rightCluster.speed;
 
-        this.leftVC.setRelativeSetpoint(left);
-        this.rightVC.setRelativeSetpoint(right);
-
-        SmartDashboard.putNumber("getangle", gyro.pidGet());
-        SmartDashboard.putNumber("modded angle", gyro.pidGet());
+        lc.setRelativeSetpoint(left);
+        rc.setRelativeSetpoint(right);
 
         try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
             StringBuilder sb = new StringBuilder();
@@ -167,15 +180,14 @@ public class TankDriveSubsystem extends DriveSubsystem {
             sb.append(",");
             sb.append(right * ((TankDriveMap) map).rightCluster.inputRange); // 3
             sb.append(",");
-            sb.append(leftCluster.getPIDOutput() * ((TankDriveMap) map).leftCluster.inputRange); // 4
+            sb.append(lc.getMotorCLusterPIDOutput() * ((TankDriveMap) map).leftCluster.inputRange); // 4
             sb.append(",");
-            sb.append(rightCluster.getPIDOutput() * ((TankDriveMap) map).rightCluster.inputRange); // 5
+            sb.append(rc.getMotorCLusterPIDOutput() * ((TankDriveMap) map).rightCluster.inputRange); // 5
             sb.append(",");
-            sb.append(leftEnc.getRate()); // 6
+            sb.append(lc.getSourceMeasuredValue()); // 6
             sb.append(",");
-            sb.append(rightEnc.getRate()); // 7
+            sb.append(rc.getSourceMeasuredValue()); // 7
             sb.append("\n");
-
             fw.write(sb.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -208,16 +220,16 @@ public class TankDriveSubsystem extends DriveSubsystem {
     }
 
     public void encoderReset() {
-        this.leftEnc.reset();
-        this.rightEnc.reset();
+        ((Encoder) lc.pidSourceDevice).reset();
+        ((Encoder) rc.pidSourceDevice).reset();
     }
 
     public double getDistance() {
-        return Math.abs(leftEnc.getDistance());
+        return Math.abs(((Encoder) lc.pidSourceDevice).getDistance());
     }
 
     public void subsystemReset() {
-        rightVC.reset();
-        leftVC.reset();
+        lc.reset();
+        rc.reset();
     }
 }
