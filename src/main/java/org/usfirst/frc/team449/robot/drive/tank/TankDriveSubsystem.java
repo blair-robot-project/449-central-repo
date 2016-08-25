@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.tank.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.tank.components.PIDAngleController;
-import org.usfirst.frc.team449.robot.drive.tank.components.PIDMotorClusterController;
+import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 import java.io.FileWriter;
@@ -49,10 +49,15 @@ public class TankDriveSubsystem extends DriveSubsystem {
         TankDriveMap tankMap = (TankDriveMap) map;
 
         rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
-                0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
+                0, 0.05, 130.0, true, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
                 return tankMap.rightCluster.cluster.motors.length;
+            }
+
+            @Override
+            public boolean getOutputDeviceInverted() {
+                return true;
             }
 
             @Override
@@ -60,7 +65,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
                 VictorSP motor; // declare before loop to save garbage collection time
                 for (int i = 0; i < tankMap.rightCluster.cluster.motors.length; i++) {
                     motor = new VictorSP(tankMap.rightCluster.cluster.motors[i].PORT);
-                    motor.setInverted(tankMap.rightCluster.cluster.motors[i].INVERTED);
+                    motor.setInverted(false);   // motors should not be inverted, motor cluster should be
                     addMotorClusterSlave(motor);
                 }
             }
@@ -81,11 +86,16 @@ public class TankDriveSubsystem extends DriveSubsystem {
             }
 
             @Override
+            public boolean getOutputDeviceInverted() {
+                return true;
+            }
+
+            @Override
             public void populateMotorCluster() {
                 VictorSP motor; // declare before loop to save garbage collection time
                 for (int i = 0; i < tankMap.leftCluster.cluster.motors.length; i++) {
                     motor = new VictorSP(tankMap.leftCluster.cluster.motors[i].PORT);
-                    motor.setInverted(tankMap.leftCluster.cluster.motors[i].INVERTED);
+                    motor.setInverted(false);   // motors should not be inverted, motor cluster should be
                     addMotorClusterSlave(motor);
                 }
             }
@@ -159,16 +169,18 @@ public class TankDriveSubsystem extends DriveSubsystem {
     public void setThrottle(double left, double right) {
         SmartDashboard.putNumber("left throttle", left);
         SmartDashboard.putNumber("right throttle", right);
+                SmartDashboard.putNumber("left setpoint", leftClusterController.getAbsoluteSetpoint());
         SmartDashboard.putNumber("right setpoint", rightClusterController.getAbsoluteSetpoint());
-        SmartDashboard.putNumber("left setpoint", leftClusterController.getAbsoluteSetpoint());
-        SmartDashboard.putNumber("right enc", leftClusterController.getPIDOutput());
+        SmartDashboard.putNumber("left error", leftClusterController.getPIDError());
+        SmartDashboard.putNumber("right error", rightClusterController.getPIDError());
         SmartDashboard.putNumber("left enc", leftClusterController.getPIDOutput());
-        SmartDashboard.putNumber("right correction", rightVelCorrector.get());
+        SmartDashboard.putNumber("right enc", leftClusterController.getPIDOutput());
         SmartDashboard.putNumber("left correction", leftVelCorrector.get());
+        SmartDashboard.putNumber("right correction", rightVelCorrector.get());
         SmartDashboard.putNumber("getangle", gyro.pidGet());
 
-        left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
-        right += rightVelCorrector.get() * ((TankDriveMap) map).rightCluster.speed;
+//        left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
+//        right += rightVelCorrector.get() * ((TankDriveMap) map).rightCluster.speed;
 
         leftClusterController.setRelativeSetpoint(left);
         rightClusterController.setRelativeSetpoint(right);

@@ -1,9 +1,8 @@
-package org.usfirst.frc.team449.robot.drive.tank.components;
+package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
-import org.usfirst.frc.team449.robot.components.PIDSpeedController;
 
 public abstract class PIDMotorClusterController extends PIDSpeedController {
     /**
@@ -38,6 +37,7 @@ public abstract class PIDMotorClusterController extends PIDSpeedController {
     public PIDOutput constructPIDOutputDevice() {
         motorCluster = new MotorCluster(getNumMotors());
         populateMotorCluster();
+        System.out.println(motorCluster);
         return motorCluster;
     }
 

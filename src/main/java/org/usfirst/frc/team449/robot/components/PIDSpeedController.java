@@ -71,6 +71,7 @@ public abstract class PIDSpeedController implements SpeedController {
 
         // Set up PID output device
         pidOutputDevice = constructPIDOutputDevice();
+        ((SpeedController) pidOutputDevice).setInverted(getOutputDeviceInverted());
         ((SpeedController) pidOutputDevice).disable();
 
         // Set up PID controller
@@ -97,6 +98,12 @@ public abstract class PIDSpeedController implements SpeedController {
     public abstract PIDOutput constructPIDOutputDevice();
 
     /**
+     * Abstract method overrided in annonymous inner class to tell the PID output device whether or not it is inverted
+     * @return whether {@link #pidOutputDevice} is inverted
+     */
+    public abstract boolean getOutputDeviceInverted();
+
+    /**
      * Abstract method for getting the value being written to {@link #pidOutputDevice}.
      *
      * @return value written to {@link #pidOutputDevice}
@@ -117,25 +124,29 @@ public abstract class PIDSpeedController implements SpeedController {
      *
      * @return PID {@link #pidSourceDevice}'s pidOutputDevice
      */
-    public double returnPIDInput() {
+    public double getPIDInput() {
         return pidSourceDevice.pidGet();
     }
 
     /**
-     * Sets the absolute PID setpoint. This method expects a setpoint in the same units as {@link #returnPIDInput()}. If
-     * the given absolute setpoint exceeds the input range ({@link #maxAbsoluteSetpoint}), it will be clamped to
-     * {@link #maxAbsoluteSetpoint}.
+     * Method that gets the PID error term
+     *
+     * @return PID error term
+     */
+    public double getPIDError() {
+        return pidController.getError();
+    }
+
+    /**
+     * Sets the absolute PID setpoint. This method expects a setpoint in the same units as {@link #getPIDInput()}.
      *
      * @param setpoint absolute setpoint (within input range)
      */
     public void setAbsoluteSetpoint(double setpoint) {
-        // Clamp to within input range
-        setpoint = setpoint > maxAbsoluteSetpoint ? maxAbsoluteSetpoint : setpoint;
-        setpoint = setpoint < -maxAbsoluteSetpoint ? -maxAbsoluteSetpoint : setpoint;
-
         // Set setpoint, inverting motor if necessary
         if (inverted) {
             pidController.setSetpoint(-setpoint);
+            System.out.println("INVERTED");
         } else {
             pidController.setSetpoint(setpoint);
         }
@@ -144,19 +155,15 @@ public abstract class PIDSpeedController implements SpeedController {
     /**
      * Sets the relative PID setpoint. This method expects a percentage of the input range
      * ({@link #maxAbsoluteSetpoint}) between -1.0 and 1.0. The absolute setpoint given to {@link #pidController} is
-     * calculated as {relative setpoint * {@link #maxAbsoluteSetpoint}}. If a larger magnitude number is passed to this
-     * method, it will be clamped to -1.0 to 1.0.
+     * calculated as {relative setpoint * {@link #maxAbsoluteSetpoint}}.
      *
      * @param setpoint relative setpoint (between -1.0 and 1.0)
      */
     public void setRelativeSetpoint(double setpoint) {
-        // Clamp to -1 to 1
-        setpoint = setpoint > 1.0 ? 1.0 : setpoint;
-        setpoint = setpoint < -1.0 ? -1.0 : setpoint;
-
         // Set setpoint, inverting motor if necessary
         if (inverted) {
             pidController.setSetpoint(setpoint * -maxAbsoluteSetpoint);
+            System.out.println("INVERTED");
         } else {
             pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
         }
@@ -280,19 +287,22 @@ public abstract class PIDSpeedController implements SpeedController {
     }
 
     /**
-     * {@link SpeedController} method for setting whether the motor is inverted
+     * {@link SpeedController} method for setting whether the controller is inverted
      *
      * @param isInverted whether the motor is inverted ({@link #inverted}
+     * @see #getOutputDeviceInverted()
      */
+    @Override
     public void setInverted(boolean isInverted) {
         inverted = isInverted;
     }
 
     /**
-     * {@link SpeedController} method for getting whether the motor is inverted
+     * {@link SpeedController} method for getting whether the controller is inverted
      *
      * @return whether the motor is inverted ({@link #inverted}
      */
+    @Override
     public boolean getInverted() {
         return inverted;
     }

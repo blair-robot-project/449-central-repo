@@ -1,8 +1,7 @@
-package org.usfirst.frc.team449.robot.drive.tank.components;
+package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.components.Component;
 
 /**
  * A cluster of motors, or SpeedControllers, used for tank drive generally.
@@ -58,9 +57,11 @@ public class MotorCluster extends Component implements SpeedController {
     public void pidWrite(double output) {
         for (int i = 0; i < controllerList.length; i++) {
             controllerList[i].pidWrite(output);
+            SmartDashboard.putBoolean("Motor Inverted", controllerList[i].getInverted());
         }
         lastSet = output;
         SmartDashboard.putNumber("MotorCluster Write: ", lastSet);
+        SmartDashboard.putBoolean("MotorCluster Inverted", inverted);
     }
 
     /**
@@ -96,9 +97,11 @@ public class MotorCluster extends Component implements SpeedController {
     public void set(double velocity) {
         for (int i = 0; i < controllerList.length; i++) {
             controllerList[i].set(velocity);
+            SmartDashboard.putBoolean("Motor Inverted", controllerList[i].getInverted());
         }
         lastSet = velocity;
         SmartDashboard.putNumber("MotorCluster Set: ", lastSet);
+        SmartDashboard.putBoolean("MotorCluster Inverted", inverted);
     }
 
     /**
