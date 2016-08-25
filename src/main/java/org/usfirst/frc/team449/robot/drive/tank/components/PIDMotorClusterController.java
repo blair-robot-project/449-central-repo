@@ -3,9 +3,9 @@ package org.usfirst.frc.team449.robot.drive.tank.components;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
-import org.usfirst.frc.team449.robot.components.PIDMotorController;
+import org.usfirst.frc.team449.robot.components.PIDSpeedController;
 
-public abstract class PIDMotorClusterController extends PIDMotorController {
+public abstract class PIDMotorClusterController extends PIDSpeedController {
     /**
      * Motor cluster to write to
      */

@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Class for PID controlled <code>SpeedController</code>s (motors).
  * <p>
- * <code>PIDMotorController</code> objects contain a <code>PIDController</code> object that handles PID
+ * <code>PIDSpeedController</code> objects contain a <code>PIDController</code> object that handles PID
  * calculations. The <code>PIDController</code> object runs in its own thread in the scheduler, independent of other
  * commands.
  * </p>
  * <p>
- * <code>PIDMotorController</code>s can be used with both absolute and relative setpoints.
+ * <code>PIDSpeedController</code>s can be used with both absolute and relative setpoints.
  * </p>
  */
-public abstract class PIDMotorController implements SpeedController {
+public abstract class PIDSpeedController implements SpeedController {
     /**
      * <code>PIDController</code> that calculates pidWrite values
      */
@@ -46,7 +46,7 @@ public abstract class PIDMotorController implements SpeedController {
     private boolean useAbsolute;
 
     /**
-     * Instantiate a new <code>PIDMotorController</code>
+     * Instantiate a new <code>PIDSpeedController</code>
      *
      * @param p                   {@link #pidController}'s proportional term
      * @param i                   {@link #pidController}'s integral term
@@ -58,7 +58,7 @@ public abstract class PIDMotorController implements SpeedController {
      * @param useAbsolute         whether {@link #set(double)} should use interpret its input as absolute (instead of
      *                            relative)
      */
-    public PIDMotorController(double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
+    public PIDSpeedController(double p, double i, double d, double f, double period, double maxAbsoluteSetpoint,
                               boolean inverted, boolean useAbsolute, PIDSourceType pidSourceType) {
         // Constants
         this.maxAbsoluteSetpoint = maxAbsoluteSetpoint;
