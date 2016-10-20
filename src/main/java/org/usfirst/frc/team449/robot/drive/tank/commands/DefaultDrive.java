@@ -22,6 +22,7 @@ public class DefaultDrive extends ReferencingCommand {
 	@Override
 	protected void initialize() {
 		((TankDriveSubsystem) subsystem).encoderReset();
+		((TankDriveSubsystem) subsystem).setThrottle(0, 0);
 	}
 
 	@Override
@@ -29,6 +30,7 @@ public class DefaultDrive extends ReferencingCommand {
 		leftThrottle = oi.getDriveAxisLeft() * ((TankDriveMap) (subsystem.map)).leftCluster.speed;
 		rightThrottle = oi.getDriveAxisRight() * ((TankDriveMap) (subsystem.map)).rightCluster.speed;
 		// pushing forward on the stick gives -1 so it is negated
+		SmartDashboard.putNumber("Left Joystick", leftThrottle);
 		((TankDriveSubsystem) subsystem).setThrottle(leftThrottle, rightThrottle);
 		SmartDashboard.putNumber("Distance", ((TankDriveSubsystem) subsystem).getDistance());
 	}

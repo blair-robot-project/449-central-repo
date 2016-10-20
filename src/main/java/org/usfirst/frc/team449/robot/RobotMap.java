@@ -252,6 +252,10 @@ public abstract class RobotMap {
 		 */
 		public double d;
 		/**
+		 * the f value for the pid controller
+		 */
+		public double f;
+		/**
 		 * the percent error around the setpoint that is "close enough" and
 		 * requires no more tuning (20 for 20%)
 		 */
@@ -286,6 +290,11 @@ public abstract class RobotMap {
 		 * to be a percentage of the inputRange (kI = i / inputRange)
 		 */
 		public int inputRange;
+
+		/**
+		 * Period of the PID control loop
+		 */
+		public double controllerPeriod;
 
 		public double rampRate;
 		public boolean rampRateEnabled;

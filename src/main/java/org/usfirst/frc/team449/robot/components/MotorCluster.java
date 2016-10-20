@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class MotorCluster extends Component implements SpeedController {
     private final SpeedController[] controllerList;
+    private double outputRange;
     private boolean inverted;
     private double lastSet = 0;
 
@@ -17,9 +18,10 @@ public class MotorCluster extends Component implements SpeedController {
      *
      * @param total the number of SpeedControllers to hold in this glorified array
      */
-    public MotorCluster(int total) {
+    public MotorCluster(int total, double outputRange) {
         controllerList = new SpeedController[total];
         lastSet = 0;
+        this.outputRange = outputRange;
     }
 
     /**
@@ -27,9 +29,10 @@ public class MotorCluster extends Component implements SpeedController {
      *
      * @param controllers the SpeedControllers to control
      */
-    public MotorCluster(SpeedController[] controllers) {
+    public MotorCluster(SpeedController[] controllers, double outputRange) {
         controllerList = controllers;
         lastSet = 0;
+        this.outputRange = outputRange;
     }
 
     /**
@@ -52,16 +55,14 @@ public class MotorCluster extends Component implements SpeedController {
      *
      * @param output value to write to the motors
      */
-    // TODO: figure out why this needs to be here; this doesn't implement PIDOutput, why does it need a PIDOutput method?
     @Override
     public void pidWrite(double output) {
+        output /= outputRange;
         for (int i = 0; i < controllerList.length; i++) {
-            controllerList[i].pidWrite(output);
-            SmartDashboard.putBoolean("Motor Inverted", controllerList[i].getInverted());
+            SmartDashboard.putNumber("MotorController PID Write Velocity", output);
+            controllerList[i].set(output);
         }
         lastSet = output;
-        SmartDashboard.putNumber("MotorCluster Write: ", lastSet);
-        SmartDashboard.putBoolean("MotorCluster Inverted", inverted);
     }
 
     /**
@@ -81,7 +82,6 @@ public class MotorCluster extends Component implements SpeedController {
      * @param syncGroup update group (not used)
      * @deprecated use {@link #set(double)} instead
      */
-    @Override
     @Deprecated
     public void set(double velocity, byte syncGroup) {
         System.out.println("Warning, you are using a deprecated method void set(double, double). You will use method " +
@@ -95,13 +95,15 @@ public class MotorCluster extends Component implements SpeedController {
      */
     @Override
     public void set(double velocity) {
-        for (int i = 0; i < controllerList.length; i++) {
-            controllerList[i].set(velocity);
-            SmartDashboard.putBoolean("Motor Inverted", controllerList[i].getInverted());
-        }
-        lastSet = velocity;
-        SmartDashboard.putNumber("MotorCluster Set: ", lastSet);
-        SmartDashboard.putBoolean("MotorCluster Inverted", inverted);
+//        velocity /= outputRange;
+//        for (int i = 0; i < controllerList.length; i++) {
+//            SmartDashboard.putNumber("MotorController Set Velocity", velocity * 130);
+//            controllerList[i].set(velocity);
+//            SmartDashboard.putBoolean("Motor Inverted", controllerList[i].getInverted());
+//        }
+////        lastSet = velocity;
+//        SmartDashboard.putNumber("MotorCluster Set: ", lastSet);
+//        SmartDashboard.putBoolean("MotorCluster Inverted", inverted);
     }
 
     /**

@@ -45,6 +45,8 @@ public abstract class PIDSpeedController implements SpeedController {
      */
     private boolean useAbsolute;
 
+    private boolean pidEnabled = true;
+
     /**
      * Instantiate a new <code>PIDSpeedController</code>
      *
@@ -70,17 +72,19 @@ public abstract class PIDSpeedController implements SpeedController {
         pidSourceDevice.setPIDSourceType(pidSourceType);
 
         // Set up PID output device
-        pidOutputDevice = constructPIDOutputDevice();
+        pidOutputDevice = constructPIDOutputDevice(maxAbsoluteSetpoint);
         ((SpeedController) pidOutputDevice).setInverted(getOutputDeviceInverted());
         ((SpeedController) pidOutputDevice).disable();
 
-        // Set up PID controller
-        pidController = new PIDController(p / maxAbsoluteSetpoint, i / maxAbsoluteSetpoint, d / maxAbsoluteSetpoint,
-                f / maxAbsoluteSetpoint, this.pidSourceDevice, this.pidOutputDevice, period);
-        pidController.setOutputRange(-maxAbsoluteSetpoint, maxAbsoluteSetpoint);
-        pidController.disable();
-        pidController.enable();
-        pidController.setSetpoint(0);
+        if (pidEnabled) {
+            // Set up PID controller
+            pidController = new PIDController(p, i, d, f ,this.pidSourceDevice, this.pidOutputDevice, period);
+            pidController.setOutputRange(-maxAbsoluteSetpoint, maxAbsoluteSetpoint);
+            pidController.setInputRange(-maxAbsoluteSetpoint, maxAbsoluteSetpoint);
+            pidController.disable();
+            pidController.enable();
+            pidController.setSetpoint(0);
+        }
     }
 
     /**
@@ -95,10 +99,11 @@ public abstract class PIDSpeedController implements SpeedController {
      *
      * @return constructed {@link PIDOutput} device
      */
-    public abstract PIDOutput constructPIDOutputDevice();
+    public abstract PIDOutput constructPIDOutputDevice(double maxAbsoluteSetpoint);
 
     /**
      * Abstract method overrided in annonymous inner class to tell the PID output device whether or not it is inverted
+     *
      * @return whether {@link #pidOutputDevice} is inverted
      */
     public abstract boolean getOutputDeviceInverted();
@@ -109,6 +114,10 @@ public abstract class PIDSpeedController implements SpeedController {
      * @return value written to {@link #pidOutputDevice}
      */
     public abstract double getPIDOutput();
+
+    public void noPIDWrite(double velocity) {
+        pidOutputDevice.pidWrite(velocity);
+    }
 
     /**
      * Method that writes to {@link #pidOutputDevice}.
@@ -146,7 +155,6 @@ public abstract class PIDSpeedController implements SpeedController {
         // Set setpoint, inverting motor if necessary
         if (inverted) {
             pidController.setSetpoint(-setpoint);
-            System.out.println("INVERTED");
         } else {
             pidController.setSetpoint(setpoint);
         }
@@ -161,9 +169,9 @@ public abstract class PIDSpeedController implements SpeedController {
      */
     public void setRelativeSetpoint(double setpoint) {
         // Set setpoint, inverting motor if necessary
+        SmartDashboard.putNumber("Relative scaled to absolute setpoint: ", setpoint * maxAbsoluteSetpoint);
         if (inverted) {
             pidController.setSetpoint(setpoint * -maxAbsoluteSetpoint);
-            System.out.println("INVERTED");
         } else {
             pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
         }
@@ -238,7 +246,7 @@ public abstract class PIDSpeedController implements SpeedController {
     }
 
     /**
-     * Turn the motor controller off
+     * Reset the controller
      */
     public void reset() {
         setAbsoluteSetpoint(0);
@@ -266,7 +274,6 @@ public abstract class PIDSpeedController implements SpeedController {
      * @param syncGroup update group (not used)
      * @deprecated use {@link #set(double)} instead
      */
-    @Override
     @Deprecated
     public void set(double velocity, byte syncGroup) {
         System.out.println("Warning, you are using a deprecated method void set(double, double). You will use method " +

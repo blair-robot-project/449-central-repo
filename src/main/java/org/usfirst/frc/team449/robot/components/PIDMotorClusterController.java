@@ -34,10 +34,9 @@ public abstract class PIDMotorClusterController extends PIDSpeedController {
      * @return the {@link MotorCluster} to use as {@link #pidOutputDevice}
      */
     @Override
-    public PIDOutput constructPIDOutputDevice() {
-        motorCluster = new MotorCluster(getNumMotors());
+    public PIDOutput constructPIDOutputDevice(double maxAbsoluteSetpoint) {
+        motorCluster = new MotorCluster(getNumMotors(), maxAbsoluteSetpoint);
         populateMotorCluster();
-        System.out.println(motorCluster);
         return motorCluster;
     }
 

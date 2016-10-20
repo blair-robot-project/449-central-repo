@@ -48,8 +48,9 @@ public class TankDriveSubsystem extends DriveSubsystem {
         }
         TankDriveMap tankMap = (TankDriveMap) map;
 
-        rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
-                0, 0.05, 130.0, tankMap.rightCluster.inverted, false, PIDSourceType.kRate) {
+        rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i,
+                tankMap.rightCluster.d, tankMap.rightCluster.f, tankMap.rightCluster.controllerPeriod,
+                tankMap.rightCluster.inputRange, tankMap.rightCluster.inverted, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
                 return tankMap.rightCluster.cluster.motors.length;
@@ -78,8 +79,9 @@ public class TankDriveSubsystem extends DriveSubsystem {
             }
         };
 
-        leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
-                0, 0.05, 130.0, tankMap.leftCluster.inverted, false, PIDSourceType.kRate) {
+        leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i,
+                tankMap.leftCluster.d, tankMap.leftCluster.f, tankMap.leftCluster.controllerPeriod,
+                tankMap.leftCluster.inputRange, tankMap.leftCluster.inverted, false, PIDSourceType.kRate) {
             @Override
             public int getNumMotors() {
                 return tankMap.leftCluster.cluster.motors.length;
@@ -126,6 +128,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
         SmartDashboard.putData("pid drive straight", driveStraightAngleController);
 
         startTime = new Date().getTime();
+
+        setThrottle(0, 0);
         System.out.println("TankDrive init finished");
     }
 
@@ -169,14 +173,15 @@ public class TankDriveSubsystem extends DriveSubsystem {
     public void setThrottle(double left, double right) {
         SmartDashboard.putNumber("left throttle", left);
         SmartDashboard.putNumber("right throttle", right);
-                SmartDashboard.putNumber("left setpoint", leftClusterController.getAbsoluteSetpoint());
+        SmartDashboard.putNumber("left setpoint", leftClusterController.getAbsoluteSetpoint());
         SmartDashboard.putNumber("right setpoint", rightClusterController.getAbsoluteSetpoint());
-        SmartDashboard.putNumber("left error", leftClusterController.getPIDError());
+        SmartDashboard.putNumber("left error",
+ leftClusterController.getPIDError());
         SmartDashboard.putNumber("right error", rightClusterController.getPIDError());
         SmartDashboard.putNumber("left enc", leftClusterController.getPIDOutput());
         SmartDashboard.putNumber("right enc", leftClusterController.getPIDOutput());
-        SmartDashboard.putNumber("left correction", leftVelCorrector.get());
-        SmartDashboard.putNumber("right correction", rightVelCorrector.get());
+//        SmartDashboard.putNumber("left correction", leftVelCorrector.get());
+//        SmartDashboard.putNumber("right correction", rightVelCorrector.get());
         SmartDashboard.putNumber("getangle", gyro.pidGet());
 
 //        left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
@@ -184,18 +189,20 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
         leftClusterController.setRelativeSetpoint(left);
         rightClusterController.setRelativeSetpoint(right);
+//        leftClusterController.noPIDWrite(left);
+//        rightClusterController.noPIDWrite(right);
 
         try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
             StringBuilder sb = new StringBuilder();
             sb.append(new Date().getTime() - startTime);    // 1
             sb.append(",");
-            sb.append(left * ((TankDriveMap) map).leftCluster.inputRange);  // 2
+            sb.append(left);  // 2
             sb.append(",");
-            sb.append(right * ((TankDriveMap) map).rightCluster.inputRange); // 3
+            sb.append(right); // 3
             sb.append(",");
-            sb.append(leftClusterController.getPIDOutput() * ((TankDriveMap) map).leftCluster.inputRange); // 4
+            sb.append(leftClusterController.getPIDOutput()); // 4
             sb.append(",");
-            sb.append(rightClusterController.getPIDOutput() * ((TankDriveMap) map).rightCluster.inputRange); // 5
+            sb.append(rightClusterController.getPIDOutput()); // 5
             sb.append(",");
             sb.append(leftClusterController.getSourceMeasuredValue()); // 6
             sb.append(",");
@@ -244,5 +251,6 @@ public class TankDriveSubsystem extends DriveSubsystem {
     public void subsystemReset() {
         leftClusterController.reset();
         rightClusterController.reset();
+        setThrottle(0, 0);
     }
 }
