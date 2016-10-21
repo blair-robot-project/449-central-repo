@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.RobotMap;
+import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.tank.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.tank.components.PIDAngleController;
-import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 import java.io.FileWriter;
@@ -48,14 +48,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
         }
         TankDriveMap tankMap = (TankDriveMap) map;
 
-<<<<<<< HEAD
-        rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i,
-                tankMap.rightCluster.d, tankMap.rightCluster.f, tankMap.rightCluster.controllerPeriod,
-                tankMap.rightCluster.inputRange, tankMap.rightCluster.inverted, false, PIDSourceType.kRate) {
-=======
         rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
                 0, 0.05, 130.0, true, false, PIDSourceType.kRate) {
->>>>>>> parent of 893cf06... Set inverted fields from the JSON
             @Override
             public int getNumMotors() {
                 return tankMap.rightCluster.cluster.motors.length;
@@ -84,14 +78,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
             }
         };
 
-<<<<<<< HEAD
-        leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i,
-                tankMap.leftCluster.d, tankMap.leftCluster.f, tankMap.leftCluster.controllerPeriod,
-                tankMap.leftCluster.inputRange, tankMap.leftCluster.inverted, false, PIDSourceType.kRate) {
-=======
         leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
                 0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
->>>>>>> parent of 893cf06... Set inverted fields from the JSON
             @Override
             public int getNumMotors() {
                 return tankMap.leftCluster.cluster.motors.length;
