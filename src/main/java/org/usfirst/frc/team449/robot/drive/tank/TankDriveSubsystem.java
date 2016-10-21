@@ -48,9 +48,14 @@ public class TankDriveSubsystem extends DriveSubsystem {
         }
         TankDriveMap tankMap = (TankDriveMap) map;
 
+<<<<<<< HEAD
         rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i,
                 tankMap.rightCluster.d, tankMap.rightCluster.f, tankMap.rightCluster.controllerPeriod,
                 tankMap.rightCluster.inputRange, tankMap.rightCluster.inverted, false, PIDSourceType.kRate) {
+=======
+        rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap.rightCluster.d,
+                0, 0.05, 130.0, true, false, PIDSourceType.kRate) {
+>>>>>>> parent of 893cf06... Set inverted fields from the JSON
             @Override
             public int getNumMotors() {
                 return tankMap.rightCluster.cluster.motors.length;
@@ -58,7 +63,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
             @Override
             public boolean getOutputDeviceInverted() {
-                return tankMap.rightCluster.cluster.INVERTED;
+                return true;
             }
 
             @Override
@@ -66,7 +71,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
                 VictorSP motor; // declare before loop to save garbage collection time
                 for (int i = 0; i < tankMap.rightCluster.cluster.motors.length; i++) {
                     motor = new VictorSP(tankMap.rightCluster.cluster.motors[i].PORT);
-                    motor.setInverted(tankMap.rightCluster.cluster.motors[i].INVERTED);
+                    motor.setInverted(false);   // motors should not be inverted, motor cluster should be
                     addMotorClusterSlave(motor);
                 }
             }
@@ -79,9 +84,14 @@ public class TankDriveSubsystem extends DriveSubsystem {
             }
         };
 
+<<<<<<< HEAD
         leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i,
                 tankMap.leftCluster.d, tankMap.leftCluster.f, tankMap.leftCluster.controllerPeriod,
                 tankMap.leftCluster.inputRange, tankMap.leftCluster.inverted, false, PIDSourceType.kRate) {
+=======
+        leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap.leftCluster.d,
+                0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
+>>>>>>> parent of 893cf06... Set inverted fields from the JSON
             @Override
             public int getNumMotors() {
                 return tankMap.leftCluster.cluster.motors.length;
@@ -89,7 +99,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
             @Override
             public boolean getOutputDeviceInverted() {
-                return tankMap.leftCluster.cluster.INVERTED;
+                return true;
             }
 
             @Override
@@ -97,7 +107,7 @@ public class TankDriveSubsystem extends DriveSubsystem {
                 VictorSP motor; // declare before loop to save garbage collection time
                 for (int i = 0; i < tankMap.leftCluster.cluster.motors.length; i++) {
                     motor = new VictorSP(tankMap.leftCluster.cluster.motors[i].PORT);
-                    motor.setInverted(tankMap.leftCluster.cluster.motors[i].INVERTED);
+                    motor.setInverted(false);   // motors should not be inverted, motor cluster should be
                     addMotorClusterSlave(motor);
                 }
             }
