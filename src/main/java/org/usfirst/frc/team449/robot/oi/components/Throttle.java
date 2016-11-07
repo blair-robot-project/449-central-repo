@@ -19,7 +19,7 @@ public class Throttle {
 	 * @param axis The axis being used. 0 is X, 1 is Y, 2 is Z.
 	 */
     public Throttle (Joystick stick, int axis){
-        this(stick, port, false);
+        this(stick, axis, false);
     }
     
     /**
