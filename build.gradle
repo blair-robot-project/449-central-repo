@@ -1,13 +1,12 @@
 /**
  * Build file for the FRC Team 449 Central Repository based on Jaci's GradleRIO.
- *
- * @author Ryan Tse
  */
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
+// Disable javadoc generation
 allprojects {
     tasks.withType(Javadoc).all { enabled = false }
 }
@@ -15,22 +14,17 @@ allprojects {
 repositories {
     mavenCentral()
 
+    // WPILib's repo
     maven {
-        name = "WPI"
-        url = "http://first.wpi.edu/FRC/roborio/maven/release"
+        name = "WPILib"
+        url = "http://first.wpi.edu/FRC/roborio/maven/release/"
     }
 }
 
 dependencies {
-    // WPILib
-    compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:+:desktop'
-    compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:+:arm'
-    compile 'edu.wpi.first.wpilibj:wpilibJavaFinal:+'
-
-    // JSON parsing library
-    compile group: 'org.json', name: 'json', version: '20151123'
-
-    // Dependencies that do not have maven repos (navX)
+    compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
+    compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
     compile fileTree(dir: 'lib')
 }
 
