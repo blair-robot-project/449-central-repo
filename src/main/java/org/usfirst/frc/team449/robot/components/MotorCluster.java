@@ -58,9 +58,9 @@ public class MotorCluster extends Component implements SpeedController {
     @Override
     public void pidWrite(double output) {
         output /= outputRange;
-        for (int i = 0; i < controllerList.length; i++) {
+        for (SpeedController aControllerList : controllerList) {
             SmartDashboard.putNumber("MotorController PID Write Velocity", output);
-            controllerList[i].set(output);
+            aControllerList.set(output);
         }
         lastSet = output;
     }
@@ -120,8 +120,8 @@ public class MotorCluster extends Component implements SpeedController {
             return;
         }
         this.inverted = isInverted;
-        for (int i = 0; i < controllerList.length; i++) {
-            controllerList[i].setInverted(!controllerList[i].getInverted());
+        for (SpeedController aControllerList : controllerList) {
+            aControllerList.setInverted(!aControllerList.getInverted());
         }
     }
 
@@ -140,19 +140,19 @@ public class MotorCluster extends Component implements SpeedController {
      */
     @Override
     public void disable() {
-        for (int i = 0; i < controllerList.length; i++) {
-            controllerList[i].disable();
+        for (SpeedController aControllerList : controllerList) {
+            aControllerList.disable();
         }
     }
 
     /**
-     * {@link SpeedController} method for stoping motor movement. Motor can be moved again by calling set without having
+     * {@link SpeedController} method for stopping motor movement. Motor can be moved again by calling set without having
      * to re-enable the motor.
      */
     @Override
     public void stopMotor() {
-        for (int i = 0; i < controllerList.length; i++) {
-            controllerList[i].stopMotor();
+        for (SpeedController aControllerList : controllerList) {
+            aControllerList.stopMotor();
         }
     }
 }
