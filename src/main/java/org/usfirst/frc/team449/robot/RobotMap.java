@@ -487,6 +487,7 @@ public abstract class RobotMap {
 		public double fwdSoftLimVal;
 		public boolean revSoftLimEnabled;
 		public double revSoftLimVal;
+		public boolean brakeMode;
 
 		/**
 		 * This creates a Map based on the
