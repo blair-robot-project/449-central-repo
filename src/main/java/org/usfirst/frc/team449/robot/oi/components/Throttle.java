@@ -15,30 +15,33 @@ public class Throttle {
 
 	/**
 	 * A basic constructor. The stick is assumed to not be inverted.
+	 *
 	 * @param stick the Joystick object being used
-	 * @param axis The axis being used. 0 is X, 1 is Y, 2 is Z.
+	 * @param axis  The axis being used. 0 is X, 1 is Y, 2 is Z.
 	 */
-    public Throttle (Joystick stick, int axis){
-        this(stick, axis, false);
-    }
-    
-    /**
-     * A basic constructor.
-     * @param stick The Joystick object being used
-     * @param axis The axis being used. 0 is X, 1 is Y, 2 is Z.
-     * @param inverted Whether or not to invert the joystick input.
-     */
-    public Throttle (Joystick stick, int axis, boolean inverted){
-        this.stick = stick;
-        this.axis = axis;
-        this.inverted = inverted;
-    }
+	public Throttle(Joystick stick, int axis) {
+		this(stick, axis, false);
+	}
 
-    /**
-     * Gets the raw value from the stick and inverts it if necessary.
-     * @return The raw joystick output.
-     */
-    public double getValue(){
-        return (inverted ? -1:1) * stick.getRawAxis(axis);
-    }
+	/**
+	 * A basic constructor.
+	 *
+	 * @param stick    The Joystick object being used
+	 * @param axis     The axis being used. 0 is X, 1 is Y, 2 is Z.
+	 * @param inverted Whether or not to invert the joystick input.
+	 */
+	public Throttle(Joystick stick, int axis, boolean inverted) {
+		this.stick = stick;
+		this.axis = axis;
+		this.inverted = inverted;
+	}
+
+	/**
+	 * Gets the raw value from the stick and inverts it if necessary.
+	 *
+	 * @return The raw joystick output.
+	 */
+	public double getValue() {
+		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
+	}
 }

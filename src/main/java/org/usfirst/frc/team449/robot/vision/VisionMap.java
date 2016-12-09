@@ -5,7 +5,9 @@ import org.usfirst.frc.team449.robot.RobotMap;
 
 public class VisionMap extends RobotMap {
 
-	public VisionMap(JSONObject json) {super(json);}
+	public VisionMap(JSONObject json) {
+		super(json);
+	}
 
 	/**
 	 * Names of the cameras (from the roborio web interface)

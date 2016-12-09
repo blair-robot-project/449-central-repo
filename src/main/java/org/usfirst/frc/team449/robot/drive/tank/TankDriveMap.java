@@ -1,8 +1,8 @@
 package org.usfirst.frc.team449.robot.drive.tank;
 
 import org.json.JSONObject;
-import org.usfirst.frc.team449.robot.drive.DriveMap;
 import org.usfirst.frc.team449.robot.RobotMap;
+import org.usfirst.frc.team449.robot.drive.DriveMap;
 
 /**
  * a map of constants needed for any form of TankDrive or its subclasses, and

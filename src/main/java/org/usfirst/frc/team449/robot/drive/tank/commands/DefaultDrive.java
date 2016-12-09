@@ -1,10 +1,10 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveMap;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
+import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 public class DefaultDrive extends ReferencingCommand {
 	public OISubsystem oi;

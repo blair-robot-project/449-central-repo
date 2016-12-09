@@ -1,11 +1,9 @@
 package org.usfirst.frc.team449.robot.vision;
 
-import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.RobotMap;
-import org.usfirst.frc.team449.robot.vision.commands.DefaultVision;
 
 /**
  * This is the subsystem for accessing USB cameras on the robot. It extends
@@ -40,25 +38,26 @@ public class VisionSubsystem extends MappedSubsystem {
 		super(map);
 		System.out.println("Vision init started");
 		System.out.println("Vision subsystem skipped");
-//		try {
-//			sessions = new int[VisionMap.CAMERA_NAMES.length];
-//			sessionPtr = 0;
-//			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-//
-//			for (int i = 0; i < VisionMap.CAMERA_NAMES.length; i++) {
-//				sessions[i] = NIVision.IMAQdxOpenCamera(VisionMap.CAMERA_NAMES[i],
-//						NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-//			}
-//			// NIVision.IMAQdxEnumItem[] arr =
-//			// NIVision.IMAQdxEnumerateVideoModes(sessions[sessionPtr]).videoModeArray;
-//			// NIVision.IMAQdxSetAttributeEnum(sessions[sessionPtr],
-//			// "AcquisitionAttributes::VideoMode", arr[15]);
-//			NIVision.IMAQdxStartAcquisition(sessions[sessionPtr]);
-//			NIVision.IMAQdxConfigureGrab(sessions[sessionPtr]);
-//		} catch (Exception e) {
-//			System.out.println(
-//					"(VisionSubsystem constructor) Cameras done goofed, but everything else is (maybe) functional.");
-//		}
+		//		try {
+		//			sessions = new int[VisionMap.CAMERA_NAMES.length];
+		//			sessionPtr = 0;
+		//			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+		//
+		//			for (int i = 0; i < VisionMap.CAMERA_NAMES.length; i++) {
+		//				sessions[i] = NIVision.IMAQdxOpenCamera(VisionMap.CAMERA_NAMES[i],
+		//						NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+		//			}
+		//			// NIVision.IMAQdxEnumItem[] arr =
+		//			// NIVision.IMAQdxEnumerateVideoModes(sessions[sessionPtr]).videoModeArray;
+		//			// NIVision.IMAQdxSetAttributeEnum(sessions[sessionPtr],
+		//			// "AcquisitionAttributes::VideoMode", arr[15]);
+		//			NIVision.IMAQdxStartAcquisition(sessions[sessionPtr]);
+		//			NIVision.IMAQdxConfigureGrab(sessions[sessionPtr]);
+		//		} catch (Exception e) {
+		//			System.out.println(
+		//					"(VisionSubsystem constructor) Cameras done goofed, but everything else is (maybe)
+		// functional.");
+		//		}
 
 		System.out.println("Vision init finished");
 	}
@@ -68,18 +67,18 @@ public class VisionSubsystem extends MappedSubsystem {
 	 * session number.
 	 */
 	public Image getFrame() {
-//		NIVision.IMAQdxStartAcquisition(sessions[sessionPtr]);
-//		NIVision.IMAQdxGrab(sessions[sessionPtr], frame, 1);
-//		return frame;
+		//		NIVision.IMAQdxStartAcquisition(sessions[sessionPtr]);
+		//		NIVision.IMAQdxGrab(sessions[sessionPtr], frame, 1);
+		//		return frame;
 		return null;
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-//		try {
-//			setDefaultCommand(new DefaultVision(this));
-//		} catch (Exception e) {
-//			System.out.println("(initDefaultCommand) Cameras done goofed, but everything else is (maybe) functional.");
-//		}
+		//		try {
+		//			setDefaultCommand(new DefaultVision(this));
+		//		} catch (Exception e) {
+		//			System.out.println("(initDefaultCommand) Cameras done goofed, but everything else is (maybe) functional.");
+		//		}
 	}
 }

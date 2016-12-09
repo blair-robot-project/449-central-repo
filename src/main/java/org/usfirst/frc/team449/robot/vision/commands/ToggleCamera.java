@@ -1,8 +1,8 @@
 package org.usfirst.frc.team449.robot.vision.commands;
 
 import com.ni.vision.NIVision;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.oi.OISubsystem;
 import org.usfirst.frc.team449.robot.vision.VisionMap;
 import org.usfirst.frc.team449.robot.vision.VisionSubsystem;
 

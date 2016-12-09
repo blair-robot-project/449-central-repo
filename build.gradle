@@ -8,27 +8,27 @@ apply plugin: 'eclipse'
 
 // Disable javadoc generation
 allprojects {
-    tasks.withType(Javadoc).all { enabled = false }
+	tasks.withType(Javadoc).all { enabled = false }
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 
-    // WPILib's repo
-    maven {
-        name = "WPILib"
-        url = "http://first.wpi.edu/FRC/roborio/maven/release/"
-    }
+	// WPILib's repo
+	maven {
+		name = "WPILib"
+		url = "http://first.wpi.edu/FRC/roborio/maven/release/"
+	}
 }
 
 dependencies {
-    compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
-    compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
-    compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
-    compile fileTree(dir: 'lib')
+	compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
+	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
+	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
+	compile fileTree(dir: 'lib')
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+	classifier = 'javadoc'
+	from javadoc.destinationDir
 }

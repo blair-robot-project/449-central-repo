@@ -38,7 +38,7 @@ public class ReferencingCommand extends Command {
 	 * </p>
 	 *
 	 * @param subsystem the subysystem that the <code>{@link ReferencingCommand}</code>  belongs to
-	 * @param timeout time in seconds before the command will time out
+	 * @param timeout   time in seconds before the command will time out
 	 */
 	public ReferencingCommand(MappedSubsystem subsystem, double timeout) {
 		super(timeout);
