@@ -26,9 +26,11 @@ public abstract class Tester {
 			e.printStackTrace(); // if this happens, we're fucked
 		}
 
-		String s = jo.toString();
-		System.out.println(s);
-		System.out.println(s.replaceAll("(?<!\\\\)\"", "\\\\\""));
+		if (jo != null) {
+			String s = jo.toString();
+			System.out.println(s);
+			System.out.println(s.replaceAll("(?<!\\\\)\"", "\\\\\""));
+		}
 	}
 
 	/**

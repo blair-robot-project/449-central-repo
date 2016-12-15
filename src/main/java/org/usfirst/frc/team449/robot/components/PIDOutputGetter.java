@@ -23,7 +23,6 @@ public class PIDOutputGetter implements SpeedController {
 	public void setInverted(boolean isInverted) {
 	}
 
-	@Override
 	public void set(double speed, byte syncGroup) {
 		set(speed);
 	}

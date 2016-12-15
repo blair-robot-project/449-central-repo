@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.vision.VisionSubsystem;
  */
 public class DefaultVision extends ReferencingCommand {
 
-	private boolean cameraFailed = false;
+	private boolean cameraFailed;
 
 	/**
 	 * Instantiate an instance of <code>ToggleCamera</code>.
@@ -21,6 +21,7 @@ public class DefaultVision extends ReferencingCommand {
 	public DefaultVision(VisionSubsystem vision) {
 		super(vision);
 		requires(vision);
+		cameraFailed = false;
 	}
 
 	@Override

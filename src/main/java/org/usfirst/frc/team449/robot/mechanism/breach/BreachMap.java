@@ -21,24 +21,4 @@ public class BreachMap extends MechanismMap {
 	public BreachMap(JSONObject json) {
 		super(json);
 	}
-
-	/**
-	 * Port number of the back solenoid's forward state
-	 */
-	// public static final int SOLENOID_BACK_FORWARD_PORT = 0;
-
-	/**
-	 * Port number of the back solenoid's reverse state
-	 */
-	// public static final int SOLENOID_BACK_REVERSE_PORT = 1;
-
-	/**
-	 * Port number of the front solenoid's forward state
-	 */
-	// public static final int SOLENOID_FRONT_FORWARD_PORT = 2;
-
-	/**
-	 * Port number of the front solenoid's reverse state
-	 */
-	// public static final int SOLENOID_FRONT_REVERSE_PORT = 3;
 }

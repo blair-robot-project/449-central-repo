@@ -9,6 +9,8 @@ public abstract class OISubsystem extends MappedSubsystem {
 	}
 
 	public abstract double getDriveAxisLeft();  // TODO put this in TankOI
+
 	public abstract double getDriveAxisRight(); // TODO put this in TankOI
+
 	public abstract void toggleCamera();
 }

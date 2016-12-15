@@ -73,7 +73,7 @@ public class PIDAngleController extends PIDComponent {
 		this.rightMotor.pidWrite(output);
 		SmartDashboard.putNumber("angle out", output);
 		SmartDashboard.putNumber("angle sp", getSetpoint());
-		SmartDashboard.putNumber("avger", getPIDController().getAvgError());
+		SmartDashboard.putNumber("avg er", getPIDController().getAvgError());
 	}
 
 	@Override

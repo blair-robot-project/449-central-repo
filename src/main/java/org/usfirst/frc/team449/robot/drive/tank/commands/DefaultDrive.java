@@ -1,10 +1,10 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveMap;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
+import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 public class DefaultDrive extends ReferencingCommand {
 	public OISubsystem oi;
@@ -21,7 +21,8 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
-		((TankDriveSubsystem) subsystem).reset();
+		((TankDriveSubsystem) subsystem).encoderReset();
+		((TankDriveSubsystem) subsystem).setThrottle(0, 0);
 	}
 
 	@Override
@@ -29,6 +30,7 @@ public class DefaultDrive extends ReferencingCommand {
 		leftThrottle = oi.getDriveAxisLeft() * ((TankDriveMap) (subsystem.map)).leftCluster.speed;
 		rightThrottle = oi.getDriveAxisRight() * ((TankDriveMap) (subsystem.map)).rightCluster.speed;
 		// pushing forward on the stick gives -1 so it is negated
+		SmartDashboard.putNumber("Left Joystick", leftThrottle);
 		((TankDriveSubsystem) subsystem).setThrottle(leftThrottle, rightThrottle);
 		SmartDashboard.putNumber("Distance", ((TankDriveSubsystem) subsystem).getDistance());
 	}
