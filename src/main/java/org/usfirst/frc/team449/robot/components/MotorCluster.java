@@ -50,20 +50,20 @@ public class MotorCluster extends Component implements SpeedController {
 		System.err.println("Motor cluster over capacity, not adding a new motor! (" + controllerList.length + ")");
 	}
 
-	/**
-	 * Write to the motors
-	 *
-	 * @param output value to write to the motors
-	 */
-	@Override
-	public void pidWrite(double output) {
-		output /= outputRange;
-		for (int i = 0; i < controllerList.length; i++) {
-			SmartDashboard.putNumber("MotorController PID Write Velocity", output);
-			controllerList[i].set(output);
-		}
-		lastSet = output;
-	}
+    /**
+     * Write to the motors
+     *
+     * @param output value to write to the motors
+     */
+    @Override
+    public void pidWrite(double output) {
+        output /= outputRange;
+        for (SpeedController aControllerList : controllerList) {
+            SmartDashboard.putNumber("MotorController PID Write Velocity", output);
+            aControllerList.set(output);
+        }
+        lastSet = output;
+    }
 
 	/**
 	 * {@link SpeedController} method for getting the last value written to the motors
@@ -108,25 +108,24 @@ public class MotorCluster extends Component implements SpeedController {
 		//        SmartDashboard.putBoolean("MotorCluster Inverted", inverted);
 	}
 
-	/**
-	 * {@link SpeedController} method for setting whether the motor cluster is inverted. This method checks if the set
-	 * value
-	 * is the same as the current value before setting each individual motor for efficiency sake since there are
-	 * multiple motors.
-	 *
-	 * @param isInverted whether the motor cluster is inverted ({@link #inverted}
-	 */
-	@Override
-	public void setInverted(boolean isInverted) {
-		boolean changed = isInverted != inverted;
-		if (!changed) {
-			return;
-		}
-		this.inverted = isInverted;
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].setInverted(!controllerList[i].getInverted());
-		}
-	}
+    /**
+     * {@link SpeedController} method for setting whether the motor cluster is inverted. This method checks if the set value
+     * is the same as the current value before setting each individual motor for efficiency sake since there are
+     * multiple motors.
+     *
+     * @param isInverted whether the motor cluster is inverted ({@link #inverted}
+     */
+    @Override
+    public void setInverted(boolean isInverted) {
+        boolean changed = isInverted != inverted;
+        if (!changed) {
+            return;
+        }
+        this.inverted = isInverted;
+        for (SpeedController aControllerList : controllerList) {
+            aControllerList.setInverted(!aControllerList.getInverted());
+        }
+    }
 
 	/**
 	 * {@link SpeedController} method for getting whether the motor cluster is inverted
@@ -138,25 +137,24 @@ public class MotorCluster extends Component implements SpeedController {
 		return inverted;
 	}
 
-	/**
-	 * {@link SpeedController} method for disabling the motor cluster
-	 */
-	@Override
-	public void disable() {
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].disable();
-		}
-	}
+    /**
+     * {@link SpeedController} method for disabling the motor cluster
+     */
+    @Override
+    public void disable() {
+        for (SpeedController aControllerList : controllerList) {
+            aControllerList.disable();
+        }
+    }
 
-	/**
-	 * {@link SpeedController} method for stoping motor movement. Motor can be moved again by calling set without
-	 * having
-	 * to re-enable the motor.
-	 */
-	@Override
-	public void stopMotor() {
-		for (int i = 0; i < controllerList.length; i++) {
-			controllerList[i].stopMotor();
-		}
-	}
+    /**
+     * {@link SpeedController} method for stopping motor movement. Motor can be moved again by calling set without having
+     * to re-enable the motor.
+     */
+    @Override
+    public void stopMotor() {
+        for (SpeedController aControllerList : controllerList) {
+            aControllerList.stopMotor();
+        }
+    }
 }

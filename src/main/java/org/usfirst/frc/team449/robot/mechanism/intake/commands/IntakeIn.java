@@ -35,10 +35,7 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
-		if (((IntakeSubsystem) subsystem).isIgnoringIR())
-			return false;
-		else
-			return ((IntakeSubsystem) subsystem).findBall();
+		return !((IntakeSubsystem) subsystem).isIgnoringIR() && ((IntakeSubsystem) subsystem).findBall();
 	}
 
 	@Override

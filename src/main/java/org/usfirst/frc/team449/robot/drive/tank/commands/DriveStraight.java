@@ -24,17 +24,17 @@ public class DriveStraight extends ReferencingCommand {
 		// ((TankDriveSubsystem) Robot.drive).enableDriveStraightCorrector();
 		SmartDashboard.putBoolean("straight on", true);
 		// ((TankDriveSubsystem) Robot.drive).enableDriveStraightCorrector();
-		// SmartDashboard.putBoolean("straigt on", true);
+		// SmartDashboard.putBoolean("straight on", true);
 	}
 
 	@Override
 	protected void execute() {
-		// leftThrottle = Robot.oi.getDriveAxisLeft() * ((TankDriveMap)
+		// leftThrottle = Robot.oi.getDriveAxisLeft() * ((TankDriveMap);
 		// (Robot.drive.map)).leftCluster.speed;
 		rightThrottle = oi.getDriveAxisRight() * ((TankDriveMap) (subsystem.map)).rightCluster.speed;
 		((TankDriveSubsystem) subsystem).setThrottle(rightThrottle, rightThrottle);
 		SmartDashboard.putNumber("Distance", ((TankDriveSubsystem) subsystem).getDistance());
-		// SmartDashboard.putBoolean("straigt on", true);
+		// SmartDashboard.putBoolean("straight on", true);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class DriveStraight extends ReferencingCommand {
 		// ((TankDriveSubsystem) Robot.drive).disableDriveStraightCorrector();
 		SmartDashboard.putBoolean("straight on", false);
 		// ((TankDriveSubsystem) Robot.drive).disableDriveStraightCorrector();
-		// SmartDashboard.putBoolean("straigt on", false);
+		// SmartDashboard.putBoolean("straight on", false);
 	}
 
 	@Override

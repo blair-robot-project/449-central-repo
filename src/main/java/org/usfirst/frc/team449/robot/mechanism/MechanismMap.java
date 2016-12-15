@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism;
 
 import org.json.JSONObject;
+import org.usfirst.frc.team449.robot.MapObject;
 import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
