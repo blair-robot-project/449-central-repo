@@ -1,0 +1,16 @@
+package components;
+import "Motor.proto";
+
+option java_package = "org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "MotorClusterMap";
+
+message MotorCluster {
+    /**
+     * The motors in this Cluster
+     */
+    repeated Motor motor = 1;
+    /**
+     * Whether the whole cluster should be inverted
+     */
+    required bool inverted = 2;
+}

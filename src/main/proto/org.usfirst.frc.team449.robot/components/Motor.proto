@@ -1,0 +1,15 @@
+package components;
+
+option java_package = "org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "MotorMap";
+
+message Motor {
+    /**
+     * Port number
+     */
+    required int32 port = 1;
+    /**
+     * Whether the motor is inverted
+     */
+    required bool inverted = 2;
+}

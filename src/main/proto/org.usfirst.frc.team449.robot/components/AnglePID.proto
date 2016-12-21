@@ -1,0 +1,10 @@
+package components;
+
+option java_package = "org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "AnglePIDMap";
+
+message AnglePID {
+    required double absolute_tolerance = 1;
+    required double minimum_output = 2;
+    required bool minimum_output_enabled = 3;
+}
