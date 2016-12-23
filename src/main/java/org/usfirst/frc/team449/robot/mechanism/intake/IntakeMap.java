@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism.intake;
 
 import org.json.JSONObject;
+import org.usfirst.frc.team449.robot.components.maps.DoubleSolenoidMap;
 import org.usfirst.frc.team449.robot.components.maps.IRSensorMap;
 import org.usfirst.frc.team449.robot.components.maps.MotorMap;
 import org.usfirst.frc.team449.robot.components.maps.UltrasonicMap;
@@ -12,7 +13,7 @@ import org.usfirst.frc.team449.robot.mechanism.MechanismMap;
  */
 public class IntakeMap extends MechanismMap {
 	public MotorMap motor;
-	public DoubleSolenoid solenoid;
+	public DoubleSolenoidMap solenoid;
 	public IRSensorMap leftIR;
 	public IRSensorMap rightIR;
 	public double OUTPUT_SPEED;

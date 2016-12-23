@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism;
 
 import org.json.JSONObject;
-import org.usfirst.frc.team449.robot.MapObject;
 import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
@@ -19,14 +18,5 @@ public abstract class MechanismMap extends RobotMap {
 	 */
 	public MechanismMap(JSONObject json) {
 		super(json);
-	}
-
-	public static class DoubleSolenoid extends MapObject {
-		public int forward;
-		public int reverse;
-
-		public DoubleSolenoid(JSONObject json, String objPath, Class enclosing) {
-			super(json, objPath, enclosing);
-		}
 	}
 }
