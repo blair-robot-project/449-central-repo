@@ -1,0 +1,21 @@
+package intake;
+import "org/usfirst/frc/team449/robot/mechanism/Mechanism";
+import "org/usfirst/frc/team449/robot/components/Motor";
+import "org/usfirst/frc/team449/robot/components/DoubleSolenoid";
+import "org/usfirst/frc/team449/robot/components/IRSensor";
+import "org/usfirst/frc/team449/robot/components/Ultrasonic";
+
+option java_package = "org.usfirst.frc.team449.robot.mechanism.intake";
+option java_outer_classname = "IntakeMap";
+
+message Intake{
+    required Mechanism super = 1;
+    required Motor motor = 2;
+    required DoubleSolenoid solenoid = 3;
+    required IRSensor leftIR = 4;
+    required IRSensor rightIR = 5;
+    required double OUTPUT_SPEED = 6;
+    required double INPUT_SPEED = 7;
+    required Ultrasonic leftUltrasonic = 8;
+    required Ultrasonic rightUltrasonic = 9;
+}

@@ -1,0 +1,12 @@
+package breach;
+import "org/usfirst/frc/team449/robot/mechanism/Mechanism";
+import "org/usfirst/frc/team449/robot/components/DoubleSolenoid";
+
+option java_package = "org.usfirst.frc.team449.robot.mechanism";
+option java_outer_classname = "BreachMap";
+
+message Breach{
+    required Mechanism super = 1;
+    required DoubleSolenoid front = 2;
+    required DoubleSolenoid back = 3;
+}
