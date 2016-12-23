@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism.breach;
 
 import org.json.JSONObject;
+import org.usfirst.frc.team449.robot.components.maps.DoubleSolenoidMap;
 import org.usfirst.frc.team449.robot.mechanism.MechanismMap;
 
 /**
@@ -8,8 +9,8 @@ import org.usfirst.frc.team449.robot.mechanism.MechanismMap;
  * defined higher in the hierarchy
  */
 public class BreachMap extends MechanismMap {
-	public DoubleSolenoid front;
-	public DoubleSolenoid back;
+	public DoubleSolenoidMap front;
+	public DoubleSolenoidMap back;
 
 	/**
 	 * creates a new Breach Map based on the configuration in the given json any
