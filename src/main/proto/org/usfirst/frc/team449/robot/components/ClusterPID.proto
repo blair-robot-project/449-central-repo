@@ -1,17 +1,19 @@
 package components;
-import "MotorCluster.proto";
-import "Encoder.proto";
+import "org/usfirst/frc/team449/robot/components/MotorCluster";
+import "org/usfirst/frc/team449/robot/components/Encoder";
+import "org/usfirst/frc/team449/robot/components/VelocityPID";
 
 option java_package = "org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "ClusterPIDMap";
 
 message ClusterPID {
+    required VelocityPID super = 1;
     /**
      * the MotorCluster controlled by this PID controller
      */
-    required MotorCluster cluster = 1;
+    required MotorCluster cluster = 2;
     /**
      * the Encoder used for control in this PID controller
      */
-    required Encoder encoder = 2;
+    required Encoder encoder = 3;
 }

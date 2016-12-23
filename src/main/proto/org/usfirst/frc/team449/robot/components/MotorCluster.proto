@@ -1,5 +1,5 @@
 package components;
-import "Motor.proto";
+import "org/usfirst/frc/team449/robot/components/Motor";
 
 option java_package = "org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "MotorClusterMap";

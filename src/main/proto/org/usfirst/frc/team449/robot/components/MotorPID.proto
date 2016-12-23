@@ -1,16 +1,17 @@
 package components;
-
+import "org/usfirst/frc/team449/robot/components/PID";
 
 option java_package = "org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "MotorPIDMap";
 
 message MotorPID {
+    required PID super = 1;
     /**
      * the motor controlled by this controller
      */
-    required Motor motor = 1;
+    required Motor motor = 2;
     /**
      * the encoder controlling the motor
      */
-    required Encoder encoder = 2;
+    required Encoder encoder = 3;
 }
