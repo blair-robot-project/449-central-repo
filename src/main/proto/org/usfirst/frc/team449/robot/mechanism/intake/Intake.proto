@@ -1,9 +1,9 @@
 package intake;
-import "org/usfirst/frc/team449/robot/mechanism/Mechanism";
-import "org/usfirst/frc/team449/robot/components/Motor";
-import "org/usfirst/frc/team449/robot/components/DoubleSolenoid";
-import "org/usfirst/frc/team449/robot/components/IRSensor";
-import "org/usfirst/frc/team449/robot/components/Ultrasonic";
+import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
+import "org/usfirst/frc/team449/robot/components/Motor.proto";
+import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
+import "org/usfirst/frc/team449/robot/components/IRSensor.proto";
+import "org/usfirst/frc/team449/robot/components/Ultrasonic.proto";
 
 option java_package = "org.usfirst.frc.team449.robot.mechanism.intake";
 option java_outer_classname = "IntakeMap";

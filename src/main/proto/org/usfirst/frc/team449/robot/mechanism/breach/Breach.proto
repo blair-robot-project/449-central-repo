@@ -1,6 +1,6 @@
 package breach;
-import "org/usfirst/frc/team449/robot/mechanism/Mechanism";
-import "org/usfirst/frc/team449/robot/components/DoubleSolenoid";
+import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
+import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
 
 option java_package = "org.usfirst.frc.team449.robot.mechanism";
 option java_outer_classname = "BreachMap";

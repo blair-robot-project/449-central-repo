@@ -1,5 +1,5 @@
 package components;
-import "org/usfirst/frc/team449/robot/components/PID";
+import "org/usfirst/frc/team449/robot/components/PID.proto";
 
 option java_package = "org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "VelocityPIDMap";

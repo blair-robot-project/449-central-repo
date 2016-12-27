@@ -1,7 +1,7 @@
 package tank;
-import "org/usfirst/frc/team449/robot/drive/Drive";
-import "org/usfirst/frc/team449/robot/components/ClusterPID";
-import "org/usfirst/frc/team449/robot/components/AnglePID";
+import "org/usfirst/frc/team449/robot/drive/Drive.proto";
+import "org/usfirst/frc/team449/robot/components/ClusterPID.proto";
+import "org/usfirst/frc/team449/robot/components/AnglePID.proto";
 
 option java_package = "org.usfirst.frc.team449.robot.drive.tank";
 option java_outer_classname = "TankDriveMap";
