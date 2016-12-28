@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-option java_package = "org.usfirst.frc.team449.robot.components";
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "LimitSwitchMap";
 
 message LimitSwitch {

@@ -3,7 +3,7 @@ syntax = "proto2";
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
 import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
 
-option java_package = "org.usfirst.frc.team449.robot.mechanism";
+option java_package = "maps.org.usfirst.frc.team449.robot.mechanism";
 option java_outer_classname = "BreachMap";
 
 message Breach{

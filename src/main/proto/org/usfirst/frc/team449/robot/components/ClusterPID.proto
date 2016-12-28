@@ -3,7 +3,7 @@ import "org/usfirst/frc/team449/robot/components/MotorCluster.proto";
 import "org/usfirst/frc/team449/robot/components/Encoder.proto";
 import "org/usfirst/frc/team449/robot/components/VelocityPID.proto";
 
-option java_package = "org.usfirst.frc.team449.robot.components";
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "ClusterPIDMap";
 
 message ClusterPID {
