@@ -1,3 +1,4 @@
+syntax = "proto2";
 package vision;
 
 option java_package = "org.usfirst.frc.team449.robot.vision";
@@ -7,5 +8,6 @@ message Vision{
     /**
 	 * Names of the cameras (from the roborio web interface)
 	 */
+
     repeated string camera_names = 1;
 }

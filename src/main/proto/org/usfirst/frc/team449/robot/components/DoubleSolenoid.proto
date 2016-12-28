@@ -1,9 +1,10 @@
+syntax = "proto2";
 package components;
 
 option java_package = "org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "DoubleSolenoidMap";
 
 message DoubleSolenoid {
-    required int forward = 1;
-    required int reverse = 2;
+    required int32 forward = 1;
+    required int32 reverse = 2;
 }

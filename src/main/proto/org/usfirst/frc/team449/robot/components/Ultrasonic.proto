@@ -1,3 +1,4 @@
+syntax = "proto2";
 package components;
 
 option java_package = "org.usfirst.frc.team449.robot.components";
