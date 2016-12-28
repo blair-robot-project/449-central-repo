@@ -19,7 +19,9 @@ public class BreachMap extends MechanismMap {
 	 * @param json a JSONObject containing the configuration for the maps in this
 	 *             object
 	 */
-	public BreachMap(JSONObject json) {
-		super(json);
+	public BreachMap(maps.org.usfirst.frc.team449.robot.mechanism.BreachMap.Breach message) {
+		super(message.getSuper());
+		front = new DoubleSolenoidMap(message.getFront());
+		back = new DoubleSolenoidMap(message.getBack());
 	}
 }

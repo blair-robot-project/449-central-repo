@@ -31,7 +31,10 @@ public class EncoderMap extends MapObject {
      * @param enclosing <code>Class</code> one up from this <code>MapObject</code>
      *                  in the map
      */
-    public EncoderMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public EncoderMap(maps.org.usfirst.frc.team449.robot.components.EncoderMap.Encoder message) {
+        super(message);
+        a = message.getPortA();
+        b = message.getPortB();
+        dpp = message.getDistancePerPulse();
     }
 }

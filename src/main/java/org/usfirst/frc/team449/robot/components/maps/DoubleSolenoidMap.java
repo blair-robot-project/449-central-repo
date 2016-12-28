@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
@@ -10,7 +9,9 @@ public class DoubleSolenoidMap extends MapObject {
     public int forward;
     public int reverse;
 
-    public DoubleSolenoidMap(JSONObject json, String objPath, Class enclosing) {
-        super(json, objPath, enclosing);
+    public DoubleSolenoidMap(maps.org.usfirst.frc.team449.robot.components.DoubleSolenoidMap.DoubleSolenoid message) {
+        super(message);
+        forward = message.getForward();
+        reverse = message.getReverse();
     }
 }

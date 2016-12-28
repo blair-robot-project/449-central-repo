@@ -17,7 +17,8 @@ public class LimitSwitchMap  extends MapObject {
      * @param path      the path to find this object in the JSONObject
      * @param enclosing the enclosing class of the <code>LimitSwitch</code>
      */
-    public LimitSwitchMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public LimitSwitchMap(maps.org.usfirst.frc.team449.robot.components.LimitSwitchMap.LimitSwitch message) {
+        super(message);
+        PORT = message.getPort();
     }
 }

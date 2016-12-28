@@ -1,7 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
-
 /**
  * Created by Blair Robot Project on 12/8/2016.
  */
@@ -38,7 +36,15 @@ public abstract class VelocityPIDMap extends PIDMap {
     public double rampRate;
     public boolean rampRateEnabled;
 
-    public VelocityPIDMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public VelocityPIDMap(maps.org.usfirst.frc.team449.robot.components.VelocityPIDMap.VelocityPID message) {
+        super(message.getSuper());
+        zeroTolerance = message.getZeroTolerance();
+        outputRange = message.getOutputRange();
+        inverted = message.getInverted();
+        speed = message.getSpeed();
+        inputRange = message.getInputRange();
+        controllerPeriod = message.getControllerPeriod();
+        rampRate = message.getRampRate();
+        rampRateEnabled = message.getRampRateEnabled();
     }
 }

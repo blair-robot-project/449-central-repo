@@ -16,7 +16,7 @@ public abstract class MechanismMap extends RobotMap {
 	 * @param json a JSONObject containing the configuration for the maps in this
 	 *             object
 	 */
-	public MechanismMap(JSONObject json) {
-		super(json);
+	public MechanismMap(maps.org.usfirst.frc.team449.robot.mechanism.MechanismMap.Mechanism message) {
+		super(message);
 	}
 }

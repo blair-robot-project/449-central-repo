@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.tank;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.components.maps.AnglePIDMap;
 import org.usfirst.frc.team449.robot.components.maps.ClusterPIDMap;
 import org.usfirst.frc.team449.robot.drive.DriveMap;
@@ -35,7 +34,12 @@ public class TankDriveMap extends DriveMap {
 	 * @param json a JSONObject containing the configuration for the maps in this
 	 *             object
 	 */
-	public TankDriveMap(JSONObject json) {
-		super(json);
+	public TankDriveMap(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive message) {
+		super(message.getSuper());
+		leftCluster = new ClusterPIDMap(message.getLeftCluster());
+		rightCluster = new ClusterPIDMap(message.getRightCluster());
+		anglePID = new AnglePIDMap(message.getAnglePID());
+		driveStraightAnglePID = new AnglePIDMap(message.getDriveStraightAnglePID());
+		RADIUS = message.getRadius();
 	}
 }

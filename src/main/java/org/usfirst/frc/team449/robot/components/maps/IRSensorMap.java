@@ -31,8 +31,13 @@ public class IRSensorMap extends MapObject {
      */
     public int AVERAGE_BITS;
 
-    public IRSensorMap(JSONObject json, String objPath, Class enclosing) {
-        super(json, objPath, enclosing);
+    public IRSensorMap(maps.org.usfirst.frc.team449.robot.components.IRSensorMap.IRSensor message) {
+        super(message);
+        PORT = message.getPort();
+        LOWER_BOUND = message.getLowerBound();
+        UPPER_BOUND = message.getUpperBound();
+        OVERSAMPLING_BITS = message.getOversamplingBits();
+        AVERAGE_BITS = message.getAverageBits();
     }
 
 }

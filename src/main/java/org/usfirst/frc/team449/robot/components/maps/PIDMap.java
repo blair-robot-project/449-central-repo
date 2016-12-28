@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
+import com.google.protobuf.Message;
 import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
@@ -29,7 +30,12 @@ public abstract class PIDMap extends MapObject {
      */
     public double percentTolerance;
 
-    public PIDMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public PIDMap(maps.org.usfirst.frc.team449.robot.components.PIDMap.PID message) {
+        super(message);
+        p = message.getP();
+        i = message.getI();
+        d = message.getD();
+        f = message.getF();
+        percentTolerance = message.getPercentTolerance();
     }
 }

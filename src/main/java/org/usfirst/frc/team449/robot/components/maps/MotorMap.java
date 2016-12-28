@@ -27,7 +27,9 @@ public class MotorMap extends MapObject {
      * @param enclosing <code>Class</code> one up from this <code>MapObject</code>
      *                  in the map
      */
-    public MotorMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public MotorMap(maps.org.usfirst.frc.team449.robot.components.MotorMap.Motor message) {
+        super(message);
+        PORT = message.getPort();
+        INVERTED = message.getInverted();
     }
 }

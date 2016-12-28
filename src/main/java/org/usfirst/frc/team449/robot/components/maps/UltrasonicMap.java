@@ -9,7 +9,8 @@ import org.usfirst.frc.team449.robot.MapObject;
 public class UltrasonicMap  extends MapObject {
     public int PORT;
 
-    public UltrasonicMap(JSONObject json, String objPath, Class enclosing) {
-        super(json, objPath, enclosing);
+    public UltrasonicMap(maps.org.usfirst.frc.team449.robot.components.UltrasonicMap.Ultrasonic message) {
+        super(message);
+        PORT = message.getPort();
     }
 }

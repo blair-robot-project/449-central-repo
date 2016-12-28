@@ -15,7 +15,7 @@ public abstract class DriveMap extends RobotMap {
 	 * @param json a JSONObject containing the configuration for the maps in this
 	 *             object
 	 */
-	public DriveMap(JSONObject json) {
-		super(json);
+	public DriveMap(maps.org.usfirst.frc.team449.robot.drive.DriveMap.Drive message) {
+		super(message);
 	}
 }

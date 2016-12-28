@@ -19,7 +19,6 @@ public class IntakeMap extends MechanismMap {
 	public double OUTPUT_SPEED;
 	public double INPUT_SPEED;
 	public UltrasonicMap leftUltrasonic;
-
 	public UltrasonicMap rightUltrasonic;
 
 	/**
@@ -29,7 +28,15 @@ public class IntakeMap extends MechanismMap {
 	 * @param json a JSONObject containing the configuration for the maps in this
 	 *             object
 	 */
-	public IntakeMap(JSONObject json) {
-		super(json);
+	public IntakeMap(maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake message) {
+		super(message.getSuper());
+		motor = new MotorMap(message.getMotor());
+		solenoid = new DoubleSolenoidMap(message.getSolenoid());
+		leftIR = new IRSensorMap(message.getLeftIR());
+		rightIR = new IRSensorMap(message.getRightIR());
+		OUTPUT_SPEED = message.getOutputSpeed();
+		INPUT_SPEED = message.getInputSpeed();
+		leftUltrasonic = new UltrasonicMap(message.getLeftUltrasonic());
+		rightUltrasonic = new UltrasonicMap(message.getRightUltrasonic());
 	}
 }

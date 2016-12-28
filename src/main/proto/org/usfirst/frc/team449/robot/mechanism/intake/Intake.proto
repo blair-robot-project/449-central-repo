@@ -12,10 +12,10 @@ message Intake{
     required Mechanism super = 1;
     required Motor motor = 2;
     required DoubleSolenoid solenoid = 3;
-    required IRSensor leftIR = 4;
-    required IRSensor rightIR = 5;
-    required double OUTPUT_SPEED = 6;
-    required double INPUT_SPEED = 7;
-    required Ultrasonic leftUltrasonic = 8;
-    required Ultrasonic rightUltrasonic = 9;
+    required IRSensor left_IR = 4;
+    required IRSensor right_IR = 5;
+    required double output_speed = 6;
+    required double input_speed = 7;
+    required Ultrasonic left_ultrasonic = 8;
+    required Ultrasonic right_ultrasonic = 9;
 }
