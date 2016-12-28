@@ -21,3 +21,4 @@ build
 ## Gradle ##
 .gradle
 build/
+gen/

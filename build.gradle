@@ -14,7 +14,7 @@ allprojects {
 
 repositories {
 	mavenCentral()
-
+	maven { url "https://plugins.gradle.org/m2/" }
 	// WPILib's repo
 	maven {
 		name = "WPILib"
@@ -22,15 +22,61 @@ repositories {
 	}
 }
 
+buildscript {
+	repositories {
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+	}
+}
+
 dependencies {
 	compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
 	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
 	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
-	classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+	compile 'com.google.protobuf:protobuf-java:3.0.0'
+	compile 'io.grpc:grpc-stub:1.0.0-pre2'
+	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
 	compile fileTree(dir: 'lib')
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+protobuf {
+	generatedFilesBaseDir = "$projectDir/gen"
+	protoc {
+		// The artifact spec for the Protobuf Compiler
+		artifact = 'com.google.protobuf:protoc:3.0.0'
+	}
+	plugins {
+		// Optional: an artifact spec for a protoc plugin, with "grpc" as
+		// the identifier, which can be referred to in the "plugins"
+		// container of the "generateProtoTasks" closure.
+		grpc {
+			artifact = 'io.grpc:protoc-gen-grpc-java:1.0.0-pre2'
+		}
+	}
+	generateProtoTasks {
+		ofSourceSet('main')*.plugins {
+			// Apply the "grpc" plugin whose spec is defined above, without
+			// options.  Note the braces cannot be omitted, otherwise the
+			// plugin will not be added. This is because of the implicit way
+			// NamedDomainObjectContainer binds the methods.
+			grpc { }
+		}
+	}
+}
+
+clean {
+	delete protobuf.generatedFilesBaseDir
+}
+
+idea {
+	module {
+		sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
+	}
 }
