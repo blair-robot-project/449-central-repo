@@ -1,10 +1,11 @@
 package org.usfirst.frc.team449.robot;
 
+import com.google.protobuf.Message;
+import com.google.protobuf.TextFormat;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -25,25 +26,24 @@ public abstract class MappedSubsystem extends Subsystem {
 	}
 
 	/**
-	 * This creates a JSONObject from a .json file referenced by the given
+	 * This creates a Message from a .cfg file referenced by the given
 	 * path.
 	 *
-	 * @param path the path to the <code>.json</code> from which to create the
-	 *             JSONObject
-	 * @return the JSONObject creted from the given file, or null if there was
-	 * an IOException
+	 * @param path the path to the <code>.cfg</code> from which to create the Message
+	 *
+	 * @param dest The message to be written to. Important for typing reasons.
+	 *
+	 * @return the Message created from the given file, which is also put in dest.
 	 */
-	public static JSONObject readConfig(String path) {
+	public static Message readConfig(String path, Message dest) throws IOException {
 		File cfg = new File(path);
 		if (!cfg.exists()) {
 			throw new RuntimeException("Configuration file does not exist!");
 		}
-		JSONObject json = null;
-		try {
-			json = new JSONObject(new String(Files.readAllBytes(cfg.toPath()), StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace(); // if this happens, we're fucked
-		}
-		return json;
+		BufferedReader br = new BufferedReader(new FileReader(cfg));
+		Message.Builder builder = dest.newBuilderForType();
+		TextFormat.getParser().merge(br, builder);
+		dest = builder.build();
+		return dest;
 	}
 }
