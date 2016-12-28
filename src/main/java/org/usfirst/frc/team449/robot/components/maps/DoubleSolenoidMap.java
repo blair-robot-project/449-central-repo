@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
 import org.json.JSONObject;
+import org.usfirst.frc.team449.robot.MapObject;
 
 /**
  * Created by blairrobot on 12/23/16.
