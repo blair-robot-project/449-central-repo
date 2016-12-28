@@ -1,5 +1,4 @@
 syntax = "proto2";
-package vision;
 
 option java_package = "org.usfirst.frc.team449.robot.vision";
 option java_outer_classname = "VisionMap";

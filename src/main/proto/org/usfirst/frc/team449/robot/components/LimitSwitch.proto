@@ -1,5 +1,4 @@
 syntax = "proto2";
-package components;
 
 option java_package = "org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "LimitSwitchMap";
@@ -8,5 +7,5 @@ message LimitSwitch {
     /**
     * Port number
     */
-    required int port = 1;
+    required int32 port = 1;
 }

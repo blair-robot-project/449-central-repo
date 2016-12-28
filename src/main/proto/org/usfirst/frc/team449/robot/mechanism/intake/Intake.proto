@@ -1,5 +1,4 @@
 syntax = "proto2";
-package intake;
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
 import "org/usfirst/frc/team449/robot/components/Motor.proto";
 import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";

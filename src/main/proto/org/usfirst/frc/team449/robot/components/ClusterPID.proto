@@ -1,5 +1,4 @@
 syntax = "proto2";
-package components;
 import "org/usfirst/frc/team449/robot/components/MotorCluster.proto";
 import "org/usfirst/frc/team449/robot/components/Encoder.proto";
 import "org/usfirst/frc/team449/robot/components/VelocityPID.proto";

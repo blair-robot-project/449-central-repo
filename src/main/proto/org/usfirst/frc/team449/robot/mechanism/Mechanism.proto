@@ -1,5 +1,4 @@
 syntax = "proto2";
-package mechanism;
 
 option java_package = "org.usfirst.frc.team449.robot.mechanism";
 option java_outer_classname = "MechanismMap";

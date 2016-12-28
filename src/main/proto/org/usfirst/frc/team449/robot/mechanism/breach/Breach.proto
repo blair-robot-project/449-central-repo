@@ -1,5 +1,5 @@
 syntax = "proto2";
-package breach;
+
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
 import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
 
