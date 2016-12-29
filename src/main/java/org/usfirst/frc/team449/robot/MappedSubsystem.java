@@ -35,7 +35,7 @@ public abstract class MappedSubsystem extends Subsystem {
 	 *
 	 * @return the Message created from the given file, which is also put in dest.
 	 */
-	public static Message readConfig(String path, Message dest) throws IOException {
+	public static void readConfig(String path, Message dest) throws IOException {
 		File cfg = new File(path);
 		if (!cfg.exists()) {
 			throw new RuntimeException("Configuration file does not exist!");
@@ -44,6 +44,5 @@ public abstract class MappedSubsystem extends Subsystem {
 		Message.Builder builder = dest.newBuilderForType();
 		TextFormat.getParser().merge(br, builder);
 		dest = builder.build();
-		return dest;
 	}
 }
