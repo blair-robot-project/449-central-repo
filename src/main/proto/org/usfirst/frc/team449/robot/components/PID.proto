@@ -24,5 +24,5 @@ message PID {
      * the percent error around the setpoint that is "close enough" and
      * requires no more tuning (20 for 20%)
      */
-    required double percentTolerance = 5;
+    required double percent_tolerance = 5;
 }
