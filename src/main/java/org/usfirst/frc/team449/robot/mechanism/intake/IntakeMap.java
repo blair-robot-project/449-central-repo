@@ -21,11 +21,10 @@ public class IntakeMap extends MechanismMap {
 	public UltrasonicMap rightUltrasonic;
 
 	/**
-	 * creates a new Intake Map based on the configuration in the given json any
-	 * maps in here are to be shared across all intake subsystems
+	 * creates a new Intake Map based on the configuration in the given message.
+	 * Any maps in here are to be shared across all intake subsystems.
 	 *
-	 * @param json a JSONObject containing the configuration for the maps in this
-	 *             object
+	 * @param message The protobuf message with the data for this object.
 	 */
 	public IntakeMap(maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake message) {
 		super(message.getSuper());

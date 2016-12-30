@@ -12,11 +12,10 @@ public class BreachMap extends MechanismMap {
 	public DoubleSolenoidMap back;
 
 	/**
-	 * creates a new Breach Map based on the configuration in the given json any
-	 * maps in here are to be shared across all breaching subsystems
+	 * creates a new Breach Map based on the configuration in the given message.
+	 * Any maps in here are to be shared across all breaching subsystems
 	 *
-	 * @param json a JSONObject containing the configuration for the maps in this
-	 *             object
+	 * @param message The protobuf message with the data for this object.
 	 */
 	public BreachMap(maps.org.usfirst.frc.team449.robot.mechanism.BreachMap.Breach message) {
 		super(message.getSuper());

@@ -3,8 +3,7 @@ package org.usfirst.frc.team449.robot.components.maps;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
- * a map for a MotorCluster of variable size. the size of the Cluster is
- * defined by the JSONObject
+ * A map for a MotorCluster of variable size.
  */
 public class MotorClusterMap extends MapObject {
     /**

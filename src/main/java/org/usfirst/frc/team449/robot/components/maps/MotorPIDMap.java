@@ -16,9 +16,7 @@ public class MotorPIDMap extends PIDMap {
     /**
      * Creates a new <code>MotorPID</code>
      *
-     * @param json      <code>JSONObject</code> containing the map
-     * @param path      dot-delimited path to the <code>MotorPID</code> in the map
-     * @param enclosing the enclosing class of the <code>MotorPID</code>
+     * @param message The protobuf message with the data for this <code>MotorPID</code>
      */
     public MotorPIDMap(maps.org.usfirst.frc.team449.robot.components.MotorPIDMap.MotorPID message) {
         super(message.getSuper());

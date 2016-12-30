@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
+ * NOTE: This class is probably useless. It's here because Noah hasn't gotten around to deleting it.
  * The base of all subsystems linked to maps. Holds a <code>RobotMap</code> that will be set
  * by subclasses to their own map
  */
@@ -29,11 +30,9 @@ public abstract class MappedSubsystem extends Subsystem {
 	 * This creates a Message from a .cfg file referenced by the given
 	 * path.
 	 *
-	 * @param path the path to the <code>.cfg</code> from which to create the Message
+	 * @param path the path to the <code>.cfg</code> from which to read the message.
 	 *
-	 * @param dest The message to be written to. Important for typing reasons.
-	 *
-	 * @return the Message created from the given file, which is also put in dest.
+	 * @param dest The message to be written to.
 	 */
 	public static void readConfig(String path, Message dest) throws IOException {
 		File cfg = new File(path);
