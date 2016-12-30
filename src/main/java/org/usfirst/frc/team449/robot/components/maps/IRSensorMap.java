@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.mechanism.intake;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.components.maps.DoubleSolenoidMap;
 import org.usfirst.frc.team449.robot.components.maps.IRSensorMap;
 import org.usfirst.frc.team449.robot.components.maps.MotorMap;

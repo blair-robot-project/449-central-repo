@@ -1,7 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
-
 /**
  * a PID controller that uses an Encoder to control a Motor
  */

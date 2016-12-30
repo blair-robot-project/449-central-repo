@@ -1,7 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import com.google.protobuf.Message;
-
 /**
  * Created by Blair Robot Project on 12/8/2016.
  */
