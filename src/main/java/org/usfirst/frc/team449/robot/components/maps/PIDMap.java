@@ -1,7 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import com.google.protobuf.Message;
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
