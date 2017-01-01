@@ -1,11 +1,9 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import com.google.protobuf.Message;
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
- * a basic PID object, only contains the p, i and d values
+ * a basic PID object, only contains the p, i, d and f values
  */
 public abstract class PIDMap extends MapObject {
     /**

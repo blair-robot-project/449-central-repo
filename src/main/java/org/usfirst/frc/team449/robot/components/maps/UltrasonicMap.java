@@ -1,10 +1,9 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
- * Created by Blair Robot Project on 12/8/2016.
+ * The map for an ultrasound sensor.
  */
 public class UltrasonicMap  extends MapObject {
     public int PORT;

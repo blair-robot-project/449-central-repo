@@ -32,7 +32,6 @@ buildscript {
 }
 
 dependencies {
-	compile group: 'org.json', name: 'json', version: '20151123' // https://mvnrepository.com/artifact/org.json/json
 	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
 	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
 	compile 'com.google.protobuf:protobuf-java:3.0.0'

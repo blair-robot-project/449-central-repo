@@ -28,11 +28,10 @@ public class TankDriveMap extends DriveMap {
 	public double RADIUS;
 
 	/**
-	 * creates a new TankDrive Map based on the configuration in the given json
-	 * any maps in here are to be shared across all tank drive subsystems
+	 * creates a new TankDrive Map based on the configuration in the given message.
+	 * Any maps in here are to be shared across all tank drive subsystems.
 	 *
-	 * @param json a JSONObject containing the configuration for the maps in this
-	 *             object
+	 * @param message The protobuf message with the data for this object
 	 */
 	public TankDriveMap(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive message) {
 		super(message.getSuper());

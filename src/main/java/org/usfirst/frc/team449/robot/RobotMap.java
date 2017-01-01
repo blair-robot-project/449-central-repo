@@ -1,23 +1,11 @@
 package org.usfirst.frc.team449.robot;
 
 import com.google.protobuf.Message;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
+ * NOTE: This class is probably useless. It's here because Noah hasn't gotten around to deleting it.
  * <p>
- * This is the base class for robot maps constructed from the json configuration
+ * This is the base class for robot maps constructed from the .cfg configuration
  * file. This class holds basic map classes like <code>Motor</code>,
  * <code>Encoder</code>, <code>PID</code>.
  * </p>

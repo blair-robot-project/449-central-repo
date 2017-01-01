@@ -1,11 +1,10 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
- * Created by Blair Robot Project on 12/8/2016.
+ * Map for an infrared sensor.
  */
 public class IRSensorMap extends MapObject {
     public int PORT;

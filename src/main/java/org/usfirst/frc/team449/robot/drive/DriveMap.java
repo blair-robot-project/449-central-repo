@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
@@ -9,11 +8,10 @@ import org.usfirst.frc.team449.robot.RobotMap;
  */
 public abstract class DriveMap extends RobotMap {
 	/**
-	 * creates a new Drive Map based on the configuration in the given json any
-	 * maps in here are to be shared across all drive subsystems
+	 * creates a new Drive Map based on the configuration in the given message.
+	 * Anything in here is to be shared across all drive subsystems.
 	 *
-	 * @param json a JSONObject containing the configuration for the maps in this
-	 *             object
+	 * @param message The protobuf message with the data for this object
 	 */
 	public DriveMap(maps.org.usfirst.frc.team449.robot.drive.DriveMap.Drive message) {
 		super(message);
