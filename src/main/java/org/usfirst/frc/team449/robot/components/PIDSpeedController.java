@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class for PID controlled <code>SpeedController</code>s (motors).
@@ -169,14 +168,11 @@ public abstract class PIDSpeedController implements SpeedController {
 	 */
 	public void setRelativeSetpoint(double setpoint) {
 		// Set setpoint, inverting motor if necessary
-		SmartDashboard.putNumber("Relative scaled to absolute setpoint: ", setpoint * maxAbsoluteSetpoint);
 		if (inverted) {
 			pidController.setSetpoint(setpoint * -maxAbsoluteSetpoint);
 		} else {
 			pidController.setSetpoint(setpoint * maxAbsoluteSetpoint);
 		}
-
-		SmartDashboard.putNumber("pidController.setSetpoint: ", setpoint * maxAbsoluteSetpoint);
 	}
 
 	/**

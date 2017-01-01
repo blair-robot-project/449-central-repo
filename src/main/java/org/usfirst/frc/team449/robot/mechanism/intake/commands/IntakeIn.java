@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap;
 import org.usfirst.frc.team449.robot.mechanism.intake.IntakeSubsystem;
@@ -23,13 +22,11 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
-		SmartDashboard.putBoolean("IntakeIn", true);
 		System.out.println("IntakeIn init");
 	}
 
 	@Override
 	protected void execute() {
-		SmartDashboard.putBoolean("IntakeIn", true);
 		((IntakeSubsystem) subsystem).setMotorSpeed(((IntakeMap) (subsystem.map)).INPUT_SPEED);
 	}
 
@@ -40,14 +37,12 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-		SmartDashboard.putBoolean("IntakeIn", false);
 		((IntakeSubsystem) subsystem).setMotorSpeed(0);
 		System.out.println("IntakeIn end");
 	}
 
 	@Override
 	protected void interrupted() {
-		SmartDashboard.putBoolean("IntakeIn", false);
 		((IntakeSubsystem) subsystem).setMotorSpeed(0);
 		System.out.println("ItakeIn interrupted");
 	}

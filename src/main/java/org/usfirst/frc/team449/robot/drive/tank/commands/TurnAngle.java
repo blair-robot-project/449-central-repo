@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
 
@@ -27,7 +26,6 @@ public class TurnAngle extends ReferencingCommand {
 		((TankDriveSubsystem) subsystem).enableAngleController();
 		((TankDriveSubsystem) subsystem).setTurnToAngle(theta);
 		done = false;
-		SmartDashboard.putBoolean("turnangle done", done);
 	}
 
 	@Override
@@ -37,7 +35,6 @@ public class TurnAngle extends ReferencingCommand {
 	@Override
 	protected boolean isFinished() {
 		done = ((TankDriveSubsystem) subsystem).getTurnAngleDone();
-		SmartDashboard.putBoolean("turnangle done", done);
 		return done;
 	}
 
@@ -47,7 +44,6 @@ public class TurnAngle extends ReferencingCommand {
 
 		((TankDriveSubsystem) subsystem).disableAngleController();
 		done = true;
-		SmartDashboard.putBoolean("turnangle done", done);
 	}
 
 	@Override
@@ -55,6 +51,5 @@ public class TurnAngle extends ReferencingCommand {
 		System.out.println("TurnAngle interrupted");
 		((TankDriveSubsystem) subsystem).disableAngleController();
 		done = true;
-		SmartDashboard.putBoolean("turnangle done", done);
 	}
 }

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.RobotMap;
 import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
@@ -125,7 +124,6 @@ public class TankDriveSubsystem extends DriveSubsystem {
 		driveStraightAngleController.setAbsoluteTolerance(tankMap.driveStraightAnglePID.absoluteTolerance);
 		driveStraightAngleController.setMinimumOutput(tankMap.driveStraightAnglePID.minimumOutput);
 		driveStraightAngleController.setMinimumOutputEnabled(tankMap.driveStraightAnglePID.minimumOutputEnabled);
-		SmartDashboard.putData("pid drive straight", driveStraightAngleController);
 
 		startTime = new Date().getTime();
 
@@ -171,26 +169,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
 	 * @param right the normalized speed between -1 and 1 for the right cluster
 	 */
 	public void setThrottle(double left, double right) {
-		SmartDashboard.putNumber("left throttle", left);
-		SmartDashboard.putNumber("right throttle", right);
-		SmartDashboard.putNumber("left setpoint", leftClusterController.getAbsoluteSetpoint());
-		SmartDashboard.putNumber("right setpoint", rightClusterController.getAbsoluteSetpoint());
-		SmartDashboard.putNumber("left error",
-				leftClusterController.getPIDError());
-		SmartDashboard.putNumber("right error", rightClusterController.getPIDError());
-		SmartDashboard.putNumber("left enc", leftClusterController.getPIDOutput());
-		SmartDashboard.putNumber("right enc", leftClusterController.getPIDOutput());
-		//        SmartDashboard.putNumber("left correction", leftVelCorrector.get());
-		//        SmartDashboard.putNumber("right correction", rightVelCorrector.get());
-		SmartDashboard.putNumber("getangle", gyro.pidGet());
-
-		//        left += leftVelCorrector.get() * ((TankDriveMap) map).leftCluster.speed;
-		//        right += rightVelCorrector.get() * ((TankDriveMap) map).rightCluster.speed;
-
 		leftClusterController.setRelativeSetpoint(left);
 		rightClusterController.setRelativeSetpoint(right);
-		//        leftClusterController.noPIDWrite(left);
-		//        rightClusterController.noPIDWrite(right);
 
 		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();

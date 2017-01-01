@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.commands;
 
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.IntakeSubsystem;
 
@@ -25,9 +24,6 @@ public class UpdateUS extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		((IntakeSubsystem) subsystem).updateVals();
-		SmartDashboard.putNumber("left", ((IntakeSubsystem) subsystem).getValLeft());
-		SmartDashboard.putNumber("right", ((IntakeSubsystem) subsystem).getValRight());
-		SmartDashboard.putNumber("angle", ((IntakeSubsystem) subsystem).getAngle());
 		((IntakeSubsystem) subsystem).findBall(); // for debugging ir
 	}
 

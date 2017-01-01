@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveMap;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
@@ -39,7 +38,6 @@ public class DriveDistance extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
-		SmartDashboard.putNumber("Distance", ((TankDriveSubsystem) (subsystem)).getDistance());
 		return ((TankDriveSubsystem) (subsystem)).getDistance() > this.distance;
 	}
 

@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.RobotMap;
 import org.usfirst.frc.team449.robot.components.SmoothedValue;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
@@ -90,7 +89,6 @@ public class IntakeSubsystem extends MechanismSubsystem {
 		rightVal = new SmoothedValue(1);
 
 		ignoreIR = false;
-		SmartDashboard.putBoolean("IR Enabled", !ignoreIR);
 
 		// new IntakeDown(); // start in down position
 
@@ -157,11 +155,8 @@ public class IntakeSubsystem extends MechanismSubsystem {
 		double left = leftIR.getAverageVoltage();
 		IntakeMap intakeMap = (IntakeMap) map; // TODO move this to
 		// constructor/initializer
-		SmartDashboard.putNumber("right ir voltage", right);
-		SmartDashboard.putNumber("left ir voltage", left);
 		boolean found = (intakeMap.rightIR.LOWER_BOUND < right && right < intakeMap.rightIR.UPPER_BOUND)
 				|| (intakeMap.leftIR.LOWER_BOUND < left && left < intakeMap.leftIR.UPPER_BOUND);
-		SmartDashboard.putBoolean("Ball found", found);
 		return found;
 	}
 
@@ -174,7 +169,6 @@ public class IntakeSubsystem extends MechanismSubsystem {
 	 */
 	public void toggleIgnoreIR() {
 		ignoreIR = !ignoreIR;
-		SmartDashboard.putBoolean("IR Enabled", !ignoreIR);
 	}
 
 	/**

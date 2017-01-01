@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveMap;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
@@ -30,9 +29,7 @@ public class DefaultDrive extends ReferencingCommand {
 		leftThrottle = oi.getDriveAxisLeft() * ((TankDriveMap) (subsystem.map)).leftCluster.speed;
 		rightThrottle = oi.getDriveAxisRight() * ((TankDriveMap) (subsystem.map)).rightCluster.speed;
 		// pushing forward on the stick gives -1 so it is negated
-		SmartDashboard.putNumber("Left Joystick", leftThrottle);
 		((TankDriveSubsystem) subsystem).setThrottle(leftThrottle, rightThrottle);
-		SmartDashboard.putNumber("Distance", ((TankDriveSubsystem) subsystem).getDistance());
 	}
 
 	@Override

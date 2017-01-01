@@ -2,7 +2,6 @@ package org.usfirst.frc.team449.robot.drive.tank.components;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.components.PIDComponent;
 
 /**
@@ -71,9 +70,6 @@ public class PIDAngleController extends PIDComponent {
 		}
 		this.leftMotor.pidWrite(-output);
 		this.rightMotor.pidWrite(output);
-		SmartDashboard.putNumber("angle out", output);
-		SmartDashboard.putNumber("angle sp", getSetpoint());
-		SmartDashboard.putNumber("avg er", getPIDController().getAvgError());
 	}
 
 	@Override
