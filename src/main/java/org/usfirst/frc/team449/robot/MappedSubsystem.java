@@ -31,18 +31,15 @@ public abstract class MappedSubsystem extends Subsystem {
 	 *
 	 * @param path the path to the <code>.cfg</code> from which to create the Message
 	 *
-	 * @param dest The message to be written to. Important for typing reasons.
-	 *
 	 * @return the Message created from the given file, which is also put in dest.
 	 */
-	public static void readConfig(String path, Message dest) throws IOException {
+	public static Message readConfig(String path, Message.Builder builder) throws IOException {
 		File cfg = new File(path);
 		if (!cfg.exists()) {
 			throw new RuntimeException("Configuration file does not exist!");
 		}
 		BufferedReader br = new BufferedReader(new FileReader(cfg));
-		Message.Builder builder = dest.newBuilderForType();
 		TextFormat.getParser().merge(br, builder);
-		dest = builder.build();
+		return builder.build();
 	}
 }
