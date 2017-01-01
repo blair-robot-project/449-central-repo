@@ -10,19 +10,18 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * NOTE: This class is probably useless. It's here because Noah hasn't gotten around to deleting it.
- * The base of all subsystems linked to maps. Holds a <code>RobotMap</code> that will be set
+ * The base of all subsystems linked to maps. Holds a Message that will be set
  * by subclasses to their own map
  */
 public abstract class MappedSubsystem extends Subsystem {
-	public final RobotMap map;
+	public final Message map;
 
 	/**
 	 * Creates a mapped subsystem and sets its map
 	 *
 	 * @param map the map of constants relevant to this subsystem
 	 */
-	public MappedSubsystem(RobotMap map) {
+	public MappedSubsystem(Message map) {
 		this.map = map;
 	}
 

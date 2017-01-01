@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.vision;
 import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
-import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
  * This is the subsystem for accessing USB cameras on the robot. It extends
@@ -34,7 +33,7 @@ public class VisionSubsystem extends MappedSubsystem {
 	 *
 	 * @param map configuration map
 	 */
-	public VisionSubsystem(RobotMap map) {
+	public VisionSubsystem(maps.org.usfirst.frc.team449.robot.vision.VisionMap.Vision map) {
 		super(map);
 		System.out.println("Vision init started");
 		System.out.println("Vision subsystem skipped");

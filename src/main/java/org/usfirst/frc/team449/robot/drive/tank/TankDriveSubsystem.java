@@ -1,12 +1,8 @@
 package org.usfirst.frc.team449.robot.drive.tank;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.RobotMap;
+import edu.wpi.first.wpilibj.*;
+import maps.org.usfirst.frc.team449.robot.components.MotorMap;
 import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
@@ -37,22 +33,17 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
 	private long startTime;
 
-	public TankDriveSubsystem(RobotMap map, OISubsystem oi) {
-		super(map);
+	public TankDriveSubsystem(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive map, OISubsystem oi) {
+		super(map.getDrive());
 		this.oi = oi;
 		System.out.println("TankDrive init started");
-		if (!(map instanceof TankDriveMap)) {
-			System.err.println(
-					"TankDrive has a map of class " + map.getClass().getSimpleName() + " and not TankDriveMap");
-		}
-		TankDriveMap tankMap = (TankDriveMap) map;
 
-		rightClusterController = new PIDMotorClusterController(tankMap.rightCluster.p, tankMap.rightCluster.i, tankMap
-				.rightCluster.d,
+		rightClusterController = new PIDMotorClusterController(map.getRightCluster().getVelocityPID().getPID().getP(),
+				map.getRightCluster().getVelocityPID().getPID().getI(), map.getRightCluster().getVelocityPID().getPID().getD(),
 				0, 0.05, 130.0, true, false, PIDSourceType.kRate) {
 			@Override
 			public int getNumMotors() {
-				return tankMap.rightCluster.cluster.motors.length;
+				return map.getRightCluster().getCluster().getMotorCount();
 			}
 
 			@Override
@@ -63,8 +54,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
 			@Override
 			public void populateMotorCluster() {
 				VictorSP motor; // declare before loop to save garbage collection time
-				for (int i = 0; i < tankMap.rightCluster.cluster.motors.length; i++) {
-					motor = new VictorSP(tankMap.rightCluster.cluster.motors[i].PORT);
+				for (MotorMap.Motor m : map.getRightCluster().getCluster().getMotorList()) {
+					motor = new VictorSP(m.getPort());
 					motor.setInverted(false);   // motors should not be inverted, motor cluster should be
 					addMotorClusterSlave(motor);
 				}
@@ -72,18 +63,19 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
 			@Override
 			public PIDSource constructPIDSourceDevice() {
-				Encoder enc = new Encoder(tankMap.rightCluster.encoder.a, tankMap.rightCluster.encoder.b);
-				enc.setDistancePerPulse(tankMap.rightCluster.encoder.dpp);
+				Encoder enc = new Encoder(map.getRightCluster().getEncoder().getPortA(),
+						map.getRightCluster().getEncoder().getPortB());
+				enc.setDistancePerPulse(map.getRightCluster().getEncoder().getDistancePerPulse());
 				return enc;
 			}
 		};
 
-		leftClusterController = new PIDMotorClusterController(tankMap.leftCluster.p, tankMap.leftCluster.i, tankMap
-				.leftCluster.d,
+		leftClusterController = new PIDMotorClusterController(map.getLeftCluster().getVelocityPID().getPID().getP(),
+				map.getLeftCluster().getVelocityPID().getPID().getI(), map.getLeftCluster().getVelocityPID().getPID().getD(),
 				0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
 			@Override
 			public int getNumMotors() {
-				return tankMap.leftCluster.cluster.motors.length;
+				return map.getLeftCluster().getCluster().getMotorCount();
 			}
 
 			@Override
@@ -94,8 +86,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
 			@Override
 			public void populateMotorCluster() {
 				VictorSP motor; // declare before loop to save garbage collection time
-				for (int i = 0; i < tankMap.leftCluster.cluster.motors.length; i++) {
-					motor = new VictorSP(tankMap.leftCluster.cluster.motors[i].PORT);
+				for (MotorMap.Motor m : map.getLeftCluster().getCluster().getMotorList()) {
+					motor = new VictorSP(m.getPort());
 					motor.setInverted(false);   // motors should not be inverted, motor cluster should be
 					addMotorClusterSlave(motor);
 				}
@@ -103,27 +95,28 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
 			@Override
 			public PIDSource constructPIDSourceDevice() {
-				Encoder enc = new Encoder(tankMap.leftCluster.encoder.a, tankMap.leftCluster.encoder.b);
-				enc.setDistancePerPulse(tankMap.leftCluster.encoder.dpp);
+				Encoder enc = new Encoder(map.getLeftCluster().getEncoder().getPortA(),
+						map.getLeftCluster().getEncoder().getPortB());
+				enc.setDistancePerPulse(map.getLeftCluster().getEncoder().getDistancePerPulse());
 				return enc;
 			}
 		};
 
 		gyro = new AHRS(SPI.Port.kMXP);
 
-		angleController = new PIDAngleController(tankMap.anglePID.p, tankMap.anglePID.i, tankMap.anglePID.d,
-				leftClusterController, rightClusterController, gyro);
-		angleController.setAbsoluteTolerance(tankMap.anglePID.absoluteTolerance);
-		angleController.setMinimumOutput(tankMap.anglePID.minimumOutput);
-		angleController.setMinimumOutputEnabled(tankMap.anglePID.minimumOutputEnabled);
+		angleController = new PIDAngleController(map.getAnglePID().getPID().getP(), map.getAnglePID().getPID().getI(),
+				map.getAnglePID().getPID().getD(), leftClusterController, rightClusterController, gyro);
+		angleController.setAbsoluteTolerance(map.getAnglePID().getAbsoluteTolerance());
+		angleController.setMinimumOutput(map.getAnglePID().getMinimumOutput());
+		angleController.setMinimumOutputEnabled(map.getAnglePID().getMinimumOutputEnabled());
 		leftVelCorrector = new PIDOutputGetter();
 		rightVelCorrector = new PIDOutputGetter();
-		driveStraightAngleController = new PIDAngleController(tankMap.driveStraightAnglePID.p,
-				tankMap.driveStraightAnglePID.i, tankMap.driveStraightAnglePID.d, leftVelCorrector, rightVelCorrector,
-				gyro);
-		driveStraightAngleController.setAbsoluteTolerance(tankMap.driveStraightAnglePID.absoluteTolerance);
-		driveStraightAngleController.setMinimumOutput(tankMap.driveStraightAnglePID.minimumOutput);
-		driveStraightAngleController.setMinimumOutputEnabled(tankMap.driveStraightAnglePID.minimumOutputEnabled);
+		driveStraightAngleController = new PIDAngleController(map.getDriveStraightAnglePID().getPID().getP(),
+				map.getDriveStraightAnglePID().getPID().getI(), map.getDriveStraightAnglePID().getPID().getD(),
+				leftVelCorrector, rightVelCorrector, gyro);
+		driveStraightAngleController.setAbsoluteTolerance(map.getDriveStraightAnglePID().getAbsoluteTolerance());
+		driveStraightAngleController.setMinimumOutput(map.getDriveStraightAnglePID().getMinimumOutput());
+		driveStraightAngleController.setMinimumOutputEnabled(map.getDriveStraightAnglePID().getMinimumOutputEnabled());
 
 		startTime = new Date().getTime();
 

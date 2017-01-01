@@ -9,7 +9,7 @@ option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.intake";
 option java_outer_classname = "IntakeMap";
 
 message Intake{
-    required Mechanism super = 1;
+    required Mechanism mechanism = 1;
     required Motor motor = 2;
     required DoubleSolenoid solenoid = 3;
     required IRSensor left_IR = 4;

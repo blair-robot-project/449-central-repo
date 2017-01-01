@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.breach;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team449.robot.RobotMap;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 
 /**
@@ -26,16 +25,12 @@ public class BreachSubsystem extends MechanismSubsystem {
 	 *
 	 * @param map configuration map
 	 */
-	public BreachSubsystem(RobotMap map) {
-		super(map);
+	public BreachSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.breach.BreachMap.Breach map) {
+		super(map.getMechanism());
 		System.out.println("Breach init started");
-		if (!(map instanceof BreachMap)) {
-			System.err.println("Breach has a map of class " + map.getClass().getSimpleName() + " and not BreachMap");
-		}
 
-		BreachMap breachMap = (BreachMap) map;
-		backSolenoid = new DoubleSolenoid(breachMap.back.forward, breachMap.back.reverse);
-		frontSolenoid = new DoubleSolenoid(breachMap.front.forward, breachMap.front.reverse);
+		backSolenoid = new DoubleSolenoid(map.getBack().getForward(), map.getBack().getReverse());
+		frontSolenoid = new DoubleSolenoid(map.getFront().getForward(), map.getFront().getReverse());
 		System.out.println("Breach init finished");
 	}
 

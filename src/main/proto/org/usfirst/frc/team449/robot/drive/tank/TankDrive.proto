@@ -7,7 +7,7 @@ option java_package = "maps.org.usfirst.frc.team449.robot.drive.tank";
 option java_outer_classname = "TankDriveMap";
 
 message TankDrive {
-    required Drive super = 1;
+    required Drive drive = 1;
     /**
 	 * the map for the left cluster of the tank drive
 	 */
