@@ -1,14 +1,16 @@
 package org.usfirst.frc.team449.robot;
 
+import com.google.protobuf.Message;
+import com.google.protobuf.TextFormat;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 /**
+ * NOTE: This class is probably useless. It's here because Noah hasn't gotten around to deleting it.
  * The base of all subsystems linked to maps. Holds a <code>RobotMap</code> that will be set
  * by subclasses to their own map
  */
@@ -25,25 +27,20 @@ public abstract class MappedSubsystem extends Subsystem {
 	}
 
 	/**
-	 * This creates a JSONObject from a .json file referenced by the given
+	 * This creates a Message from a .cfg file referenced by the given
 	 * path.
 	 *
-	 * @param path the path to the <code>.json</code> from which to create the
-	 *             JSONObject
-	 * @return the JSONObject creted from the given file, or null if there was
-	 * an IOException
+	 * @param path the path to the <code>.cfg</code> from which to read the message.
+	 *
+	 * @return the Message created from the given file, which is also put in dest.
 	 */
-	public static JSONObject readConfig(String path) {
+	public static Message readConfig(String path, Message.Builder builder) throws IOException {
 		File cfg = new File(path);
 		if (!cfg.exists()) {
 			throw new RuntimeException("Configuration file does not exist!");
 		}
-		JSONObject json = null;
-		try {
-			json = new JSONObject(new String(Files.readAllBytes(cfg.toPath()), StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace(); // if this happens, we're fucked
-		}
-		return json;
+		BufferedReader br = new BufferedReader(new FileReader(cfg));
+		TextFormat.getParser().merge(br, builder);
+		return builder.build();
 	}
 }

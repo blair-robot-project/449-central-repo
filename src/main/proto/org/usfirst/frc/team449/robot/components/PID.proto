@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "PIDMap";
+
+message PID {
+    /**
+     * the p value for the pid controller
+     */
+    required double p = 1;
+    /**
+     * the i value for the pid controller
+     */
+    required double i = 2;
+    /**
+     * the d value for the pid controller
+     */
+    required double d = 3;
+    /**
+     * the f value for the pid controller
+     */
+    required double f = 4;
+    /**
+     * the percent error around the setpoint that is "close enough" and
+     * requires no more tuning (20 for 20%)
+     */
+    required double percent_tolerance = 5;
+}

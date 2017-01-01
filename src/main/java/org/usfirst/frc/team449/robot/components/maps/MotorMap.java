@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
@@ -20,14 +19,11 @@ public class MotorMap extends MapObject {
     /**
      * Instantiates a new <code>Motor</code>
      *
-     * @param json      the <code>JSONObject</code> containing the values for this
-     *                  object
-     * @param path      the path to find this object in the
-     *                  <code>JSONObject</code>
-     * @param enclosing <code>Class</code> one up from this <code>MapObject</code>
-     *                  in the map
+     * @param message The protobuf message with the data for this <code>Motor</code>
      */
-    public MotorMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public MotorMap(maps.org.usfirst.frc.team449.robot.components.MotorMap.Motor message) {
+        super(message);
+        PORT = message.getPort();
+        INVERTED = message.getInverted();
     }
 }

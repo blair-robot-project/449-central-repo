@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "EncoderMap";
+
+message Encoder {
+    /**
+     * Port a of the encoder
+     */
+    required int32 port_a = 1;
+    /**
+     * Port b of the encoder
+     */
+    required int32 port_b = 2;
+    /**
+     * DPP (distance per pulse) of the encoder
+     */
+    required double distance_per_pulse = 3;
+}

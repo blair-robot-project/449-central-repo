@@ -1,0 +1,40 @@
+syntax = "proto2";
+import "org/usfirst/frc/team449/robot/components/PID.proto";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "VelocityPIDMap";
+
+message VelocityPID {
+    required PID super = 1;
+    /**
+     * radius of the range of values around zero, that when read from the
+     * encoder when setpoint is 0 results in velocity being 0
+     */
+    required double zero_tolerance = 2;
+    /**
+     * the maximum delta velocity from the controller
+     */
+    required double output_range = 3;
+    /**
+     * whether this PIDVelocityMotor should be run backwards
+     */
+    required bool inverted = 4;
+    /**
+     * max speed to run these motors at
+     */
+    required double speed = 5;
+
+    /**
+     * the expected input range to the PID loop; kP, kI, and kD are adjusted
+     * to be a percentage of the inputRange (kI = i / inputRange)
+     */
+    required int32 input_range = 6;
+
+    /**
+     * Period of the PID control loop
+     */
+    required double controller_period = 7;
+
+    required double ramp_rate = 8;
+    required bool ramp_rate_enabled = 9;
+}

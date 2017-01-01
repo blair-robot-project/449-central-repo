@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.vision";
+option java_outer_classname = "VisionMap";
+
+message Vision{
+    /**
+	 * Names of the cameras (from the roborio web interface)
+	 */
+
+    repeated string camera_names = 1;
+}

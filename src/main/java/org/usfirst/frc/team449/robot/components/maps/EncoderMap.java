@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
@@ -24,14 +23,12 @@ public class EncoderMap extends MapObject {
     /**
      * Instantiates a new <code>Encoder</code>
      *
-     * @param json      the <code>JSONObject</code> containing the values for this
-     *                  object
-     * @param path      the path to find this object in the
-     *                  <code>JSONObject</code>
-     * @param enclosing <code>Class</code> one up from this <code>MapObject</code>
-     *                  in the map
+     * @param message The protobuf message with the data for this encoder.
      */
-    public EncoderMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public EncoderMap(maps.org.usfirst.frc.team449.robot.components.EncoderMap.Encoder message) {
+        super(message);
+        a = message.getPortA();
+        b = message.getPortB();
+        dpp = message.getDistancePerPulse();
     }
 }

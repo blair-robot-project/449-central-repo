@@ -1,10 +1,9 @@
 package org.usfirst.frc.team449.robot.components.maps;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.MapObject;
 
 /**
- * a basic PID object, only contains the p, i and d values
+ * a basic PID object, only contains the p, i, d and f values
  */
 public abstract class PIDMap extends MapObject {
     /**
@@ -29,7 +28,12 @@ public abstract class PIDMap extends MapObject {
      */
     public double percentTolerance;
 
-    public PIDMap(JSONObject json, String path, Class enclosing) {
-        super(json, path, enclosing);
+    public PIDMap(maps.org.usfirst.frc.team449.robot.components.PIDMap.PID message) {
+        super(message);
+        p = message.getP();
+        i = message.getI();
+        d = message.getD();
+        f = message.getF();
+        percentTolerance = message.getPercentTolerance();
     }
 }

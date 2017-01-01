@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.mechanism.intake;
 
-import org.json.JSONObject;
 import org.usfirst.frc.team449.robot.components.maps.DoubleSolenoidMap;
 import org.usfirst.frc.team449.robot.components.maps.IRSensorMap;
 import org.usfirst.frc.team449.robot.components.maps.MotorMap;
@@ -19,17 +18,23 @@ public class IntakeMap extends MechanismMap {
 	public double OUTPUT_SPEED;
 	public double INPUT_SPEED;
 	public UltrasonicMap leftUltrasonic;
-
 	public UltrasonicMap rightUltrasonic;
 
 	/**
-	 * creates a new Intake Map based on the configuration in the given json any
-	 * maps in here are to be shared across all intake subsystems
+	 * creates a new Intake Map based on the configuration in the given message.
+	 * Any maps in here are to be shared across all intake subsystems.
 	 *
-	 * @param json a JSONObject containing the configuration for the maps in this
-	 *             object
+	 * @param message The protobuf message with the data for this object.
 	 */
-	public IntakeMap(JSONObject json) {
-		super(json);
+	public IntakeMap(maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake message) {
+		super(message.getSuper());
+		motor = new MotorMap(message.getMotor());
+		solenoid = new DoubleSolenoidMap(message.getSolenoid());
+		leftIR = new IRSensorMap(message.getLeftIR());
+		rightIR = new IRSensorMap(message.getRightIR());
+		OUTPUT_SPEED = message.getOutputSpeed();
+		INPUT_SPEED = message.getInputSpeed();
+		leftUltrasonic = new UltrasonicMap(message.getLeftUltrasonic());
+		rightUltrasonic = new UltrasonicMap(message.getRightUltrasonic());
 	}
 }
