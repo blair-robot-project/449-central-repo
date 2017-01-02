@@ -1,10 +1,6 @@
 package org.usfirst.frc.team449.robot.components;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.*;
 
 /**
  * Class for PID controlled <code>SpeedController</code>s (motors).

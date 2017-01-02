@@ -7,7 +7,7 @@ option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "MotorPIDMap";
 
 message MotorPID {
-    required PID super = 1;
+    required PID PID = 1;
     /**
      * the motor controlled by this controller
      */

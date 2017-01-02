@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.drive.tank.TankDriveMap;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
@@ -26,8 +25,10 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		leftThrottle = oi.getDriveAxisLeft() * ((TankDriveMap) (subsystem.map)).leftCluster.speed;
-		rightThrottle = oi.getDriveAxisRight() * ((TankDriveMap) (subsystem.map)).rightCluster.speed;
+		leftThrottle = oi.getDriveAxisLeft() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive)
+				(subsystem.map)).getLeftCluster().getVelocityPID().getSpeed();
+		rightThrottle = oi.getDriveAxisRight() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive)
+				(subsystem.map)).getRightCluster().getVelocityPID().getSpeed();
 		// pushing forward on the stick gives -1 so it is negated
 		((TankDriveSubsystem) subsystem).setThrottle(leftThrottle, rightThrottle);
 	}

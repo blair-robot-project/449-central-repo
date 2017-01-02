@@ -5,7 +5,7 @@ option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "VelocityPIDMap";
 
 message VelocityPID {
-    required PID super = 1;
+    required PID PID = 1;
     /**
      * radius of the range of values around zero, that when read from the
      * encoder when setpoint is 0 results in velocity being 0

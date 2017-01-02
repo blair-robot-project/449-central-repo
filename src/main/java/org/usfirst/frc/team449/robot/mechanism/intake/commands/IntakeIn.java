@@ -2,7 +2,6 @@ package org.usfirst.frc.team449.robot.mechanism.intake.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap;
 import org.usfirst.frc.team449.robot.mechanism.intake.IntakeSubsystem;
 
 /**
@@ -27,7 +26,8 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		((IntakeSubsystem) subsystem).setMotorSpeed(((IntakeMap) (subsystem.map)).INPUT_SPEED);
+		((IntakeSubsystem) subsystem).setMotorSpeed(((maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake)
+				(subsystem.map)).getInputSpeed());
 	}
 
 	@Override

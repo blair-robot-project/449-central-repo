@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.RobotMap;
 import org.usfirst.frc.team449.robot.components.SmoothedValue;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.commands.IntakeIn;
@@ -56,34 +55,31 @@ public class IntakeSubsystem extends MechanismSubsystem {
 
 	private boolean ignoreIR;
 
+	private maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake intakeMap;
+
 	/**
 	 * Instantiate a new <code>IntakeSubsystem</code>
 	 *
-	 * @param map {@link RobotMap} used for reference to constants
+	 * @param map message used for reference to constants
 	 */
-	public IntakeSubsystem(RobotMap map) {
-		super(map);
+	public IntakeSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake map) {
+		super(map.getMechanism());
 		System.out.println("Intake init started");
+		intakeMap = map;
 
-		if (!(map instanceof IntakeMap)) {
-			System.err.println("Intake has a map of class " + map.getClass().getSimpleName() + " and not IntakeMap");
-		}
+		this.mainMotor = new VictorSP(map.getMotor().getPort());
+		this.mainMotor.setInverted(map.getMotor().getInverted());
 
-		IntakeMap intakeMap = (IntakeMap) map;
+		solenoid = new DoubleSolenoid(map.getSolenoid().getForward(), map.getSolenoid().getReverse());
+		this.leftIR = new AnalogInput(map.getLeftIR().getPort());
+		this.leftIR.setAverageBits(map.getLeftIR().getAverageBits());
+		this.leftIR.setOversampleBits(map.getLeftIR().getOversamplingBits());
+		this.rightIR = new AnalogInput(map.getRightIR().getPort());
+		this.rightIR.setAverageBits(map.getRightIR().getAverageBits());
+		this.rightIR.setOversampleBits(map.getRightIR().getOversamplingBits());
 
-		this.mainMotor = new VictorSP(intakeMap.motor.PORT);
-		this.mainMotor.setInverted(intakeMap.motor.INVERTED);
-
-		solenoid = new DoubleSolenoid(intakeMap.solenoid.forward, intakeMap.solenoid.reverse);
-		this.leftIR = new AnalogInput(intakeMap.leftIR.PORT);
-		this.leftIR.setAverageBits(intakeMap.leftIR.AVERAGE_BITS);
-		this.leftIR.setOversampleBits(intakeMap.leftIR.OVERSAMPLING_BITS);
-		this.rightIR = new AnalogInput(intakeMap.rightIR.PORT);
-		this.rightIR.setAverageBits(intakeMap.rightIR.AVERAGE_BITS);
-		this.rightIR.setOversampleBits(intakeMap.rightIR.OVERSAMPLING_BITS);
-
-		leftChannel = new AnalogInput(intakeMap.leftUltrasonic.PORT);
-		rightChannel = new AnalogInput(intakeMap.rightUltrasonic.PORT);
+		leftChannel = new AnalogInput(map.getLeftUltrasonic().getPort());
+		rightChannel = new AnalogInput(map.getRightIR().getPort());
 
 		leftVal = new SmoothedValue(1);
 		rightVal = new SmoothedValue(1);
@@ -153,10 +149,8 @@ public class IntakeSubsystem extends MechanismSubsystem {
 	public boolean findBall() {
 		double right = rightIR.getAverageVoltage();
 		double left = leftIR.getAverageVoltage();
-		IntakeMap intakeMap = (IntakeMap) map; // TODO move this to
-		// constructor/initializer
-		boolean found = (intakeMap.rightIR.LOWER_BOUND < right && right < intakeMap.rightIR.UPPER_BOUND)
-				|| (intakeMap.leftIR.LOWER_BOUND < left && left < intakeMap.leftIR.UPPER_BOUND);
+		boolean found = (intakeMap.getRightIR().getLowerBound() < right && right < intakeMap.getRightIR().getUpperBound())
+				|| (intakeMap.getLeftIR().getLowerBound() < left && left < intakeMap.getLeftIR().getUpperBound());
 		return found;
 	}
 

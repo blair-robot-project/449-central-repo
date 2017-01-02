@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.vision.commands;
 import com.ni.vision.NIVision;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
-import org.usfirst.frc.team449.robot.vision.VisionMap;
 import org.usfirst.frc.team449.robot.vision.VisionSubsystem;
 
 
@@ -35,8 +34,8 @@ public class ToggleCamera extends ReferencingCommand {
 				.sessionPtr]);
 
 		// Get new session pointer
-		((VisionSubsystem) subsystem).sessionPtr = ((VisionSubsystem) subsystem).sessionPtr < VisionMap.CAMERA_NAMES
-				.length - 1
+		((VisionSubsystem) subsystem).sessionPtr = ((VisionSubsystem) subsystem).sessionPtr <
+				((maps.org.usfirst.frc.team449.robot.vision.VisionMap.Vision) subsystem.map).getCameraNamesCount() - 1
 				? ((VisionSubsystem) subsystem).sessionPtr + 1 : 0;
 
 		// Start capture from new session

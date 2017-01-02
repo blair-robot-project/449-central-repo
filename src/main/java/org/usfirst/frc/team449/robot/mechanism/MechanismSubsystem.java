@@ -1,12 +1,11 @@
 package org.usfirst.frc.team449.robot.mechanism;
 
 import org.usfirst.frc.team449.robot.MappedSubsystem;
-import org.usfirst.frc.team449.robot.RobotMap;
 
 /**
  * <p>
  * This is the base class for all mechanisms on the robot. It extends
- * {@link MappedSubsystem} and contains a {@link RobotMap} to hold constants.
+ * {@link MappedSubsystem} and contains a Message to hold constants.
  * </p>
  */
 public abstract class MechanismSubsystem extends MappedSubsystem {
@@ -16,7 +15,7 @@ public abstract class MechanismSubsystem extends MappedSubsystem {
 	 *
 	 * @param map constants map
 	 */
-	public MechanismSubsystem(RobotMap map) {
+	public MechanismSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.MechanismMap.Mechanism map) {
 		super(map);
 	}
 }

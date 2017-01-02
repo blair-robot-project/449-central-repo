@@ -7,7 +7,7 @@ option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "ClusterPIDMap";
 
 message ClusterPID {
-    required VelocityPID super = 1;
+    required VelocityPID velocity_PID = 1;
     /**
      * the MotorCluster controlled by this PID controller
      */

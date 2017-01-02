@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.tank.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.drive.tank.TankDriveMap;
 import org.usfirst.frc.team449.robot.drive.tank.TankDriveSubsystem;
 
 /**
@@ -31,9 +30,10 @@ public class DriveDistance extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		TankDriveMap map = (TankDriveMap) (subsystem.map);
-		((TankDriveSubsystem) (subsystem)).setThrottle(direction * -map.leftCluster.speed * .5, direction * -map
-				.rightCluster.speed * .5);
+		maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive map =
+				(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive) (subsystem.map);
+		((TankDriveSubsystem) (subsystem)).setThrottle(direction * -map.getLeftCluster().getVelocityPID().getSpeed() * .5,
+				direction * -map.getRightCluster().getVelocityPID().getSpeed() * .5);
 	}
 
 	@Override
