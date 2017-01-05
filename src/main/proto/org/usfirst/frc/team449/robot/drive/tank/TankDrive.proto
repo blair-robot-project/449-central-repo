@@ -7,22 +7,22 @@ option java_package = "maps.org.usfirst.frc.team449.robot.drive.tank";
 option java_outer_classname = "TankDriveMap";
 
 message TankDrive {
-    required Drive drive = 1;
-    /**
+	required Drive drive = 1;
+	/**
 	 * the map for the left cluster of the tank drive
 	 */
-    required ClusterPID left_cluster = 2;
+	required ClusterPID left_cluster = 2;
 	/**
 	 * the map for the right cluster of the tank drive
 	 */
 	required ClusterPID right_cluster = 3;
-    /**
-     * the map for angle controller of the tank drive
-     */
-    required AnglePID angle_PID = 4;
+	/**
+	 * the map for angle controller of the tank drive
+	 */
+	required AnglePID angle_PID = 4;
 	required AnglePID drive_straight_angle_PID = 5;
-    /**
-     * the radius of the drive
-     */
-    required double radius = 6;
+	/**
+	 * the radius of the drive
+	 */
+	required double radius = 6;
 }

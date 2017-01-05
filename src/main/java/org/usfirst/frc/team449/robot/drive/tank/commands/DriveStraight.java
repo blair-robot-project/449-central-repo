@@ -23,7 +23,8 @@ public class DriveStraight extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		rightThrottle = oi.getDriveAxisRight() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive)
+		rightThrottle = oi.getDriveAxisRight() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap
+				.TankDrive)
 				(subsystem.map)).getRightCluster().getVelocityPID().getSpeed();
 		((TankDriveSubsystem) subsystem).setThrottle(rightThrottle, rightThrottle);
 	}

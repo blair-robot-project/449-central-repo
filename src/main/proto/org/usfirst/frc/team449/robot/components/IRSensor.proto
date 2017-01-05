@@ -4,28 +4,28 @@ option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "IRSensorMap";
 
 message IRSensor {
-    /**
-    * Port number
-    */
-    required int32 port = 1;
-    /**
-     * Minimum value at which IntakeIn should stop
-     */
-    required double lower_bound = 2;
-    /**
-     * Maximum value at which IntakeIn should stop
-     */
-    required double upper_bound = 3;
-    /**
-     * number of bits for oversampling as defined by
-     * {@link AnalogInput#setOversampleBits(int)}
-     * Should probably be the same as average_bits
-     */
-    required int32 oversampling_bits = 4;
-    /**
-     * number of bits for averaging as defined by
-     * {@link AnalogInput#setAverageBits(int) }
-     * Should probably be the same as oversampling_bits
-     */
-    required int32 average_bits = 5;
+	/**
+	* Port number
+	*/
+	required int32 port = 1;
+	/**
+	 * Minimum value at which IntakeIn should stop
+	 */
+	required double lower_bound = 2;
+	/**
+	 * Maximum value at which IntakeIn should stop
+	 */
+	required double upper_bound = 3;
+	/**
+	 * number of bits for oversampling as defined by
+	 * {@link AnalogInput#setOversampleBits(int)}
+	 * Should probably be the same as average_bits
+	 */
+	required int32 oversampling_bits = 4;
+	/**
+	 * number of bits for averaging as defined by
+	 * {@link AnalogInput#setAverageBits(int) }
+	 * Should probably be the same as oversampling_bits
+	 */
+	required int32 average_bits = 5;
 }

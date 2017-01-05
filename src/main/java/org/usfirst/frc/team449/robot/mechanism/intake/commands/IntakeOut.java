@@ -25,7 +25,8 @@ public class IntakeOut extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		((IntakeSubsystem) subsystem).setMotorSpeed(((maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake)
+		((IntakeSubsystem) subsystem).setMotorSpeed(((maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap
+				.Intake)
 				(subsystem.map)).getOutputSpeed());
 	}
 

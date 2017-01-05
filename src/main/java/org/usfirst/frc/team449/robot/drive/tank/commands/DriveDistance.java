@@ -32,7 +32,8 @@ public class DriveDistance extends ReferencingCommand {
 	protected void execute() {
 		maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive map =
 				(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive) (subsystem.map);
-		((TankDriveSubsystem) (subsystem)).setThrottle(direction * -map.getLeftCluster().getVelocityPID().getSpeed() * .5,
+		((TankDriveSubsystem) (subsystem)).setThrottle(direction * -map.getLeftCluster().getVelocityPID().getSpeed() *
+						.5,
 				direction * -map.getRightCluster().getVelocityPID().getSpeed() * .5);
 	}
 

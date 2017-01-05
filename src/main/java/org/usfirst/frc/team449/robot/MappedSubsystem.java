@@ -30,7 +30,6 @@ public abstract class MappedSubsystem extends Subsystem {
 	 * path.
 	 *
 	 * @param path the path to the <code>.cfg</code> from which to read the message.
-	 *
 	 * @return the Message created from the given file, which is also put in dest.
 	 */
 	public static Message readConfig(String path, Message.Builder builder) throws IOException {

@@ -77,7 +77,8 @@ public class VisionSubsystem extends MappedSubsystem {
 		//		try {
 		//			setDefaultCommand(new DefaultVision(this));
 		//		} catch (Exception e) {
-		//			System.out.println("(initDefaultCommand) Cameras done goofed, but everything else is (maybe) functional.");
+		//			System.out.println("(initDefaultCommand) Cameras done goofed, but everything else is (maybe)
+		// functional.");
 		//		}
 	}
 }

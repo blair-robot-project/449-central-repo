@@ -8,14 +8,14 @@ import "org/usfirst/frc/team449/robot/components/Ultrasonic.proto";
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.intake";
 option java_outer_classname = "IntakeMap";
 
-message Intake{
-    required Mechanism mechanism = 1;
-    required Motor motor = 2;
-    required DoubleSolenoid solenoid = 3;
-    required IRSensor left_IR = 4;
-    required IRSensor right_IR = 5;
-    required double output_speed = 6;
-    required double input_speed = 7;
-    required Ultrasonic left_ultrasonic = 8;
-    required Ultrasonic right_ultrasonic = 9;
+message Intake {
+	required Mechanism mechanism = 1;
+	required Motor motor = 2;
+	required DoubleSolenoid solenoid = 3;
+	required IRSensor left_IR = 4;
+	required IRSensor right_IR = 5;
+	required double output_speed = 6;
+	required double input_speed = 7;
+	required Ultrasonic left_ultrasonic = 8;
+	required Ultrasonic right_ultrasonic = 9;
 }

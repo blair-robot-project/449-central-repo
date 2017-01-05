@@ -149,7 +149,8 @@ public class IntakeSubsystem extends MechanismSubsystem {
 	public boolean findBall() {
 		double right = rightIR.getAverageVoltage();
 		double left = leftIR.getAverageVoltage();
-		boolean found = (intakeMap.getRightIR().getLowerBound() < right && right < intakeMap.getRightIR().getUpperBound())
+		boolean found = (intakeMap.getRightIR().getLowerBound() < right && right < intakeMap.getRightIR()
+				.getUpperBound())
 				|| (intakeMap.getLeftIR().getLowerBound() < left && left < intakeMap.getLeftIR().getUpperBound());
 		return found;
 	}

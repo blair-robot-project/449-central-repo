@@ -27,7 +27,8 @@ public class DefaultDrive extends ReferencingCommand {
 	protected void execute() {
 		leftThrottle = oi.getDriveAxisLeft() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive)
 				(subsystem.map)).getLeftCluster().getVelocityPID().getSpeed();
-		rightThrottle = oi.getDriveAxisRight() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive)
+		rightThrottle = oi.getDriveAxisRight() * ((maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap
+				.TankDrive)
 				(subsystem.map)).getRightCluster().getVelocityPID().getSpeed();
 		// pushing forward on the stick gives -1 so it is negated
 		((TankDriveSubsystem) subsystem).setThrottle(leftThrottle, rightThrottle);
