@@ -19,8 +19,4 @@ public abstract class Component extends Subsystem {
 	@Override
 	final protected void initDefaultCommand() {
 	}
-
-	public abstract boolean getInverted();
-
-	public abstract void setInverted(boolean b);
 }
