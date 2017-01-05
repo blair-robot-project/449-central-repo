@@ -4,8 +4,8 @@ option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "LimitSwitchMap";
 
 message LimitSwitch {
-    /**
-    * Port number
-    */
-    required int32 port = 1;
+	/**
+	* Port number
+	*/
+	required int32 port = 1;
 }

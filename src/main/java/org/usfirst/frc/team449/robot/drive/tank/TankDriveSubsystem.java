@@ -1,7 +1,11 @@
 package org.usfirst.frc.team449.robot.drive.tank;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.VictorSP;
 import maps.org.usfirst.frc.team449.robot.components.MotorMap;
 import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
@@ -33,13 +37,15 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
 	private long startTime;
 
-	public TankDriveSubsystem(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive map, OISubsystem oi) {
+	public TankDriveSubsystem(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive map, OISubsystem
+			oi) {
 		super(map.getDrive());
 		this.oi = oi;
 		System.out.println("TankDrive init started");
 
 		rightClusterController = new PIDMotorClusterController(map.getRightCluster().getVelocityPID().getPID().getP(),
-				map.getRightCluster().getVelocityPID().getPID().getI(), map.getRightCluster().getVelocityPID().getPID().getD(),
+				map.getRightCluster().getVelocityPID().getPID().getI(), map.getRightCluster().getVelocityPID().getPID
+				().getD(),
 				0, 0.05, 130.0, true, false, PIDSourceType.kRate) {
 			@Override
 			public int getNumMotors() {
@@ -71,7 +77,8 @@ public class TankDriveSubsystem extends DriveSubsystem {
 		};
 
 		leftClusterController = new PIDMotorClusterController(map.getLeftCluster().getVelocityPID().getPID().getP(),
-				map.getLeftCluster().getVelocityPID().getPID().getI(), map.getLeftCluster().getVelocityPID().getPID().getD(),
+				map.getLeftCluster().getVelocityPID().getPID().getI(), map.getLeftCluster().getVelocityPID().getPID()
+				.getD(),
 				0, 0.05, 130.0, false, false, PIDSourceType.kRate) {
 			@Override
 			public int getNumMotors() {

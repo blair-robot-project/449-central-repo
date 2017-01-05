@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "CANTalonSRXMap";
+
+message CANTalonSRX {
+	required int32 port = 1;
+
+	// Feedback Device represents CTRE's {@link CANTalon.FeedbackDevice}
+	enum FeedbackDevice {
+		QuadEncoder = 0;
+		AnalogPot = 2;
+		AnalogEncoder = 3;
+		EncRising = 4;
+		EncFalling = 5;
+		CtreMagEncoder_Relative = 6;
+		CtreMagEncoder_Absolute = 7;
+		PulseWidth = 8;
+	}
+
+	required FeedbackDevice feedback_device = 2;
+	required bool reverse_sensor = 3;
+	required bool reverse_output = 4;
+	required bool is_inverted = 5;
+	required double nominal_out_voltage = 6;
+	required double peak_out_voltage = 7;
+	required int32 profile = 8;
+	required double kP = 9;
+	required double kI = 10;
+	required double kD = 11;
+	required double kF = 12;
+	required bool fwd_lim_norm_open = 13;
+	required bool rev_lim_norm_open = 14;
+	required bool fwd_lim_enabled = 15;
+	required bool rev_lim_enabled = 16;
+	required bool fwd_soft_lim_enabled = 17;
+	required double fwd_soft_lim_val = 18;
+	required bool rev_soft_lim_enabled = 19;
+	required double rev_soft_lim_val = 20;
+	required bool brake_mode = 21;
+}

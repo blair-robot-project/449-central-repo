@@ -3,4 +3,5 @@ syntax = "proto2";
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism";
 option java_outer_classname = "MechanismMap";
 
-message Mechanism{}
+message Mechanism {
+}
