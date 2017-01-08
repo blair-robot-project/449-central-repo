@@ -142,12 +142,10 @@ public class CANTalonSRX extends Component {
 		canTalon.set(velocitySp * 60); // 60 converts from RPS to RPM, TODO figure out where the 60 should actually go
 	}
 
-	@Override
 	public boolean getInverted() {
 		return false;
 	}
 
-	@Override
 	public void setInverted(boolean b) {
 	}
 }
