@@ -14,7 +14,7 @@ import java.io.IOException;
  * by subclasses to their own map
  */
 public abstract class MappedSubsystem extends Subsystem {
-	public final Message map;
+	public Message map;
 
 	/**
 	 * Creates a mapped subsystem and sets its map
