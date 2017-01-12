@@ -13,6 +13,11 @@ public class CANTalonSRX extends Component {
 	public CANTalon canTalon;
 
 	/**
+	 * The maximum speed of the motor, in human units.
+	 */
+	protected double maxSpeed;
+
+	/**
 	 * kP of the internal PID loop
 	 */
 	protected double kP;
@@ -37,6 +42,8 @@ public class CANTalonSRX extends Component {
 	public CANTalonSRX(maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap.CANTalonSRX m) {
 		// Configure stuff
 		canTalon = new CANTalon(m.getPort());
+		if(m.hasMaxSpeed())
+			maxSpeed = m.getMaxSpeed();
 		canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.valueOf(m.getFeedbackDevice().getNumber()));
 		canTalon.reverseSensor(m.getReverseSensor());
 		canTalon.reverseOutput(m.getReverseOutput());
@@ -147,5 +154,11 @@ public class CANTalonSRX extends Component {
 	}
 
 	public void setInverted(boolean b) {
+	}
+
+	public Double getMaxSpeed(){
+		if (maxSpeed == 0.0)
+			return null;
+		return maxSpeed;
 	}
 }

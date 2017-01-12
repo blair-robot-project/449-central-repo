@@ -29,6 +29,7 @@ message CANTalonSRX {
 	required double kI = 10;
 	required double kD = 11;
 	required double kF = 12;
+	optional double max_speed = 22;
 	required bool fwd_lim_norm_open = 13;
 	required bool rev_lim_norm_open = 14;
 	required bool fwd_lim_enabled = 15;
