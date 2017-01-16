@@ -8,9 +8,6 @@
 .idea
 out
 
-## Libraries ##
-lib/
-
 ## eclipse project file ##
 .settings
 .classpath

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot.components;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 
 /**
  * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}

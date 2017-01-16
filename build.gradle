@@ -32,8 +32,8 @@ buildscript {
 }
 
 dependencies {
-	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
-	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
+	compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
+	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
 	compile 'com.google.protobuf:protobuf-java:3.0.0'
 	compile 'io.grpc:grpc-stub:1.0.0-pre2'
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
