@@ -22,3 +22,6 @@ build
 .gradle
 build/
 gen/
+
+## Mac-only ##
+.DS_Store
