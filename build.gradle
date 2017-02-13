@@ -37,6 +37,8 @@ dependencies {
 	compile 'com.google.protobuf:protobuf-java:3.0.0'
 	compile 'io.grpc:grpc-stub:1.0.0-pre2'
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
+	compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.6'
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
 	compile fileTree(dir: 'lib')
 }
 

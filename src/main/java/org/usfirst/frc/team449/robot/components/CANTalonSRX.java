@@ -1,5 +1,7 @@
 package org.usfirst.frc.team449.robot.components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.wpi.first.wpilibj.CANTalon;
 
 /**
@@ -33,6 +35,53 @@ public class CANTalonSRX extends Component {
 	 * kF of the interal PID loop
 	 */
 	protected double kF;
+
+	@JsonCreator
+	public CANTalonSRX(@JsonProperty("port") int port,
+					   @JsonProperty("max_speed") double maxSpeed,
+					   @JsonProperty("kP") double kP,
+					   @JsonProperty("kI") double kI,
+					   @JsonProperty("kD") double kD,
+					   @JsonProperty("kF") double kF,
+					   @JsonProperty("feedback_device") CANTalon.FeedbackDevice feedbackDevice,
+					   @JsonProperty("reverse_sensor") boolean reverseSensor,
+					   @JsonProperty("reverse_output") boolean reverseOutput,
+					   @JsonProperty("is_inverted") boolean isInverted,
+					   @JsonProperty("nominal_out_voltage") double nomOutVoltage,
+					   @JsonProperty("peak_out_voltage") double peakOutVoltage,
+					   @JsonProperty("profile") int profile,
+					   @JsonProperty("brake_mode") boolean brakeMode){
+		canTalon = new CANTalon(port);
+		if(maxSpeed != 0.0)
+			this.maxSpeed = maxSpeed;
+		canTalon.setFeedbackDevice(feedbackDevice);
+		canTalon.reverseSensor(reverseSensor);
+		canTalon.reverseOutput(reverseOutput);
+		canTalon.setInverted(isInverted);
+		canTalon.configNominalOutputVoltage(+nomOutVoltage,-nomOutVoltage);
+		canTalon.configPeakOutputVoltage(+peakOutVoltage,-peakOutVoltage);
+		canTalon.setProfile(profile);
+
+		//Set up PID
+		this.kP = kP;
+		this.kI = kI;
+		this.kD = kD;
+		this.kF = kF;
+		setPIDF(kP,kI,kD,kF);
+		canTalon.setPID(kP, kI, kD, kF, 0, 0, 0);
+
+		canTalon.enableBrakeMode(brakeMode);
+
+//		canTalon.ConfigFwdLimitSwitchNormallyOpen(m.getFwdLimNormOpen());
+//		canTalon.ConfigRevLimitSwitchNormallyOpen(m.getRevLimNormOpen());
+//		canTalon.enableLimitSwitch(m.getFwdLimEnabled(), m.getRevLimEnabled());
+//		canTalon.enableForwardSoftLimit(m.getFwdSoftLimEnabled());
+//		canTalon.setForwardSoftLimit(m.getFwdSoftLimVal());
+//		canTalon.enableReverseSoftLimit(m.getRevSoftLimEnabled());
+//		canTalon.setReverseSoftLimit(m.getRevSoftLimVal());
+//		canTalon.enableBrakeMode(m.getBrakeMode());
+
+	}
 
 	/**
 	 * Construct the CANTalonSRX from its map object
