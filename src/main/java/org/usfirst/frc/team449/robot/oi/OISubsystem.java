@@ -1,8 +1,8 @@
 package org.usfirst.frc.team449.robot.oi;
 
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
-public abstract class OISubsystem extends MappedSubsystem {
+public abstract class OISubsystem extends Subsystem {
 	public OISubsystem(maps.org.usfirst.frc.team449.robot.oi.OIMap.OI map) {
 		super(map);
 	}

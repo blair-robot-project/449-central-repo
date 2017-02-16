@@ -50,6 +50,14 @@ public class CANTalonSRX extends Component {
 					   @JsonProperty("nominal_out_voltage") double nomOutVoltage,
 					   @JsonProperty("peak_out_voltage") double peakOutVoltage,
 					   @JsonProperty("profile") int profile,
+					   @JsonProperty("fwd_lim_norm_open") boolean fwdLimNormOpen,
+					   @JsonProperty("rev_lim_norm_open") boolean revLimNormOpen,
+					   @JsonProperty("fwd_lim_enabled") boolean fwdLimEnabled,
+					   @JsonProperty("rev_lim_enabled") boolean revLimEnabled,
+					   @JsonProperty("fwd_soft_lim_enabled") boolean fwdSoftLimEnabled,
+					   @JsonProperty("fwd_soft_lim_val") double fwdSoftLimVal,
+					   @JsonProperty("rev_soft_lim_enabled") boolean revSoftLimEnabled,
+					   @JsonProperty("rev_soft_lim_val") double revSoftLimVal,
 					   @JsonProperty("brake_mode") boolean brakeMode){
 		canTalon = new CANTalon(port);
 		if(maxSpeed != 0.0)
@@ -70,8 +78,50 @@ public class CANTalonSRX extends Component {
 		setPIDF(kP,kI,kD,kF);
 		canTalon.setPID(kP, kI, kD, kF, 0, 0, 0);
 
+		canTalon.ConfigFwdLimitSwitchNormallyOpen(fwdLimNormOpen);
+		canTalon.ConfigRevLimitSwitchNormallyOpen(revLimNormOpen);
+		canTalon.enableLimitSwitch(fwdLimEnabled, revLimEnabled);
+		canTalon.enableForwardSoftLimit(fwdSoftLimEnabled);
+		canTalon.setForwardSoftLimit(fwdSoftLimVal);
+		canTalon.enableReverseSoftLimit(revSoftLimEnabled);
+		canTalon.setReverseSoftLimit(revSoftLimVal);
 		canTalon.enableBrakeMode(brakeMode);
+	}
 
+//	/**
+//	 * Construct the CANTalonSRX from its map object
+//	 *
+//	 * @param m CANTalonSRX map object
+//	 */
+//	public CANTalonSRX(maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap.CANTalonSRX m) {
+//		// Configure stuff
+//		canTalon = new CANTalon(m.getPort());
+//		if(m.hasMaxSpeed())
+//			maxSpeed = m.getMaxSpeed();
+//		canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.valueOf(m.getFeedbackDevice().getNumber()));
+//		canTalon.reverseSensor(m.getReverseSensor());
+//		canTalon.reverseOutput(m.getReverseOutput());
+//		canTalon.setInverted(m.getIsInverted());
+//		canTalon.configNominalOutputVoltage
+//				(+m.getNominalOutVoltage(), -m.getNominalOutVoltage());
+//		canTalon.configPeakOutputVoltage(+m.getPeakOutVoltage(),
+//				-m.getPeakOutVoltage());
+//		canTalon.setProfile(m.getProfile());
+//
+//		/*
+//		 * Read the PIDF constants from the map, then call setPIDF to scale the stuff in the map as desired to get to
+//		 * native units, appropriates or whatever the hell the controller expect, then set the PIDF slots of the
+//		 * hardware and choose the slot
+//		 */
+//		kP = m.getKP();
+//		kI = m.getKI();
+//		kD = m.getKD();
+//		kF = m.getKF();
+//		setPIDF(m.getKP(), m.getKI(), m.getKD(), m.getKF());
+//		canTalon.setPID(kP, kI, kD, kF, 0, 0, 0);
+//		canTalon.setProfile(0);
+//
+//		// Configure more stuff
 //		canTalon.ConfigFwdLimitSwitchNormallyOpen(m.getFwdLimNormOpen());
 //		canTalon.ConfigRevLimitSwitchNormallyOpen(m.getRevLimNormOpen());
 //		canTalon.enableLimitSwitch(m.getFwdLimEnabled(), m.getRevLimEnabled());
@@ -80,52 +130,7 @@ public class CANTalonSRX extends Component {
 //		canTalon.enableReverseSoftLimit(m.getRevSoftLimEnabled());
 //		canTalon.setReverseSoftLimit(m.getRevSoftLimVal());
 //		canTalon.enableBrakeMode(m.getBrakeMode());
-
-	}
-
-	/**
-	 * Construct the CANTalonSRX from its map object
-	 *
-	 * @param m CANTalonSRX map object
-	 */
-	public CANTalonSRX(maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap.CANTalonSRX m) {
-		// Configure stuff
-		canTalon = new CANTalon(m.getPort());
-		if(m.hasMaxSpeed())
-			maxSpeed = m.getMaxSpeed();
-		canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.valueOf(m.getFeedbackDevice().getNumber()));
-		canTalon.reverseSensor(m.getReverseSensor());
-		canTalon.reverseOutput(m.getReverseOutput());
-		canTalon.setInverted(m.getIsInverted());
-		canTalon.configNominalOutputVoltage
-				(+m.getNominalOutVoltage(), -m.getNominalOutVoltage());
-		canTalon.configPeakOutputVoltage(+m.getPeakOutVoltage(),
-				-m.getPeakOutVoltage());
-		canTalon.setProfile(m.getProfile());
-
-		/*
-		 * Read the PIDF constants from the map, then call setPIDF to scale the stuff in the map as desired to get to
-		 * native units, appropriates or whatever the hell the controller expect, then set the PIDF slots of the
-		 * hardware and choose the slot
-		 */
-		kP = m.getKP();
-		kI = m.getKI();
-		kD = m.getKD();
-		kF = m.getKF();
-		setPIDF(m.getKP(), m.getKI(), m.getKD(), m.getKF());
-		canTalon.setPID(kP, kI, kD, kF, 0, 0, 0);
-		canTalon.setProfile(0);
-
-		// Configure more stuff
-		canTalon.ConfigFwdLimitSwitchNormallyOpen(m.getFwdLimNormOpen());
-		canTalon.ConfigRevLimitSwitchNormallyOpen(m.getRevLimNormOpen());
-		canTalon.enableLimitSwitch(m.getFwdLimEnabled(), m.getRevLimEnabled());
-		canTalon.enableForwardSoftLimit(m.getFwdSoftLimEnabled());
-		canTalon.setForwardSoftLimit(m.getFwdSoftLimVal());
-		canTalon.enableReverseSoftLimit(m.getRevSoftLimEnabled());
-		canTalon.setReverseSoftLimit(m.getRevSoftLimVal());
-		canTalon.enableBrakeMode(m.getBrakeMode());
-	}
+//	}
 
 	/**
 	 * Method called in the constructor that sets the true PID values before they are handed to the Talon's internal

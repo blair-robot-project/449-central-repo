@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import maps.org.usfirst.frc.team449.robot.components.MotorMap;
 import org.usfirst.frc.team449.robot.components.PIDMotorClusterController;
 import org.usfirst.frc.team449.robot.components.PIDOutputGetter;
@@ -23,7 +24,7 @@ import java.util.Date;
 /**
  * a Drive subsystem that operates with a tank drive
  */
-public class TankDriveSubsystem extends DriveSubsystem {
+public class TankDriveSubsystem extends Subsystem {
 	private PIDMotorClusterController rightClusterController;
 	private PIDMotorClusterController leftClusterController;
 
@@ -41,7 +42,6 @@ public class TankDriveSubsystem extends DriveSubsystem {
 
 	public TankDriveSubsystem(maps.org.usfirst.frc.team449.robot.drive.tank.TankDriveMap.TankDrive map, OISubsystem
 			oi) {
-		super(map.getDrive());
 		this.oi = oi;
 		System.out.println("TankDrive init started");
 
