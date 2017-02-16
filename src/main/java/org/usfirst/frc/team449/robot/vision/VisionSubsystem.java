@@ -1,17 +1,13 @@
 package org.usfirst.frc.team449.robot.vision;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
 
 /**
- * This is the subsystem for accessing USB cameras on the robot. It extends
- * <code>Subsystem</code>, not <code>MappedSubsystem</code>.
- *
- * @see Subsystem
- * @see MappedSubsystem
+ * This is the subsystem for accessing USB cameras on the robot.
  */
-public class VisionSubsystem extends MappedSubsystem {
+public class VisionSubsystem extends Subsystem {
 	/**
 	 * {@link Image} from the the current USB camera
 	 */
@@ -28,14 +24,16 @@ public class VisionSubsystem extends MappedSubsystem {
 	 */
 	public int sessionPtr;
 
+	int cameraNamesCount;
+
 	/**
 	 * Instantiate a new <code>VisionSubsystem</code>
-	 *
-	 * @param map configuration map
 	 */
-	public VisionSubsystem(maps.org.usfirst.frc.team449.robot.vision.VisionMap.Vision map) {
-		super(map);
+	public VisionSubsystem(@JsonProperty("camera_names_count") int cameraNamesCount) {
 		System.out.println("Vision init started");
+
+		this.cameraNamesCount = cameraNamesCount;
+
 		System.out.println("Vision subsystem skipped");
 		//		try {
 		//			sessions = new int[VisionMap.CAMERA_NAMES.length];
@@ -70,6 +68,10 @@ public class VisionSubsystem extends MappedSubsystem {
 		//		NIVision.IMAQdxGrab(sessions[sessionPtr], frame, 1);
 		//		return frame;
 		return null;
+	}
+
+	public int getCameraNamesCount() {
+		return cameraNamesCount;
 	}
 
 	@Override

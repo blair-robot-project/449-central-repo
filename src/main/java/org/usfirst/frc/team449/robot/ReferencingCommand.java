@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * <p>
@@ -10,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * </p>
  */
 public class ReferencingCommand extends Command {
-	public MappedSubsystem subsystem;
+	public Subsystem subsystem;
 
 	/**
 	 * <p>
@@ -21,7 +22,7 @@ public class ReferencingCommand extends Command {
 	 *
 	 * @param subsystem the subsystem that the <code>ReferencingCommand</code> belongs to
 	 */
-	public ReferencingCommand(MappedSubsystem subsystem) {
+	public ReferencingCommand(Subsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 
@@ -40,7 +41,7 @@ public class ReferencingCommand extends Command {
 	 * @param subsystem the subysystem that the <code>{@link ReferencingCommand}</code>  belongs to
 	 * @param timeout   time in seconds before the command will time out
 	 */
-	public ReferencingCommand(MappedSubsystem subsystem, double timeout) {
+	public ReferencingCommand(Subsystem subsystem, double timeout) {
 		super(timeout);
 		this.subsystem = subsystem;
 	}

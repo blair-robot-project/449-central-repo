@@ -35,7 +35,7 @@ public class ToggleCamera extends ReferencingCommand {
 
 		// Get new session pointer
 		((VisionSubsystem) subsystem).sessionPtr = ((VisionSubsystem) subsystem).sessionPtr <
-				((maps.org.usfirst.frc.team449.robot.vision.VisionMap.Vision) subsystem.map).getCameraNamesCount() - 1
+				(((VisionSubsystem) subsystem).getCameraNamesCount() - 1)
 				? ((VisionSubsystem) subsystem).sessionPtr + 1 : 0;
 
 		// Start capture from new session
