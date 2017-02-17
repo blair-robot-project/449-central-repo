@@ -4,7 +4,6 @@
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'com.google.protobuf'
 apply plugin: 'eclipse'
 
 // Disable javadoc generation
@@ -26,17 +25,11 @@ buildscript {
 	repositories {
 		maven { url "https://plugins.gradle.org/m2/" }
 	}
-	dependencies {
-		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
-	}
 }
 
 dependencies {
 	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
 	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
-	compile 'com.google.protobuf:protobuf-java:3.0.0'
-	compile 'io.grpc:grpc-stub:1.0.0-pre2'
-	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
 	compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.6'
 	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
 	compile fileTree(dir: 'lib')
@@ -47,37 +40,8 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-protobuf {
-	generatedFilesBaseDir = "$projectDir/gen"
-	protoc {
-		// The artifact spec for the Protobuf Compiler
-		artifact = 'com.google.protobuf:protoc:3.0.0'
-	}
-	plugins {
-		// Optional: an artifact spec for a protoc plugin, with "grpc" as
-		// the identifier, which can be referred to in the "plugins"
-		// container of the "generateProtoTasks" closure.
-		grpc {
-			artifact = 'io.grpc:protoc-gen-grpc-java:1.0.0-pre2'
-		}
-	}
-	generateProtoTasks {
-		ofSourceSet('main')*.plugins {
-			// Apply the "grpc" plugin whose spec is defined above, without
-			// options.  Note the braces cannot be omitted, otherwise the
-			// plugin will not be added. This is because of the implicit way
-			// NamedDomainObjectContainer binds the methods.
-			grpc { }
-		}
-	}
-}
-
-clean {
-	delete protobuf.generatedFilesBaseDir
-}
-
 idea {
 	module {
-		generatedSourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
+
 	}
 }
