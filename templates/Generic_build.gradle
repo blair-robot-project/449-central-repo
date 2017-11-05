@@ -1,14 +1,13 @@
 //All these version numbers should be updated, but only during preseason.
 plugins {
 	id 'org.hidetake.ssh' version "2.9.0"
-	id "java"
-	id "eclipse"
-	id "idea"
-	id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'jaci.openrio.gradle.GradleRIO' version "2017.1.5"
 }
 
-group 'org.usfirst.frc.team449.PROJECT_NAME'
-version '1.0'
+group 'org.usfirst.frc.robotYEAR'
 
 repositories {
 	mavenCentral()
@@ -18,6 +17,15 @@ repositories {
 	}
 
 	maven { url "https://plugins.gradle.org/m2/" }
+}
+
+wpi {
+	wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+	ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
+	opencvVersion = "3.1.0"         // The OpenCV version to use.
+	cscoreVersion = "1.0.2"         // The CSCore version to use.
+	talonSrxVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
+	navxVersion = "3.0.331"         // The NavX-MXP library version to use.
 }
 
 dependencies {
@@ -36,17 +44,6 @@ dependencies {
 	compile navx()
 }
 
-task convertFiles {
-	doLast {
-		fileTree("src/main/resources").matching { include "*.txt" }.each { aFile ->
-			exec {
-				commandLine 'dos2unix'
-				args aFile.absolutePath
-			}
-		}
-	}
-}
-
 /* GradleRIO stuff */
 remotes {
 	rio {
@@ -56,33 +53,19 @@ remotes {
 	}
 }
 
-frc {
-	team = '449'
-	robotClass = "org.usfirst.frc.team449.robot.Robot"
-}
-
-wpi {
-	wpilibVersion = "+"
-	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
-	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
-	opencvVersion = "+"                   // The OpenCV version to use
-	cscoreVersion = "+"                   // The CSCore version to use
-
-	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
-}
-
 def robotManifest = {
 	attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
 	attributes 'Robot-Class': frc.robotClass
 }
 
-task('copyResources', dependsOn: convertFiles) {
+task('copyResources') {
 	doLast {
 		ssh.run {
 			session(remotes.rio) {
 				execute 'mkdir ~/449_resources', ignoreError: true
 				execute 'mkdir ~/logs', ignoreError: true
 				put from: fileTree('src/main/resources'), into: './449_resources/'
+				execute "./etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
 			}
 		}
 	}
@@ -97,6 +80,16 @@ jar {
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+task deleteDocs(type: Delete){
+	delete '../docs'
+	followSymlinks = false
+}
+
+task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]){
+	from 'build/docs/javadoc'
+	into '../docs'
 }
 
 artifacts {
