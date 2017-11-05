@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.org/blair-robot-project/robot2017.svg?branch=master)](https://travis-ci.org/blair-robot-project/robot2017)
-[![CodeFactor](https://www.codefactor.io/repository/github/blair-robot-project/robot2017/badge/master)](https://www.codefactor.io/repository/github/blair-robot-project/robot2017/overview/master)
-# robot2017
-FRC Team 449 Blair Robot Project's 2017 build season code
+[![Build Status](https://travis-ci.org/blair-robot-project/449-central-repo.svg?branch=master)](https://travis-ci.org/blair-robot-project/449-central-repo/)
+[![CodeFactor](https://www.codefactor.io/repository/github/blair-robot-project/449-central-repo/badge)](https://www.codefactor.io/repository/github/blair-robot-project/449-central-repo)
+# 449-central-repo
+FRC Team 449 Blair Robot Project's reusable code
 
-JavaDocs: https://blair-robot-project.github.io/robot2017/
+JavaDocs: https://blair-robot-project.github.io/449-central-repo/
 
 In order for this code to work on your RoboRIO, you have to install
 java using our custom installer, found [here](https://github.com/blair-robot-project/java-installer).
