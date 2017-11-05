@@ -1,4 +1,2 @@
+include 'RoboRIO', 'Pathgen'
 rootProject.name = '449-central-repo'
-//
-//include ':allwpilib'
-//project(':allwpilib').projectDir = new File(settingsDir, '../allwpilib')

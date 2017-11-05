@@ -1,0 +1,11 @@
+sudo: required
+language: java
+jdk: oraclejdk8
+
+script:
+  - ./gradlew build
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always # default: always

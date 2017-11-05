@@ -1,27 +1,47 @@
-## Binaries ##
-*.class
-
-## IntelliJ project files  ##
-*.iml
-*.iws
-*.ipr
-.idea
-out
-
-## Libraries ##
-lib/
-
-## eclipse project file ##
-.settings
-.classpath
-.project
-build
-
-## vim ##
-*~
-*.swp
-
-## Gradle ##
 .gradle
 build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+# IntelliJ files
+.idea/
+*.idea
 gen/
+classes/
+out/
+build
+*build
+*.iml
+*.ipr
+*.iws
+
+# GradleRIO files
+robot2017.iml
+robot2017.ipr
+robot2017.iws
+
+# R workspace files
+*.RData
+*.Rhistory
+
+#Other
+.metadata/
+.DS_Store
+bash.exe.stackdump
+
+#Copied log files
+logs/
+*Log*.csv
+
+#Generated profiles in the base-level directory
+*Profile.csv
