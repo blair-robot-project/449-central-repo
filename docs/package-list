@@ -38,9 +38,9 @@ org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.intake
 org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile
+org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands
-org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid
 org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands
 org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera

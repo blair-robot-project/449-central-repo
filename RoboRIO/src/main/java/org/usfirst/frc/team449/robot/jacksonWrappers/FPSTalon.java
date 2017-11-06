@@ -474,6 +474,16 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
+	 * Set a position setpoint for the Talon.
+	 *
+	 * @param feet An absolute position setpoint, in feet.
+	 */
+	public void setPositionSetpoint(double feet) {
+		canTalon.changeControlMode(CANTalon.TalonControlMode.Position);
+		canTalon.set(feetToEncoder(feet));
+	}
+
+	/**
 	 * Get the velocity of the CANTalon in FPS.
 	 *
 	 * @return The CANTalon's velocity in FPS, or null if no encoder CPR was given.
