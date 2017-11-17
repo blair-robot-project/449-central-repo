@@ -55,16 +55,6 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 	private final double turnInPlaceRotScale;
 
 	/**
-	 * Whether or not to scale the left and right outputs so the max output is 1.
-	 */
-	private final boolean rescaleOutputs;
-
-	/**
-	 * Fields to avoid garbage collection.
-	 */
-	private double fwdForLeft, rotForLeft, fwdForRight, rotForRight;
-
-	/**
 	 * Default constructor
 	 *
 	 * @param gamepad             The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
@@ -76,7 +66,7 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 	 *                            rotational throttle. Can be null, and if it is, rotational throttle is not scaled by
 	 *                            forwards throttle.
 	 * @param turnInPlaceRotScale The scalar that scales the rotational throttle while turning in place.
-	 * @param rescaleOutputs      Whether or not to scale the left and right outputs so the max output is 1.
+	 * @param rescaleOutputs      Whether or not to scale the left and right outputs so the max output is 1. Defaults to false.
 	 */
 	@JsonCreator
 	public OIArcadeWithDPad(
@@ -88,13 +78,13 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 			@Nullable Polynomial scaleRotByFwdPoly,
 			@JsonProperty(required = true) double turnInPlaceRotScale,
 			boolean rescaleOutputs) {
+		super(rescaleOutputs);
 		this.dPadShift = (invertDPad ? -1 : 1) * dPadShift;
 		this.rotThrottle = rotThrottle;
 		this.fwdThrottle = fwdThrottle;
 		this.gamepad = gamepad;
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 		this.turnInPlaceRotScale = turnInPlaceRotScale;
-		this.rescaleOutputs = rescaleOutputs;
 	}
 
 	/**
@@ -166,41 +156,5 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 	@Override
 	public String getName() {
 		return "OI";
-	}
-
-	/**
-	 * The output to be given to the left side of the drive.
-	 *
-	 * @return Output to left side from [-1, 1]
-	 */
-	@Override
-	public double getLeftOutput() {
-		fwdForLeft = getFwd();
-		rotForLeft = getRot();
-		if (rescaleOutputs && Math.abs(fwdForLeft - rotForLeft) > 1) {
-			return (fwdForLeft + rotForLeft) / Math.abs(fwdForLeft - rotForLeft);
-		} else if (Math.abs(fwdForLeft + getRot()) > 1) {
-			return Math.signum(fwdForLeft + rotForLeft);
-		} else {
-			return fwdForLeft + rotForLeft;
-		}
-	}
-
-	/**
-	 * The output to be given to the right side of the drive.
-	 *
-	 * @return Output to right side from [-1, 1]
-	 */
-	@Override
-	public double getRightOutput() {
-		fwdForRight = getFwd();
-		rotForRight = getRot();
-		if (rescaleOutputs && Math.abs(fwdForRight + rotForRight) > 1) {
-			return (fwdForRight - rotForRight) / Math.abs(fwdForRight + rotForRight);
-		} else if (Math.abs(fwdForRight - rotForRight) > 1) {
-			return Math.signum(fwdForRight - rotForRight);
-		} else {
-			return fwdForRight - rotForRight;
-		}
 	}
 }

@@ -88,9 +88,9 @@ public class NavXDriveStraight<T extends YamlSubsystem & DriveUnidirectional & S
 
 		//Set throttle to the specified stick.
 		if (useLeft) {
-			subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getLeftOutputCached() + output);
+			subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
 		} else {
-			subsystem.setOutput(oi.getRightOutputCached() - output, oi.getRightOutputCached() + output);
+			subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
 		}
 	}
 

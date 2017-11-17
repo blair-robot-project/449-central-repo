@@ -57,7 +57,7 @@ public class SimpleUnidirectionalDrive<T extends YamlSubsystem & DriveUnidirecti
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setOutput(oi.getLeftOutputCached(), oi.getRightOutputCached());
+		subsystem.setOutput(oi.getLeftRightOutputCached()[0], oi.getLeftRightOutputCached()[1]);
 	}
 
 	/**

@@ -175,17 +175,17 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 			output = processPIDOutput(output);
 
 			//Deadband if we're stationary
-			if (oi.getLeftOutputCached() == 0 || oi.getRightOutputCached() == 0) {
+			if (oi.getLeftRightOutputCached()[0] == 0 || oi.getLeftRightOutputCached()[1] == 0) {
 				output = deadbandOutput(output);
 			}
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getRightOutputCached() + output);
+			subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
 		}
 		//If we're free driving...
 		else {
 			//Set the throttle to normal arcade throttle.
-			subsystem.setOutput(oi.getLeftOutputCached(), oi.getRightOutputCached());
+			subsystem.setOutput(oi.getLeftRightOutputCached()[0], oi.getLeftRightOutputCached()[1]);
 		}
 	}
 }
