@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
@@ -60,6 +61,54 @@ public class MotionProfileData {
 			readFile("/home/lvuser/449_resources/" + filename);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Data array constructor.
+	 * @param pos An array with position setpoints, in feet.
+	 * @param vel An array of corresponding velocity setpoints, in feet/sec.
+	 * @param accel An array of corresponding acceleration setpoints, in feet/sec^2.
+	 * @param deltaTime The time between setpoints, in seconds.
+	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
+	 * @param velocityOnly Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to false.
+	 * @param resetPosition Whether or not to reset the talon position when this profile starts.
+	 */
+	public MotionProfileData(@NotNull double[] pos, @NotNull double[] vel, @NotNull double[] accel,
+	                                 double deltaTime, boolean inverted, boolean velocityOnly, boolean resetPosition){
+		this.inverted = inverted;
+		this.velocityOnly = velocityOnly;
+		this.resetPosition = resetPosition;
+		data = new double[pos.length][4];
+		for (int i = 0; i < pos.length; i++){
+			data[i][0] = pos[i];
+			data[i][1] = vel[i];
+			data[i][2] = accel[i];
+			data[i][3] = deltaTime;
+		}
+	}
+
+	/**
+	 * Data list constructor.
+	 * @param pos A list with position setpoints, in feet.
+	 * @param vel A list of corresponding velocity setpoints, in feet/sec.
+	 * @param accel A list of corresponding acceleration setpoints, in feet/sec^2.
+	 * @param deltaTime The time between setpoints, in seconds.
+	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
+	 * @param velocityOnly Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to false.
+	 * @param resetPosition Whether or not to reset the talon position when this profile starts.
+	 */
+	public MotionProfileData(@NotNull List<Double> pos, @NotNull List<Double> vel, @NotNull List<Double> accel,
+	                                 double deltaTime, boolean inverted, boolean velocityOnly, boolean resetPosition){
+		this.inverted = inverted;
+		this.velocityOnly = velocityOnly;
+		this.resetPosition = resetPosition;
+		data = new double[pos.size()][4];
+		for (int i = 0; i < pos.size(); i++){
+			data[i][0] = pos.get(i);
+			data[i][1] = vel.get(i);
+			data[i][2] = accel.get(i);
+			data[i][3] = deltaTime;
 		}
 	}
 
