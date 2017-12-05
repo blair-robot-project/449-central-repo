@@ -62,7 +62,7 @@ public class GenericCommand extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("GenericSubsytemInterface end", this.getClass());
+		Logger.addEvent("GenericCommand end", this.getClass());
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class GenericCommand extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("GenericSubsytemInterface interrupted!", this.getClass());
+		Logger.addEvent("GenericCommand interrupted!", this.getClass());
 	}
 
 }
