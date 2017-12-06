@@ -27,7 +27,7 @@ public class GenericCommand extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public RunMotorWhileConditonMet(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
+	public GenericCommand(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
 		this.subsystem = subsystem;
 	}
 
