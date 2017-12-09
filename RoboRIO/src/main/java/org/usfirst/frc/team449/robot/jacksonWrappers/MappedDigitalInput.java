@@ -17,7 +17,7 @@ public class MappedDigitalInput {
 	 * The digitalInputs this class represents
 	 */
 	@JsonIgnore
-	private final List<DigitalInput> digitalInputs;
+	protected final List<DigitalInput> digitalInputs;
 
 	/**
 	 * Value of the inputs. Field to avoid garbage collection.
