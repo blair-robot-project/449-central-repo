@@ -13,44 +13,44 @@ import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedAnalogInput extends AnalogInput implements Updatable {
 
-	/**
-	 * The value of analog input, as a percent.
-	 */
-	private double percentValueCached;
+    /**
+     * The value of analog input, as a percent.
+     */
+    private double percentValueCached;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param port           The analog input port this object reads analog voltage from.
-	 * @param oversampleBits The sensor will be oversampled by 2^oversampleBits bits. Oversampling is kinda confusing,
-	 *                       so just read the wikipedia page on it. Defaults to 0.
-	 * @param averageBits    The sensor output will be the average of 2^averageBits readings. Defaults to 0.
-	 */
-	@JsonCreator
-	public MappedAnalogInput(@JsonProperty(required = true) int port,
-	                         int oversampleBits,
-	                         int averageBits) {
-		super(port);
-		setOversampleBits(oversampleBits);
-		setAverageBits(averageBits);
-	}
+    /**
+     * Default constructor.
+     *
+     * @param port           The analog input port this object reads analog voltage from.
+     * @param oversampleBits The sensor will be oversampled by 2^oversampleBits bits. Oversampling is kinda confusing,
+     *                       so just read the wikipedia page on it. Defaults to 0.
+     * @param averageBits    The sensor output will be the average of 2^averageBits readings. Defaults to 0.
+     */
+    @JsonCreator
+    public MappedAnalogInput(@JsonProperty(required = true) int port,
+                             int oversampleBits,
+                             int averageBits) {
+        super(port);
+        setOversampleBits(oversampleBits);
+        setAverageBits(averageBits);
+    }
 
-	/**
-	 * Get the percentage value of the analog input.
-	 *
-	 * @return The value of the analog input on [0,1], scaled so that 5 volts is 1 and 0 volts is 0.
-	 */
-	public double getPercentValue() {
-		//Round to 3 decimal places and clip to between 0 and 1.
-		return Math.min(Math.max(Math.round((getAverageValue() - 55.) / 64190. * 1000.) / 1000., 0), 1);
-	}
+    /**
+     * Get the percentage value of the analog input.
+     *
+     * @return The value of the analog input on [0,1], scaled so that 5 volts is 1 and 0 volts is 0.
+     */
+    public double getPercentValue() {
+        //Round to 3 decimal places and clip to between 0 and 1.
+        return Math.min(Math.max(Math.round((getAverageValue() - 55.) / 64190. * 1000.) / 1000., 0), 1);
+    }
 
-	public double getPercentValueCached() {
-		return percentValueCached;
-	}
+    public double getPercentValueCached() {
+        return percentValueCached;
+    }
 
-	@Override
-	public void update() {
-		percentValueCached = getPercentValue();
-	}
+    @Override
+    public void update() {
+        percentValueCached = getPercentValue();
+    }
 }

@@ -15,16 +15,16 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlyw
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SpinUpThenShoot extends YamlCommandGroupWrapper {
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param subsystem The subsystem to execute this command on.
-	 */
-	@JsonCreator
-	public SpinUpThenShoot(@NotNull @JsonProperty(required = true) SubsystemFlywheel subsystem) {
-		addSequential(new SpinUpFlywheel(subsystem));
-		//Use a wait command here because SpinUpFlywheel is instantaneous.
-		addSequential(new WaitForMillis(subsystem.getSpinUpTimeMillis()));
-		addSequential(new TurnAllOn(subsystem));
-	}
+    /**
+     * Default constructor.
+     *
+     * @param subsystem The subsystem to execute this command on.
+     */
+    @JsonCreator
+    public SpinUpThenShoot(@NotNull @JsonProperty(required = true) SubsystemFlywheel subsystem) {
+        addSequential(new SpinUpFlywheel(subsystem));
+        //Use a wait command here because SpinUpFlywheel is instantaneous.
+        addSequential(new WaitForMillis(subsystem.getSpinUpTimeMillis()));
+        addSequential(new TurnAllOn(subsystem));
+    }
 }

@@ -1,12 +1,12 @@
 plugins {
-	id 'java'
-	id 'application'
-	id 'eclipse'
-	id 'idea'
+    id 'java'
+    id 'application'
+    id 'eclipse'
+    id 'idea'
 }
 
 mainClassName = 'org.usfirst.frc.team449.pathgen.Pathgen'
 
 dependencies {
-	compile fileTree(dir: "lib", include: "*.jar")
+    compile fileTree(dir: "lib", include: "*.jar")
 }

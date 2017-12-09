@@ -17,20 +17,20 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RunProfileTwoSides<T extends YamlSubsystem & SubsystemMPTwoSides> extends YamlCommandGroupWrapper {
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param subsystem The subsystem to execute this command on.
-	 * @param left      The motion profile for the left side to load and execute.
-	 * @param right     The motion profile for the right side to load and execute.
-	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
-	 */
-	@JsonCreator
-	public RunProfileTwoSides(@NotNull @JsonProperty(required = true) T subsystem,
-	                          @NotNull @JsonProperty(required = true) MotionProfileData left,
-	                          @NotNull @JsonProperty(required = true) MotionProfileData right,
-	                          @JsonProperty(required = true) double timeout) {
-		addParallel(new LoadProfileTwoSides(subsystem, left, right));
-		addParallel(new RunLoadedProfile<>(subsystem, timeout, true));
-	}
+    /**
+     * Default constructor.
+     *
+     * @param subsystem The subsystem to execute this command on.
+     * @param left      The motion profile for the left side to load and execute.
+     * @param right     The motion profile for the right side to load and execute.
+     * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
+     */
+    @JsonCreator
+    public RunProfileTwoSides(@NotNull @JsonProperty(required = true) T subsystem,
+                              @NotNull @JsonProperty(required = true) MotionProfileData left,
+                              @NotNull @JsonProperty(required = true) MotionProfileData right,
+                              @JsonProperty(required = true) double timeout) {
+        addParallel(new LoadProfileTwoSides(subsystem, left, right));
+        addParallel(new RunLoadedProfile<>(subsystem, timeout, true));
+    }
 }

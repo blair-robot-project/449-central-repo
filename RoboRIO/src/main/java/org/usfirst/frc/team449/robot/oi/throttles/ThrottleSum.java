@@ -12,69 +12,69 @@ import org.jetbrains.annotations.NotNull;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ThrottleSum implements Throttle {
 
-	/**
-	 * The throttles to sum.
-	 */
-	@NotNull
-	protected final Throttle[] throttles;
+    /**
+     * The throttles to sum.
+     */
+    @NotNull
+    protected final Throttle[] throttles;
 
-	/**
-	 * The cached output.
-	 */
-	protected double cachedValue;
+    /**
+     * The cached output.
+     */
+    protected double cachedValue;
 
-	/**
-	 * The sum. Field to avoid garbage collection.
-	 */
-	private double sum;
+    /**
+     * The sum. Field to avoid garbage collection.
+     */
+    private double sum;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param throttles The throttles to sum.
-	 */
-	@JsonCreator
-	public ThrottleSum(@NotNull @JsonProperty(required = true) Throttle[] throttles) {
-		this.throttles = throttles;
-	}
+    /**
+     * Default constructor.
+     *
+     * @param throttles The throttles to sum.
+     */
+    @JsonCreator
+    public ThrottleSum(@NotNull @JsonProperty(required = true) Throttle[] throttles) {
+        this.throttles = throttles;
+    }
 
-	/**
-	 * Sums the throttles and returns their output
-	 *
-	 * @return The summed outputs, clipped to [-1, 1].
-	 */
-	public double getValue() {
-		//sum throttles
-		sum = 0;
-		for (Throttle throttle : throttles) {
-			sum += throttle.getValue();
-		}
+    /**
+     * Sums the throttles and returns their output
+     *
+     * @return The summed outputs, clipped to [-1, 1].
+     */
+    public double getValue() {
+        //sum throttles
+        sum = 0;
+        for (Throttle throttle : throttles) {
+            sum += throttle.getValue();
+        }
 
-		//clip to [-1, 1]
-		if (sum >= 1) {
-			return 1;
-		} else if (sum <= -1) {
-			return -1;
-		} else {
-			return sum;
-		}
-	}
+        //clip to [-1, 1]
+        if (sum >= 1) {
+            return 1;
+        } else if (sum <= -1) {
+            return -1;
+        } else {
+            return sum;
+        }
+    }
 
-	/**
-	 * Get the cached output of the throttle this object represents.
-	 *
-	 * @return The output from [-1, 1].
-	 */
-	@Override
-	public double getValueCached() {
-		return cachedValue;
-	}
+    /**
+     * Get the cached output of the throttle this object represents.
+     *
+     * @return The output from [-1, 1].
+     */
+    @Override
+    public double getValueCached() {
+        return cachedValue;
+    }
 
-	/**
-	 * Updates all cached values with current ones.
-	 */
-	@Override
-	public void update() {
-		cachedValue = getValue();
-	}
+    /**
+     * Updates all cached values with current ones.
+     */
+    @Override
+    public void update() {
+        cachedValue = getValue();
+    }
 }

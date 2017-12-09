@@ -11,11 +11,11 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.Subsyste
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface SubsystemMPTwoSides extends SubsystemMP {
 
-	/**
-	 * Loads given profiles into the left and right sides of the drive.
-	 *
-	 * @param left  The profile to load into the left side.
-	 * @param right The profile to load into the right side.
-	 */
-	void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right);
+    /**
+     * Loads given profiles into the left and right sides of the drive.
+     *
+     * @param left  The profile to load into the left side.
+     * @param right The profile to load into the right side.
+     */
+    void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right);
 }
