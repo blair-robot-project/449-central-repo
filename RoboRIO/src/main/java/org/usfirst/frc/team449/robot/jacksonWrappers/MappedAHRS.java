@@ -64,7 +64,11 @@ public class MappedAHRS {
      * @return The heading, in degrees from [-180, 180]
      */
     public double getHeading() {
-        return ahrs.getYaw() * invertYaw;
+        toRet = ahrs.getFusedHeading();
+        if (toRet > 180) {
+            toRet -= 360;
+        }
+        return toRet * invertYaw;
     }
 
     /**
@@ -83,19 +87,6 @@ public class MappedAHRS {
      */
     public double getAngularDisplacement() {
         return ahrs.getAngle() * invertYaw;
-    }
-
-    /**
-     * Uses the gyro axes, magnetometer, and compass to get the most accurate possible yaw value for the robot.
-     *
-     * @return The heading, in degrees from [-180, 180]
-     */
-    public double get9AxisHeading() {
-        toRet = ahrs.getFusedHeading();
-        if (toRet > 180) {
-            toRet -= 360;
-        }
-        return toRet * invertYaw;
     }
 
     /**
