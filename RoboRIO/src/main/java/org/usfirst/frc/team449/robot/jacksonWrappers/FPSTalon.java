@@ -375,7 +375,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
         if (currentGearSettings.getVoltsPerFPSFwd() != null) {
             //Put driving constants in slot 0
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / 12. * FPSToEncoder(currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd()),
+                    1023. / 12. * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd()),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
             //Put MP constants in slot 1
             canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(), currentGearSettings.getMotionProfileDFwd(),
@@ -516,16 +516,17 @@ public class FPSTalon implements SimpleMotor, Shiftable {
     protected void setVelocityFPS(double velocity) {
         //Switch control mode to velocity closed-loop
         canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
+        velocity = FPSToEncoder(velocity);
         if (velocity > 0) {
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / 12. * FPSToEncoder(currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity),
+                    1023. / 12. * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
         } else if (velocity < 0) {
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / 12. * FPSToEncoder(currentGearSettings.getVoltsPerFPSRev() + currentGearSettings.getInterceptVoltageRev() / velocity),
+                    1023. / 12. * (currentGearSettings.getVoltsPerFPSRev() - currentGearSettings.getInterceptVoltageRev() / velocity),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
         }
-        canTalon.set(FPSToEncoder(velocity));
+        canTalon.set((velocity));
     }
 
     /**
