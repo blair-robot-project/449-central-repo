@@ -372,7 +372,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
         canTalon.configNominalOutputVoltage(currentGearSettings.getFwdNominalOutputVoltage(), currentGearSettings.getRevNominalOutputVoltage());
 
         //Set PID stuff
-        if (currentGearSettings.getMaxSpeed() != null) {
+        if (currentGearSettings.getVoltsPerFPSFwd() != null) {
             //Put driving constants in slot 0
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
                     1023. / 12. * FPSToEncoder(currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd()),
@@ -733,7 +733,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
             point.velocity = FPSToEncoder(feedforward);
 
             //Doing vel+accel shouldn't lead to impossible setpoints, so if it does, we log so we know to change either the profile or kA.
-            if (Math.abs(feedforward) > currentGearSettings.getMaxSpeed()) {
+            if (Math.abs(feedforward) > 12) {
                 System.out.println("Point " + Arrays.toString(data.getData()[i]) + " has an unattainable velocity+acceleration setpoint!");
                 Logger.addEvent("Point " + Arrays.toString(data.getData()[i]) + " has an unattainable velocity+acceleration setpoint!", this.getClass());
             }
