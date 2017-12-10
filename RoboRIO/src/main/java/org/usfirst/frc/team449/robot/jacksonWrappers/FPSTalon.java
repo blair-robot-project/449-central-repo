@@ -377,7 +377,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
                     1023. / 12. * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd()),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
-            //Put MP constants in slot 1
+            //Put MP constants in slot 1, F of 1023/12 lets us deal in voltage
             canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(), currentGearSettings.getMotionProfileDFwd(),
                     1023. / 12., 0, currentGearSettings.getClosedLoopRampRate(), 1);
             canTalon.setProfile(0);
