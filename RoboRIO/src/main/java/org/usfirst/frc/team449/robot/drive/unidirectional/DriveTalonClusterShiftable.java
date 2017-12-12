@@ -35,7 +35,6 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
      * @param leftMaster                The master talon on the left side of the drive.
      * @param rightMaster               The master talon on the right side of the drive.
      * @param ahrs                      The NavX on this drive.
-     * @param VelScale                  The amount to scale the output to the motor by. Defaults to 1.
      * @param shiftComponent            The component that controls shifting.
      * @param startingOverrideAutoshift Whether to start with autoshift disabled. Defaults to false.
      */
@@ -43,10 +42,9 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
     public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
                                       @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
                                       @NotNull @JsonProperty(required = true) MappedAHRS ahrs,
-                                      @Nullable Double VelScale,
                                       @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent,
                                       boolean startingOverrideAutoshift) {
-        super(leftMaster, rightMaster, ahrs, VelScale);
+        super(leftMaster, rightMaster, ahrs);
         //Initialize stuff
         this.shiftComponent = shiftComponent;
 

@@ -23,11 +23,6 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideM
 public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, DriveUnidirectional, Loggable, SubsystemMPTwoSides {
 
     /**
-     * Joystick scaling constant. Joystick output is scaled by this before being handed to the motors.
-     */
-    protected final double VEL_SCALE;
-
-    /**
      * Right master Talon
      */
     @NotNull
@@ -63,16 +58,13 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
      * @param leftMaster  The master talon on the left side of the drive.
      * @param rightMaster The master talon on the right side of the drive.
      * @param ahrs        The NavX gyro for calculating this drive's heading and angular velocity.
-     * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
      */
     @JsonCreator
     public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
                              @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
-                             @NotNull @JsonProperty(required = true) MappedAHRS ahrs,
-                             @Nullable Double VelScale) {
+                             @NotNull @JsonProperty(required = true) MappedAHRS ahrs) {
         super();
         //Initialize stuff
-        this.VEL_SCALE = VelScale != null ? VelScale : 1.;
         this.rightMaster = rightMaster;
         this.leftMaster = leftMaster;
         this.ahrs = ahrs;
@@ -88,8 +80,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
     @Override
     public void setOutput(double left, double right) {
         //scale by the max speed
-        leftMaster.setVelocity(VEL_SCALE * left);
-        rightMaster.setVelocity(VEL_SCALE * right);
+        leftMaster.setVelocity(left);
+        rightMaster.setVelocity(right);
     }
 
     /**
