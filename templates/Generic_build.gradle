@@ -39,7 +39,7 @@ wpi {
 }
 
 dependencies {
-    compile 'com.github.blair-robot-project:449-central-repo:98fad7b4dd'
+    compile 'com.github.blair-robot-project:449-central-repo:v6.1.0'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core

@@ -207,16 +207,6 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
     }
 
     /**
-     * Set the default command. Done here instead of in initDefaultCommand so we don't have a defaultCommand during
-     * auto.
-     *
-     * @param defaultCommand The command to have run by default. Must require this subsystem.
-     */
-    public void setDefaultCommandManual(Command defaultCommand) {
-        setDefaultCommand(defaultCommand);
-    }
-
-    /**
      * Get the robot's heading using the AHRS
      *
      * @return robot heading, in degrees, on [-180, 180]
