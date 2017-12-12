@@ -375,11 +375,11 @@ public class FPSTalon implements SimpleMotor, Shiftable {
         if (currentGearSettings.getVoltsPerFPSFwd() != null) {
             //Put driving constants in slot 0
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / 12. * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd()),
+                    1023. / currentGearSettings.getFwdPeakOutputVoltage() * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd()),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
-            //Put MP constants in slot 1, F of 1023/12 lets us deal in voltage
+            //Put MP constants in slot 1, F of 1023/voltage lets us deal in voltage
             canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(), currentGearSettings.getMotionProfileDFwd(),
-                    1023. / 12., 0, currentGearSettings.getClosedLoopRampRate(), 1);
+                    1023. / currentGearSettings.getFwdPeakOutputVoltage(), 0, currentGearSettings.getClosedLoopRampRate(), 1);
             canTalon.setProfile(0);
         }
     }
@@ -519,11 +519,11 @@ public class FPSTalon implements SimpleMotor, Shiftable {
         velocity = FPSToEncoder(velocity);
         if (velocity > 0) {
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / 12. * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity),
+                    1023. / currentGearSettings.getFwdPeakOutputVoltage() * (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
         } else if (velocity < 0) {
             canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / 12. * (currentGearSettings.getVoltsPerFPSRev() - currentGearSettings.getInterceptVoltageRev() / velocity),
+                    1023. / -currentGearSettings.getRevPeakOutputVoltage() * (currentGearSettings.getVoltsPerFPSRev() - currentGearSettings.getInterceptVoltageRev() / velocity),
                     0, currentGearSettings.getClosedLoopRampRate(), 0);
         }
         canTalon.set((velocity));
@@ -698,12 +698,12 @@ public class FPSTalon implements SimpleMotor, Shiftable {
         if (data.isInverted()) {
             canTalon.setPID(currentGearSettings.getMotionProfilePRev(), currentGearSettings.getMotionProfileIRev(),
                     currentGearSettings.getMotionProfileDRev(),
-                    1023. / 12., 0,
+                    1023. / -currentGearSettings.getRevPeakOutputVoltage(), 0,
                     currentGearSettings.getClosedLoopRampRate(), 1);
         } else {
             canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(),
                     currentGearSettings.getMotionProfileDFwd(),
-                    1023. / 12., 0,
+                    1023. / currentGearSettings.getFwdPeakOutputVoltage(), 0,
                     currentGearSettings.getClosedLoopRampRate(), 1);
         }
 
@@ -731,7 +731,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
                         + currentGearSettings.getInterceptVoltageFwd();
             }
             Logger.addEvent("VelPlusAccel: " + feedforward, this.getClass());
-            point.velocity = FPSToEncoder(feedforward);
+            point.velocity = feedforward;
 
             //Doing vel+accel shouldn't lead to impossible setpoints, so if it does, we log so we know to change either the profile or kA.
             if (Math.abs(feedforward) > 12) {
