@@ -11,20 +11,20 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class GenericSubsystem extends YamlSubsystem implements GenericSubsystemInterface {
 
-	/**
-	 * Default constructor
-	 */
-	@JsonCreator
-	public GenericSubsystem() {
-	}
+    /**
+     * Default constructor
+     */
+    @JsonCreator
+    public GenericSubsystem() {
+    }
 
-	/**
-	 * Initialize the default command for a subsystem. By default subsystems have no default command, but if they do,
-	 * the default command is set with this method. It is called on all Subsystems by CommandBase in the users program
-	 * after all the Subsystems are created.
-	 */
-	@Override
-	protected void initDefaultCommand() {
-		//Do nothing!
-	}
+    /**
+     * Initialize the default command for a subsystem. By default subsystems have no default command, but if they do,
+     * the default command is set with this method. It is called on all Subsystems by CommandBase in the users program
+     * after all the Subsystems are created.
+     */
+    @Override
+    protected void initDefaultCommand() {
+        //Do nothing!
+    }
 }
