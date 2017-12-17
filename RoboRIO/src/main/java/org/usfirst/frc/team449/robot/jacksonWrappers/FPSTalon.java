@@ -101,6 +101,12 @@ public class FPSTalon implements SimpleMotor, Shiftable {
     private long timeMPStatusLastRead;
 
     /**
+     * The voltage to scale voltage compensation based on. Null for no voltage compensation.
+     */
+    @Nullable
+    private Double voltageCompVoltage;
+
+    /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
     private Double RPS;
@@ -127,9 +133,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
      * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to.
      *                                   Defaults to 1.
      * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
-     * @param maxClosedLoopVoltage       The voltage to scale closed-loop output based on, e.g. closed-loop output of 1
-     *                                   will produce this voltage, output of 0.5 will produce half, etc. This feature
-     *                                   compensates for low battery voltage.
+     * @param voltageCompVoltage       The voltage to scale voltage compensation based on, e.g. input of 1
+     *                                   will produce this voltage, input of 0.5 will produce half, etc. This feature
+     *                                   compensates for low battery voltage. Defaults to no voltage compensation.
      * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
      *                                   null if there is no encoder attached to this Talon.
      * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
@@ -161,7 +167,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
                     @Nullable Double postEncoderGearing,
                     @Nullable Double feetPerRotation,
                     @Nullable Integer currentLimit,
-                    double maxClosedLoopVoltage,
+                    double voltageCompVoltage,
                     @Nullable CANTalon.FeedbackDevice feedbackDevice,
                     @Nullable Integer encoderCPR,
                     boolean reverseSensor,
@@ -289,7 +295,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
         }
 
         //Set the nominal closed loop battery voltage. Different thing from NominalOutputVoltage.
-        canTalon.setNominalClosedLoopVoltage(maxClosedLoopVoltage);
+        canTalon.setNominalClosedLoopVoltage(voltageCompVoltage);
+        this.voltageCompVoltage = voltageCompVoltage != 0 ? voltageCompVoltage : null;
 
         //Set up MP notifier
         bottomBufferLoader = new Notifier(canTalon::processMotionProfileBuffer);
@@ -339,11 +346,14 @@ public class FPSTalon implements SimpleMotor, Shiftable {
             percentVoltage = Math.signum(percentVoltage);
         }
 
-        //Switch to voltage mode
-        canTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-
-        //Set the setpoint to the input given.
-        canTalon.set(percentVoltage * (invertInVoltage ? -1 : 1));
+        //Switch to voltage mode, which one depends on whether comp is turned on
+        if (voltageCompVoltage != null){
+            canTalon.changeControlMode(CANTalon.TalonControlMode.Voltage);
+            canTalon.set(percentVoltage * (invertInVoltage ? -1 : 1) * voltageCompVoltage);
+        } else {
+            canTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+            canTalon.set(percentVoltage * (invertInVoltage ? -1 : 1));
+        }
     }
 
     /**
