@@ -567,6 +567,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
     }
 
     /**
+     * Get the voltage available for the Talon.
+     *
+     * @return Voltage in volts.
+     */
+    public double getBatteryVoltage(){
+        return canTalon.getBusVoltage();
+    }
+
+    /**
      * Get the current the Talon is currently drawing from the PDP.
      *
      * @return Current in amps.
