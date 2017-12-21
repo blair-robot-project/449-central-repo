@@ -585,6 +585,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
     }
 
     /**
+     * Get the current control mode of the Talon. Please don't use this for anything other than logging.
+     *
+     * @return Control mode as a string.
+     */
+    public String getControlMode(){
+        return String.valueOf(canTalon.getControlMode());
+    }
+
+    /**
      * Enables the motor, if applicable.
      */
     @Override
