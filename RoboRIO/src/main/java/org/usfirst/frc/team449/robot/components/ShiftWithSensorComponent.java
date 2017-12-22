@@ -71,7 +71,6 @@ public class ShiftWithSensorComponent extends ShiftComponent {
      *
      * @param otherShiftables         All objects that should be shifted when this component's piston is.
      * @param piston                  The piston that shifts.
-     * @param lowGearPistonPos        The piston position for low gear. Defaults to Forward.
      * @param startingGear            The gear to start in. Can be null, and if it is, the starting gear is gotten from
      *                                the piston's position.
      * @param highGearSensors         The reed switches that detect if the shifter pistons are in high gear.
@@ -85,14 +84,13 @@ public class ShiftWithSensorComponent extends ShiftComponent {
     @JsonCreator
     public ShiftWithSensorComponent(@NotNull @JsonProperty(required = true) List<Shiftable> otherShiftables,
                                     @NotNull @JsonProperty(required = true) MappedDoubleSolenoid piston,
-                                    @Nullable DoubleSolenoid.Value lowGearPistonPos,
                                     @Nullable Shiftable.gear startingGear,
                                     @NotNull @JsonProperty(required = true) MappedDigitalInput highGearSensors,
                                     @NotNull @JsonProperty(required = true) MappedDigitalInput lowGearSensors,
                                     @NotNull @JsonProperty(required = true) List<SimpleMotor> motorsToDisable,
                                     @NotNull @JsonProperty(required = true) BufferTimer motorDisableTimer,
                                     @JsonProperty(required = true) double sensorCheckerPeriodSecs) {
-        super(otherShiftables, piston, lowGearPistonPos, startingGear);
+        super(otherShiftables, piston, startingGear);
         this.highGearSensors = highGearSensors;
         this.lowGearSensors = lowGearSensors;
         this.motorsToDisable = motorsToDisable;
