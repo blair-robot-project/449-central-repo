@@ -1,13 +1,11 @@
 plugins {
-    id 'org.hidetake.ssh' version "2.9.0"
     id 'java'
     id 'eclipse'
     id 'idea'
+    id 'maven'
+    id 'org.hidetake.ssh' version "2.9.0"
     id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
 }
-
-group 'org.usfirst.frc.team449.449-central-repo'
-version '1.0'
 
 repositories {
     mavenCentral()
@@ -47,6 +45,11 @@ dependencies {
     compile navx()
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
 task genJavadoc(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
@@ -63,6 +66,7 @@ task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]) {
 }
 
 artifacts {
+    archives sourcesJar
     archives genJavadoc
 }
 
