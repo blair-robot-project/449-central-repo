@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.ShiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
+
+import java.util.Arrays;
 
 
 /**
@@ -28,6 +31,11 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
      * Whether not to override auto shifting
      */
     private boolean overrideAutoshift;
+
+    /**
+     * Fields to avoid garbage collection
+     */
+    Object[] superData, toRet;
 
     /**
      * Default constructor.
@@ -104,5 +112,34 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
     @Override
     public void setGear(int gear) {
         shiftComponent.shiftToGear(gear);
+    }
+
+    /**
+     * Get the headers for the data this subsystem logs every loop.
+     *
+     * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+     */
+    @Override
+    @NotNull
+    @Contract(pure = true)
+    public String[] getHeader() {
+        String[] superHeader = super.getHeader();
+        String[] toRet = Arrays.copyOf(superHeader, superHeader.length+1);
+        toRet[superHeader.length] = "gear";
+        return toRet;
+    }
+
+    /**
+     * Get the data this subsystem logs every loop.
+     *
+     * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+     */
+    @Override
+    @NotNull
+    public Object[] getData() {
+        superData = super.getData();
+        toRet = Arrays.copyOf(superData, superData.length+1);
+        toRet[superData.length] = getGear();
+        return toRet;
     }
 }
