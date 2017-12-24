@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.SubsystemMP;
+
+import java.util.function.Supplier;
 
 /**
  * Loads the given profile into the subsystem, but doesn't run it.
@@ -23,22 +26,42 @@ public class LoadProfile extends YamlCommandWrapper {
 	private final SubsystemMP subsystem;
 
 	/**
-	 * The profile to execute.
+	 * The profile to load. Can be null if profileSupplier isn't.
 	 */
-	@NotNull
+	@Nullable
 	private final MotionProfileData profile;
+
+	/**
+	 * A Supplier that gets the profile to load. Ignored if profile isn't null, must be non-null if profile is null.
+	 */
+	@Nullable
+	private final Supplier<MotionProfileData> profileSupplier;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param profile   The profile to run.
+	 * @param profile   The profile to load.
 	 */
 	@JsonCreator
 	public LoadProfile(@NotNull @JsonProperty(required = true) SubsystemMP subsystem,
 	                   @NotNull @JsonProperty(required = true) MotionProfileData profile) {
 		this.subsystem = subsystem;
 		this.profile = profile;
+		this.profileSupplier = null;
+	}
+
+	/**
+	 * Constructor that takes a lambda, for use in dynamic commandGroups.
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 * @param profileSupplier A Supplier that gets the profile to load.
+	 */
+	public LoadProfile(@NotNull SubsystemMP subsystem,
+					   @NotNull Supplier<MotionProfileData> profileSupplier){
+		this.subsystem = subsystem;
+		this.profileSupplier = profileSupplier;
+		this.profile = null;
 	}
 
 	/**
@@ -54,7 +77,11 @@ public class LoadProfile extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.loadMotionProfile(profile);
+		if (profile != null) {
+			subsystem.loadMotionProfile(profile);
+		} else {
+			subsystem.loadMotionProfile(profileSupplier.get());
+		}
 	}
 
 	/**
