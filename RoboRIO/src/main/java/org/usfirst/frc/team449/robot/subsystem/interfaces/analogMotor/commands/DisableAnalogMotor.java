@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.SubsystemAnalogMotor;
 
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.SubsystemA
  * A command that disables an analog motor.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DisableAnalogMotor extends YamlCommandWrapper {
+public class DisableAnalogMotor extends Command {
 
 	/**
 	 * The subsystem to execute this command on.

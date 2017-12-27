@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
  * A command that switches to high gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SwitchToHighGear extends YamlCommandWrapper {
+public class SwitchToHighGear extends Command {
 
     /**
      * The drive subsystem to execute this command on.

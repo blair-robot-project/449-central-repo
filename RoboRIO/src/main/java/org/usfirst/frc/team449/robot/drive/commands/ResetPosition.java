@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
  * Resets the positions of the motors of the given drive subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ResetPosition extends YamlCommandWrapper {
+public class ResetPosition extends Command {
 
     /**
      * The subsystem to execute this command on.

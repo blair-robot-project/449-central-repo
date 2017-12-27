@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlyw
  * Turn on the flywheel but not the feeder in order to give the flywheel time to get up to speed.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SpinUpFlywheel extends YamlCommandWrapper {
+public class SpinUpFlywheel extends Command {
 
     /**
      * The subsystem to execute this command on.

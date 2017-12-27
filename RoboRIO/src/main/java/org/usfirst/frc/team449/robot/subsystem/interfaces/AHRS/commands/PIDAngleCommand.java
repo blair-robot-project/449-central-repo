@@ -8,14 +8,13 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
  * A command that uses a AHRS to turn to a certain angle.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand {
+public abstract class PIDAngleCommand extends PIDCommand{
 
     /**
      * The subsystem to execute this command on.
@@ -140,16 +139,5 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
     @Override
     protected double returnPIDInput() {
         return subsystem.getHeadingCached();
-    }
-
-    /**
-     * Get the command object this object is.
-     *
-     * @return this.
-     */
-    @Override
-    @NotNull
-    public Command getCommand() {
-        return this;
     }
 }

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.SubsystemBinaryMotor;
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.conditional.SubsystemC
  * Run a BinaryMotor while a condition is true.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunMotorWhileConditonMet<T extends YamlSubsystem & SubsystemBinaryMotor & SubsystemConditional> extends YamlCommandWrapper {
+public class RunMotorWhileConditonMet<T extends YamlSubsystem & SubsystemBinaryMotor & SubsystemConditional> extends Command {
 
     /**
      * The subsystem to execute this command on

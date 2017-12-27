@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands.TurnAllOn;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetInt
  * runs feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FireShooter extends YamlCommandGroupWrapper {
+public class FireShooter extends CommandGroup {
 
     /**
      * Constructs a FireShooter command group

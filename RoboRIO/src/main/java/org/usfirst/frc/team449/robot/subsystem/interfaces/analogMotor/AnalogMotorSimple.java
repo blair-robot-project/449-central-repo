@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 
 /**
@@ -24,22 +23,13 @@ public class AnalogMotorSimple extends YamlSubsystem implements SubsystemAnalogM
     private final SimpleMotor motor;
 
     /**
-     * The default command to run. Can be null to not have a default command.
-     */
-    @Nullable
-    private final Command defaultCommand;
-
-    /**
      * Default constructor.
      *
      * @param motor The motor this subsystem controls.
-     * @param defaultCommand The default command to run. Can be null to not have a default command.
      */
     @JsonCreator
-    public AnalogMotorSimple(@NotNull @JsonProperty(required = true) SimpleMotor motor,
-                             @Nullable YamlCommand defaultCommand) {
+    public AnalogMotorSimple(@NotNull @JsonProperty(required = true) SimpleMotor motor) {
         this.motor = motor;
-        this.defaultCommand = defaultCommand != null ? defaultCommand.getCommand() : null;
     }
 
     /**
@@ -47,9 +37,7 @@ public class AnalogMotorSimple extends YamlSubsystem implements SubsystemAnalogM
      */
     @Override
     protected void initDefaultCommand() {
-        if(defaultCommand != null){
-            setDefaultCommand(defaultCommand);
-        }
+        //Do nothing
     }
 
     /**
