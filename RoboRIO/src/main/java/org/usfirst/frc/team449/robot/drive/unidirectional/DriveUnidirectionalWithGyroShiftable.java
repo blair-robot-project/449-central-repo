@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.ShiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
@@ -19,7 +18,7 @@ import java.util.Arrays;
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
+public class DriveUnidirectionalWithGyroShiftable extends DriveUnidirectionalWithGyro implements DriveShiftable {
 
     /**
      * The component that controls shifting.
@@ -33,11 +32,6 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
     private boolean overrideAutoshift;
 
     /**
-     * Fields to avoid garbage collection
-     */
-    Object[] superData, toRet;
-
-    /**
      * Default constructor.
      *
      * @param leftMaster                The master talon on the left side of the drive.
@@ -47,11 +41,11 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
      * @param startingOverrideAutoshift Whether to start with autoshift disabled. Defaults to false.
      */
     @JsonCreator
-    public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
-                                      @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
-                                      @NotNull @JsonProperty(required = true) MappedAHRS ahrs,
-                                      @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent,
-                                      boolean startingOverrideAutoshift) {
+    public DriveUnidirectionalWithGyroShiftable(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
+                                                @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
+                                                @NotNull @JsonProperty(required = true) MappedAHRS ahrs,
+                                                @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent,
+                                                boolean startingOverrideAutoshift) {
         super(leftMaster, rightMaster, ahrs);
         //Initialize stuff
         this.shiftComponent = shiftComponent;
@@ -123,10 +117,11 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
     @NotNull
     @Contract(pure = true)
     public String[] getHeader() {
-        String[] superHeader = super.getHeader();
-        String[] toRet = Arrays.copyOf(superHeader, superHeader.length+1);
-        toRet[superHeader.length] = "gear";
-        return toRet;
+        return new String[]{
+                "override_gyro",
+                "override_autoshift",
+                "gear"
+        };
     }
 
     /**
@@ -137,9 +132,10 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
     @Override
     @NotNull
     public Object[] getData() {
-        superData = super.getData();
-        toRet = Arrays.copyOf(superData, superData.length+1);
-        toRet[superData.length] = getGear();
-        return toRet;
+        return new Object[]{
+                getOverrideGyro(),
+                getOverrideAutoshift(),
+                getGear()
+        };
     }
 }

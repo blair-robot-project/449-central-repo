@@ -7,12 +7,15 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
+import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
 
 /**
  * A Jackson-compatible, invertible wrapper for the NavX.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class MappedAHRS {
+public class MappedAHRS implements Loggable, Updatable{
 
     /**
      * The AHRS this class is a wrapper on.
@@ -28,6 +31,11 @@ public class MappedAHRS {
      * The 9-axis heading value to return. Field to avoid garbage collection.
      */
     private double toRet;
+
+    /**
+     * Cached values.
+     */
+    private double cachedHeading, cachedAngularDisplacement, cachedAngularVel,cachedXAccel, cachedYAccel;
 
     /**
      * Default constructor.
@@ -78,6 +86,7 @@ public class MappedAHRS {
      */
     public void setHeading(double headingDegrees) {
         ahrs.setAngleAdjustment(ahrs.getYaw() + invertYaw * headingDegrees);
+        cachedHeading = headingDegrees;
     }
 
     /**
@@ -114,5 +123,111 @@ public class MappedAHRS {
      */
     public double getYAccel() {
         return gsToFeetPerSecondSquared(ahrs.getWorldLinearAccelY());
+    }
+
+    /**
+     * Get the cached yaw value.
+     *
+     * @return The heading, in degrees from [-180, 180]
+     */
+    public double getCachedHeading() {
+        toRet = ahrs.getFusedHeading();
+        if (toRet > 180) {
+            toRet -= 360;
+        }
+        return toRet * invertYaw;
+    }
+
+    /**
+     * Get the cached total angular displacement. Differs from getHeading because it doesn't limit angle.
+     *
+     * @return The angular displacement, in degrees.
+     */
+    public double getCachedAngularDisplacement() {
+        return cachedAngularDisplacement;
+    }
+
+    /**
+     * Get the cached angular yaw velocity.
+     *
+     * @return The angular yaw velocity, in degrees/sec.
+     */
+    public double getCachedAngularVelocity() {
+        return cachedAngularVel;
+    }
+
+    /**
+     * Get the cached absolute X acceleration of the robot, relative to the field.
+     *
+     * @return Linear X acceleration, in feet/(sec^2)
+     */
+    public double getCachedXAccel() {
+        return cachedXAccel;
+    }
+
+    /**
+     * Get the cached absolute Y acceleration of the robot, relative to the field.
+     *
+     * @return Linear Y acceleration, in feet/(sec^2)
+     */
+    public double getCachedYAccel() {
+        return cachedYAccel;
+    }
+
+    /**
+     * Get the headers for the data this subsystem logs every loop.
+     *
+     * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+     */
+    @NotNull
+    @Override
+    public String[] getHeader() {
+        return new String[]{
+                "heading",
+                "angular_displacement",
+                "angular_vel",
+                "x_accel",
+                "y_accel"
+        };
+    }
+
+    /**
+     * Get the data this subsystem logs every loop.
+     *
+     * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+     */
+    @NotNull
+    @Override
+    public Object[] getData() {
+        return new Object[]{
+                getHeading(),
+                getAngularDisplacement(),
+                getAngularVelocity(),
+                getXAccel(),
+                getYAccel()
+        };
+    }
+
+    /**
+     * Get the name of this object.
+     *
+     * @return A string that will identify this object in the log file.
+     */
+    @NotNull
+    @Override
+    public String getName() {
+        return "AHRS";
+    }
+
+    /**
+     * Updates all cached values with current ones.
+     */
+    @Override
+    public void update() {
+        cachedHeading = getHeading();
+        cachedAngularDisplacement = getAngularDisplacement();
+        cachedAngularVel = getAngularVelocity();
+        cachedXAccel = getXAccel();
+        cachedYAccel = getYAccel();
     }
 }

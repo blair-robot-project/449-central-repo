@@ -20,7 +20,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideM
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, DriveUnidirectional, Loggable, SubsystemMPTwoSides {
+public class DriveUnidirectionalWithGyro extends YamlSubsystem implements SubsystemAHRS, DriveUnidirectional, Loggable, SubsystemMPTwoSides {
 
     /**
      * Right master Talon
@@ -50,7 +50,6 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
      */
     @Nullable
     private Double cachedLeftVel, cachedRightVel, cachedLeftPos, cachedRightPos;
-    private double cachedHeading, cachedAngularDisplacement, cachedAngularVel;
 
     /**
      * Default constructor.
@@ -60,9 +59,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
      * @param ahrs        The NavX gyro for calculating this drive's heading and angular velocity.
      */
     @JsonCreator
-    public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
-                             @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
-                             @NotNull @JsonProperty(required = true) MappedAHRS ahrs) {
+    public DriveUnidirectionalWithGyro(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
+                                       @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
+                                       @NotNull @JsonProperty(required = true) MappedAHRS ahrs) {
         super();
         //Initialize stuff
         this.rightMaster = rightMaster;
@@ -225,7 +224,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
      */
     @Override
     public double getHeadingCached() {
-        return cachedHeading;
+        return ahrs.getCachedHeading();
     }
 
     /**
@@ -245,7 +244,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
      */
     @Override
     public double getAngularVelCached() {
-        return cachedAngularVel;
+        return ahrs.getCachedAngularVelocity();
     }
 
     /**
@@ -265,7 +264,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
      */
     @Override
     public double getAngularDisplacementCached() {
-        return cachedAngularDisplacement;
+        return ahrs.getCachedAngularDisplacement();
     }
 
     /**
@@ -293,26 +292,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
     @NotNull
     @Contract(pure = true)
     public String[] getHeader() {
-        return new String[]{"left_vel",
-                "right_vel",
-                "left_setpoint",
-                "right_setpoint",
-                "left_current",
-                "right_current",
-                "left_voltage",
-                "right_voltage",
-                "battery_voltage",
-                "left_pos",
-                "right_pos",
-                "left_error",
-                "right_error",
-                "left_control_mode",
-                "right_control_mode",
-                "heading",
-                "rotational_velocity",
-                "angular_displacement",
-                "x_accel",
-                "y_accel"};
+        return new String[]{"override_gyro"};
     }
 
     /**
@@ -323,26 +303,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
     @Override
     @NotNull
     public Object[] getData() {
-        return new Object[]{cachedLeftVel,
-                cachedRightVel,
-                leftMaster.getSetpoint(),
-                rightMaster.getSetpoint(),
-                leftMaster.getOutputCurrent(),
-                rightMaster.getOutputCurrent(),
-                leftMaster.getOutputVoltage(),
-                rightMaster.getOutputVoltage(),
-                rightMaster.getBatteryVoltage(),
-                cachedLeftPos,
-                cachedRightPos,
-                leftMaster.getError(),
-                rightMaster.getError(),
-                leftMaster.getControlMode(),
-                rightMaster.getControlMode(),
-                cachedHeading,
-                cachedAngularVel,
-                cachedAngularDisplacement,
-                ahrs.getXAccel(),
-                ahrs.getYAccel()};
+        return new Object[]{getOverrideGyro()};
     }
 
     /**
@@ -456,8 +417,5 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
         cachedLeftPos = getLeftPos();
         cachedRightVel = getRightVel();
         cachedRightPos = getRightPos();
-        cachedHeading = getHeading();
-        cachedAngularDisplacement = getAngularDisplacement();
-        cachedAngularVel = getAngularVel();
     }
 }
