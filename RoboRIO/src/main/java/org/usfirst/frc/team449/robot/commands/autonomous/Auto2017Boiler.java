@@ -48,14 +48,14 @@ public class Auto2017Boiler extends YamlCommandGroupWrapper {
             addParallel(spinUpShooter.getCommand());
         }
         addSequential(runWallToPegProfile);
-        if (dropGearSwitch.getStatus().get(0)) {
+        if (dropGearSwitch.get()) {
             addSequential(dropGear.getCommand());
         }
 
         addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
         //Red is true, blue is false
-        if (allianceSwitch.getStatus().get(0)) {
+        if (allianceSwitch.get()) {
             addSequential(runRedPegToKeyProfile);
         } else {
             addSequential(runBluePegToKeyProfile);

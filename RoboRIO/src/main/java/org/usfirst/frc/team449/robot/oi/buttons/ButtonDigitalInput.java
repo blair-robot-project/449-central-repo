@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.DigitalInput;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedButton;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
@@ -19,17 +20,7 @@ public class ButtonDigitalInput extends MappedButton {
      * The input to read from.
      */
     @NotNull
-    private final MappedDigitalInput input;
-
-    /**
-     * True if all inputs are true, false otherwise
-     */
-    protected boolean value;
-
-    /**
-     * The time at which the value for this button was cached
-     */
-    private long timeValueCached;
+    private final DigitalInput input;
 
     /**
      * Default constructor.
@@ -42,29 +33,12 @@ public class ButtonDigitalInput extends MappedButton {
     }
 
     /**
-     * Cache the value of the input if it hasn't been done yet this tic, otherwise do nothing.
-     */
-    protected void cacheValue() {
-        if (timeValueCached < Clock.currentTimeMillis()) {
-            value = true;
-            for (Boolean b : input.getStatus()) {
-                if (!b) {
-                    value = false;
-                    break;
-                }
-            }
-            timeValueCached = Clock.currentTimeMillis();
-        }
-    }
-
-    /**
      * Get whether this button is pressed
      *
      * @return true if the all the ports in the MappedDigitalInput are true, false otherwise.
      */
     @Override
     public boolean get() {
-        cacheValue();
-        return value;
+        return input.get();
     }
 }

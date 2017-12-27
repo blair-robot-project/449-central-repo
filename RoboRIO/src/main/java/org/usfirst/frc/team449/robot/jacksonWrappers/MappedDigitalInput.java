@@ -9,50 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A series of roboRIO digital input pins.
+ * A roboRIO digital input pin.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class MappedDigitalInput implements Loggable{
+public class MappedDigitalInput extends DigitalInput implements Loggable{
 
     /**
-     * The digitalInputs this class represents
-     */
-    @JsonIgnore
-    protected final List<DigitalInput> digitalInputs;
-
-    /**
-     * Value of the inputs. Field to avoid garbage collection.
-     */
-    private List<Boolean> digitalValues;
-
-    /**
-     * Construct a MappedDigitalInput.
+     * Create an instance of a Digital Input class. Creates a digital input given a channel.
      *
-     * @param ports The ports to read from, in order.
+     * @param channel the DIO channel for the digital input 0-9 are on-board, 10-25 are on the MXP
      */
     @JsonCreator
-    public MappedDigitalInput(@NotNull @JsonProperty(required = true) int[] ports) {
-        digitalInputs = new ArrayList<>();
-        for (int portNum : ports) {
-            DigitalInput tmp = new DigitalInput(portNum);
-            digitalInputs.add(tmp);
-        }
+    public MappedDigitalInput(@JsonProperty(required = true) int channel) {
+        super(channel);
     }
 
     /**
-     * Get the status of each pin specified in the map, in the order they were specified.
+     * Get the value from a digital input channel. Retrieve the value of a single digital input
+     * channel from the FPGA.
      *
-     * @return A list of booleans where 1 represents the input receiving a signal and 0 represents no signal.
+     * @return the status of the digital input
      */
-    @JsonIgnore
-    @NotNull
-    public List<Boolean> getStatus() {
-        digitalValues = new ArrayList<>();
-        for (DigitalInput digitalInput : digitalInputs) {
-            //Negated because, by default, false means signal and true means no signal, and that's dumb.
-            digitalValues.add(!digitalInput.get());
-        }
-        return digitalValues;
+    @Override
+    public boolean get(){
+        return !super.get(); //true is off by default in WPILib, and that's dumb
     }
 
     /**
@@ -63,11 +43,7 @@ public class MappedDigitalInput implements Loggable{
     @NotNull
     @Override
     public String[] getHeader() {
-        String[] toRet = new String[digitalInputs.size()];
-        for (int i = 0; i < toRet.length; i++){
-            toRet[i] = Integer.toString(digitalInputs.get(i).getChannel());
-        }
-        return toRet;
+        return new String[]{"value"};
     }
 
     /**
@@ -78,7 +54,7 @@ public class MappedDigitalInput implements Loggable{
     @NotNull
     @Override
     public Object[] getData() {
-        return this.getStatus().toArray();
+        return new Object[]{this.get()};
     }
 
     /**
@@ -89,6 +65,6 @@ public class MappedDigitalInput implements Loggable{
     @NotNull
     @Override
     public String getName() {
-        return "DigitalInput";
+        return "DigitalInput"+this.getChannel();
     }
 }
