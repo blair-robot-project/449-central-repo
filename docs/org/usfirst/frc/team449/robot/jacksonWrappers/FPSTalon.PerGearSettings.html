@@ -155,11 +155,11 @@ extends java.lang.Object</pre>
                java.lang.Double&nbsp;motionProfilePRev,
                java.lang.Double&nbsp;motionProfileIRev,
                java.lang.Double&nbsp;motionProfileDRev,
-               double&nbsp;voltsPerFPSSquaredFwd,
-               java.lang.Double&nbsp;voltsPerFPSSquaredRev,
-               java.lang.Double&nbsp;voltsPerFPSFwd,
+               double&nbsp;kAFwd,
+               java.lang.Double&nbsp;kARev,
+               java.lang.Double&nbsp;kVFwd,
                double&nbsp;interceptVoltageFwd,
-               java.lang.Double&nbsp;voltsPerFPSRev,
+               java.lang.Double&nbsp;kVRev,
                java.lang.Double&nbsp;interceptVoltageRev)</code>
 <div class="block">Default constructor.</div>
 </td>
@@ -319,14 +319,14 @@ extends java.lang.Object</pre>
                        java.lang.Double&nbsp;motionProfilePRev,
                        java.lang.Double&nbsp;motionProfileIRev,
                        java.lang.Double&nbsp;motionProfileDRev,
-                       double&nbsp;voltsPerFPSSquaredFwd,
+                       double&nbsp;kAFwd,
                        @Nullable
-                       java.lang.Double&nbsp;voltsPerFPSSquaredRev,
+                       java.lang.Double&nbsp;kARev,
                        @Nullable
-                       java.lang.Double&nbsp;voltsPerFPSFwd,
+                       java.lang.Double&nbsp;kVFwd,
                        double&nbsp;interceptVoltageFwd,
                        @Nullable
-                       java.lang.Double&nbsp;voltsPerFPSRev,
+                       java.lang.Double&nbsp;kVRev,
                        @Nullable
                        java.lang.Double&nbsp;interceptVoltageRev)</pre>
 <div class="block">Default constructor.</div>
@@ -347,36 +347,36 @@ extends java.lang.Object</pre>
 <dd><code>closedLoopRampRate</code> - The closed loop ramp rate, in volts/sec. Can be null, and if it is, no ramp
                                 rate is used.</dd>
 <dd><code>maxSpeed</code> - The maximum speed of the motor in this gear, in FPS. Used for throttle
-                                scaling. Ignored if voltsPerFPSFwd is null. Calculated from the drive
+                                scaling. Ignored if kVFwd is null. Calculated from the drive
                                 characterization terms if null.</dd>
 <dd><code>kP</code> - The proportional PID constant for the motor in this gear. Ignored if
-                                voltsPerFPSFwd is null. Defaults to 0.</dd>
+                                kVFwd is null. Defaults to 0.</dd>
 <dd><code>kI</code> - The integral PID constant for the motor in this gear. Ignored if
-                                voltsPerFPSFwd is null. Defaults to 0.</dd>
+                                kVFwd is null. Defaults to 0.</dd>
 <dd><code>kD</code> - The derivative PID constant for the motor in this gear. Ignored if
-                                voltsPerFPSFwd is null. Defaults to 0.</dd>
+                                kVFwd is null. Defaults to 0.</dd>
 <dd><code>motionProfilePFwd</code> - The proportional PID constant for forwards motion profiles in this gear.
-                                Ignored if voltsPerFPSFwd is null. Defaults to 0.</dd>
+                                Ignored if kVFwd is null. Defaults to 0.</dd>
 <dd><code>motionProfileIFwd</code> - The integral PID constant for forwards motion profiles in this gear. Ignored
-                                if voltsPerFPSFwd is null. Defaults to 0.</dd>
+                                if kVFwd is null. Defaults to 0.</dd>
 <dd><code>motionProfileDFwd</code> - The derivative PID constant for forwards motion profiles in this gear. Ignored
-                                if voltsPerFPSFwd is null. Defaults to 0.</dd>
+                                if kVFwd is null. Defaults to 0.</dd>
 <dd><code>motionProfilePRev</code> - The proportional PID constant for reverse motion profiles in this gear.
-                                Ignored if voltsPerFPSFwd is null. Defaults to motionProfilePFwd.</dd>
+                                Ignored if kVFwd is null. Defaults to motionProfilePFwd.</dd>
 <dd><code>motionProfileIRev</code> - The integral PID constant for reverse motion profiles in this gear. Ignored if
-                                voltsPerFPSFwd is null. Defaults to motionProfileIFwd.</dd>
+                                kVFwd is null. Defaults to motionProfileIFwd.</dd>
 <dd><code>motionProfileDRev</code> - The derivative PID constant for reverse motion profiles in this gear. Ignored
-                                if voltsPerFPSFwd is null. Defaults to motionProfileDFwd.</dd>
-<dd><code>voltsPerFPSSquaredFwd</code> - The voltage required to accelerate the robot at one foot per second^2 while
+                                if kVFwd is null. Defaults to motionProfileDFwd.</dd>
+<dd><code>kAFwd</code> - The voltage required to accelerate the robot at one foot per second^2 while
                                 going forwards. Ka in the drive characterization paper. Defaults to zero,
                                 meaning we don't use acceleration feed-forward.</dd>
-<dd><code>voltsPerFPSSquaredRev</code> - The voltage required to accelerate the robot at one foot per second^2 while
+<dd><code>kARev</code> - The voltage required to accelerate the robot at one foot per second^2 while
                                 going in reverse. Ka in the drive characterization paper. Defaults to
-                                voltsPerFPSSquaredFwd.</dd>
-<dd><code>voltsPerFPSFwd</code> - The voltage required to run forwards at a steady-state velocity of 1 foot per
+                                kAFwd.</dd>
+<dd><code>kVFwd</code> - The voltage required to run forwards at a steady-state velocity of 1 foot per
                                 second. Kv in the drive characterization paper. Can be null to not use PID.</dd>
-<dd><code>voltsPerFPSRev</code> - The voltage required to run backwards at a steady-state velocity of 1 foot per
-                                second. Kv in the drive characterization paper.Defaults to voltsPerFPSFwd.</dd>
+<dd><code>kVRev</code> - The voltage required to run backwards at a steady-state velocity of 1 foot per
+                                second. Kv in the drive characterization paper.Defaults to kVFwd.</dd>
 <dd><code>interceptVoltageFwd</code> - The voltage required to overcome static friction in the forwards direction.
                                 Vintercept in the drive characterization paper. Defaults to 0.</dd>
 <dd><code>interceptVoltageRev</code> - The voltage required to overcome static friction in the reverse direction.
