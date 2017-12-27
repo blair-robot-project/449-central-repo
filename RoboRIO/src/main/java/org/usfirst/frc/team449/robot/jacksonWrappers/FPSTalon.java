@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonTokenId;
 import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.other.Clock;
@@ -25,7 +27,7 @@ import java.util.Map;
  * in this class takes arguments in post-gearing FPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FPSTalon implements SimpleMotor, Shiftable {
+public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
 
     /**
      * The CTRE CAN Talon SRX that this class is a wrapper on
@@ -38,12 +40,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
      */
     @Nullable
     private final Integer encoderCPR;
-
-    /**
-     * The type of encoder the talon uses, or null if there is no encoder.
-     */
-    @Nullable
-    private final CANTalon.FeedbackDevice feedbackDevice;
 
     /**
      * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if there was a
@@ -112,9 +108,16 @@ public class FPSTalon implements SimpleMotor, Shiftable {
     private Double RPS;
 
     /**
+     * The talon's name, used for logging purposes.
+     */
+    @NotNull
+    private final String name;
+
+    /**
      * Default constructor.
      *
      * @param port                       CAN port of this Talon.
+     *                                   @param name The talon's name, used for logging purposes. Defaults to talon_portnum
      * @param invertInVoltage            Whether or not to invert the motor in voltage mode.
      * @param reverseOutput              Whether to reverse the output (identical effect to inverting outside of
      *                                   position PID)
@@ -157,6 +160,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
      */
     @JsonCreator
     public FPSTalon(@JsonProperty(required = true) int port,
+                    @Nullable String name,
                     boolean invertInVoltage,
                     boolean reverseOutput,
                     @JsonProperty(required = true) boolean enableBrakeMode,
@@ -181,6 +185,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
                     @Nullable List<SlaveTalon> slaves) {
         //Instantiate the base CANTalon this is a wrapper on.
         canTalon = new CANTalon(port, controlFrameRateMillis != null ? controlFrameRateMillis : 10);
+        //Set the name to the given one or to talon_portnum
+        this.name = name != null ? name : ("talon_"+port);
         //Set this to false because we only use reverseOutput for slaves.
         canTalon.reverseOutput(reverseOutput);
         //NO TOUCHY
@@ -253,15 +259,13 @@ public class FPSTalon implements SimpleMotor, Shiftable {
             //having to support RPM.
             if (feedbackDevice.equals(CANTalon.FeedbackDevice.CtreMagEncoder_Absolute) ||
                     feedbackDevice.equals(CANTalon.FeedbackDevice.CtreMagEncoder_Relative)) {
-                this.feedbackDevice = CANTalon.FeedbackDevice.QuadEncoder;
+                canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
             } else {
-                this.feedbackDevice = feedbackDevice;
+                canTalon.setFeedbackDevice(feedbackDevice);
             }
-            canTalon.setFeedbackDevice(this.feedbackDevice);
             this.encoderCPR = encoderCPR;
             canTalon.reverseSensor(reverseSensor);
         } else {
-            this.feedbackDevice = null;
             this.encoderCPR = null;
         }
 
@@ -784,6 +788,59 @@ public class FPSTalon implements SimpleMotor, Shiftable {
      */
     public void stopMPProcesses() {
         bottomBufferLoader.stop();
+    }
+
+    /**
+     * Get the headers for the data this subsystem logs every loop.
+     *
+     * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+     */
+    @NotNull
+    @Override
+    public String[] getHeader() {
+        return new String[]{
+                "velocity",
+                "position",
+                "setpoint",
+                "error",
+                "battery_voltage",
+                "voltage",
+                "current",
+                "control_mode",
+                "gear"
+        };
+    }
+
+    /**
+     * Get the data this subsystem logs every loop.
+     *
+     * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+     */
+    @NotNull
+    @Override
+    public Object[] getData() {
+        return new Object[]{
+                getVelocity(),
+                getPositionFeet(),
+                getSetpoint(),
+                getError(),
+                getBatteryVoltage(),
+                getOutputVoltage(),
+                getOutputCurrent(),
+                getControlMode(),
+                getGear()
+        };
+    }
+
+    /**
+     * Get the name of this object.
+     *
+     * @return A string that will identify this object in the log file.
+     */
+    @NotNull
+    @Override
+    public String getName() {
+        return name;
     }
 
     /**
