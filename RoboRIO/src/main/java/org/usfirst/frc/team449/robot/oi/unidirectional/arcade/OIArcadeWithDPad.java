@@ -117,34 +117,6 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
     }
 
     /**
-     * Get the headers for the data this subsystem logs every loop.
-     *
-     * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
-     */
-    @NotNull
-    @Override
-    public String[] getHeader() {
-        return new String[]{
-                "Fwd",
-                "Rot"
-        };
-    }
-
-    /**
-     * Get the data this subsystem logs every loop.
-     *
-     * @return An N-length array of Objects, where N is the number of labels given by getHeader.
-     */
-    @NotNull
-    @Override
-    public Object[] getData() {
-        return new Object[]{
-                getFwd(),
-                getRot()
-        };
-    }
-
-    /**
      * Get the name of this object.
      *
      * @return A string that will identify this object in the log file.

@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.oi.OI;
  * An OI that gives an absolute heading, relative to the field, and a velocity.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public abstract class OIFieldOriented implements OI, Loggable {
+public abstract class OIFieldOriented implements OI {
 
     /**
      * The cached linear velocity.

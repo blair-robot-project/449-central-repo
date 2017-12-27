@@ -119,6 +119,6 @@ public class OIFieldOrientedPosCos extends OIFieldOriented{
     @NotNull
     @Override
     public String getName() {
-        return "oiFieldOriented";
+        return "OI";
     }
 }
