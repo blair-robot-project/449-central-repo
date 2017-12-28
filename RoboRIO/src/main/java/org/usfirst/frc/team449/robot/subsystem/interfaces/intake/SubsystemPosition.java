@@ -6,7 +6,7 @@ public interface SubsystemPosition {
 	public void setPosition(int value);
 
 	// Method for setting the motor output to a value.
-	public void setMoterOutput(int value);
+	public void setMotorOutput(int value);
 
 	// Method for returning the state of the reverse limit switch.
 	public boolean getReverseLimit();
@@ -18,5 +18,5 @@ public interface SubsystemPosition {
 	public void enableMotor();
 
 	// Method for disabling the motor.
-	public void disableMoter();
+	public void disableMotor();
 }
