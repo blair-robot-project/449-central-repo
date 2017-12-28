@@ -13,13 +13,13 @@ public interface SubsystemPosition {
 	}
 
 	// Method for returning the state of the reverse limit switch.
-	public static String stateOfReverseLimitSwitch(){
-		return "";
+	public static boolean stateOfReverseLimitSwitch(){
+		return false;
 	}
 
 	// Method for returning the state of the forward limit switch.
-	public static String stateOfForwardLimitSwitch(){
-		return"";
+	public static boolean stateOfForwardLimitSwitch(){
+		return false;
 	}
 
 	// Method for enabling the motor.
