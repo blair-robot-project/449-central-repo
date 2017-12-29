@@ -495,6 +495,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     public void setPositionSetpoint(double feet) {
         canTalon.changeControlMode(CANTalon.TalonControlMode.Position);
+        canTalon.setF(0);
         canTalon.set(feetToEncoder(feet));
     }
 
@@ -649,6 +650,24 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     public void resetPosition() {
         canTalon.setEncPosition(0);
+    }
+
+    /**
+     * Get the status of the forwards limit switch.
+     *
+     * @return True if the forwards limit switch is closed, false if it's open or doesn't exist.
+     */
+    public boolean getFwdLimitSwitch(){
+        return canTalon.isFwdLimitSwitchClosed();
+    }
+
+    /**
+     * Get the status of the reverse limit switch.
+     *
+     * @return True if the reverse limit switch is closed, false if it's open or doesn't exist.
+     */
+    public boolean getRevLimitSwitch(){
+        return canTalon.isRevLimitSwitchClosed();
     }
 
     /**
