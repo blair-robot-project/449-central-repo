@@ -110,7 +110,7 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
         } else if (getFwd() == 0) { //Turning in place
             return rotThrottle.getValue() * turnInPlaceRotScale;
         } else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
-            return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(getFwd()));
+            return rotThrottle.getValue() * scaleRotByFwdPoly.applyAsDouble(Math.abs(getFwd()));
         } else { //Plain and simple
             return rotThrottle.getValue();
         }

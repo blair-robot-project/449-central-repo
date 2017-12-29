@@ -60,6 +60,6 @@ public class ThrottlePolynomial extends ThrottleDeadbanded {
      */
     @Override
     public double getValue() {
-        return polynomial.get(super.getValue());
+        return polynomial.applyAsDouble(super.getValue());
     }
 }

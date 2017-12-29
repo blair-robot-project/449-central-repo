@@ -8,12 +8,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.DoubleUnaryOperator;
 
 /**
  * A polynomial of a single variable.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Polynomial {
+public class Polynomial implements DoubleUnaryOperator {
 
     /**
      * A map of the powers and coefficients of each term.
@@ -67,7 +68,8 @@ public class Polynomial {
      * @param x The variable to be given to the polynomial.
      * @return The value of the polynomial evaluated at |x|, then changed to the sign of x.
      */
-    public double get(double x) {
+    @Override
+    public double applyAsDouble(double x) {
         sign = Math.signum(x);
         abs = Math.abs(x);
         toRet = 0;
