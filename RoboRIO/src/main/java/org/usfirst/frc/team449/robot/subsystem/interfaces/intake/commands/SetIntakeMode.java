@@ -62,9 +62,7 @@ public class SetIntakeMode extends YamlCommandWrapper {
 	 * @return true
 	 */
 	@Override
-	protected boolean isFinished() {
-		return true;
-	}
+	protected boolean isFinished() { return true; }
 
 	/**
 	 * Log when this command ends

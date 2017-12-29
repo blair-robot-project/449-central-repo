@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.subsystem.interfaces.intake;
+package org.usfirst.frc.team449.robot.subsystem.interfaces.Position;
 
 public interface SubsystemPosition {
 
