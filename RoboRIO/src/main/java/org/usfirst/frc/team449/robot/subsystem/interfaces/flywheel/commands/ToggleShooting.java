@@ -15,22 +15,22 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlyw
 public class ToggleShooting extends YamlCommandGroupWrapper {
 
 
-    /**
-     * Default constructor.
-     *
-     * @param subsystem The subsystem to execute this command on.
-     */
-    @JsonCreator
-    public ToggleShooting(@NotNull @JsonProperty(required = true) SubsystemFlywheel subsystem) {
-        switch (subsystem.getFlywheelState()) {
-            case OFF:
-                addSequential(new SpinUpThenShoot(subsystem));
-                break;
-            case SHOOTING:
-                addSequential(new TurnAllOff(subsystem));
-                break;
-            case SPINNING_UP:
-                addSequential(new TurnAllOn(subsystem));
-        }
-    }
+	/**
+	 * Default constructor.
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 */
+	@JsonCreator
+	public ToggleShooting(@NotNull @JsonProperty(required = true) SubsystemFlywheel subsystem) {
+		switch (subsystem.getFlywheelState()) {
+			case OFF:
+				addSequential(new SpinUpThenShoot(subsystem));
+				break;
+			case SHOOTING:
+				addSequential(new TurnAllOff(subsystem));
+				break;
+			case SPINNING_UP:
+				addSequential(new TurnAllOn(subsystem));
+		}
+	}
 }

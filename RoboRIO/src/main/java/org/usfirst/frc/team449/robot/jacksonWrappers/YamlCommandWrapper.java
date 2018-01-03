@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class YamlCommandWrapper extends Command implements YamlCommand {
 
-    /**
-     * Return the Command this is a wrapper on.
-     *
-     * @return this.
-     */
-    @NotNull
-    @Override
-    public Command getCommand() {
-        return this;
-    }
+	/**
+	 * Return the Command this is a wrapper on.
+	 *
+	 * @return this.
+	 */
+	@NotNull
+	@Override
+	public Command getCommand() {
+		return this;
+	}
 }

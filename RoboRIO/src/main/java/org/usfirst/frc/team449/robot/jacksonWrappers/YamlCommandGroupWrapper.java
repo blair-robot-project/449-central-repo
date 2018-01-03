@@ -9,14 +9,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class YamlCommandGroupWrapper extends CommandGroup implements YamlCommand {
 
-    /**
-     * Return the Command this is a wrapper on.
-     *
-     * @return this.
-     */
-    @NotNull
-    @Override
-    public Command getCommand() {
-        return this;
-    }
+	/**
+	 * Return the Command this is a wrapper on.
+	 *
+	 * @return this.
+	 */
+	@NotNull
+	@Override
+	public Command getCommand() {
+		return this;
+	}
 }

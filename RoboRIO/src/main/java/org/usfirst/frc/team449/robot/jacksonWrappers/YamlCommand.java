@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface YamlCommand {
 
-    /**
-     * Get the command object this object is.
-     *
-     * @return this.
-     */
-    @NotNull
-    Command getCommand();
+	/**
+	 * Get the command object this object is.
+	 *
+	 * @return this.
+	 */
+	@NotNull
+	Command getCommand();
 }

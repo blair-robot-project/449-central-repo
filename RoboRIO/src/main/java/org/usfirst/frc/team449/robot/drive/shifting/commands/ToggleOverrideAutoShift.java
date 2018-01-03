@@ -15,63 +15,63 @@ import org.usfirst.frc.team449.robot.other.Logger;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ToggleOverrideAutoShift extends YamlCommandWrapper {
 
-    /**
-     * The drive subsystem to execute this command on.
-     */
-    @NotNull
-    private final DriveShiftable subsystem;
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
+	@NotNull
+	private final DriveShiftable subsystem;
 
-    /**
-     * Default constructor
-     *
-     * @param drive The drive subsystem to execute this command on.
-     */
-    @JsonCreator
-    public ToggleOverrideAutoShift(@NotNull @JsonProperty(required = true) DriveShiftable drive) {
-        subsystem = drive;
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param drive The drive subsystem to execute this command on.
+	 */
+	@JsonCreator
+	public ToggleOverrideAutoShift(@NotNull @JsonProperty(required = true) DriveShiftable drive) {
+		subsystem = drive;
+	}
 
-    /**
-     * Log on initialization
-     */
-    @Override
-    protected void initialize() {
-        Logger.addEvent("OverrideAutoShift init", this.getClass());
-    }
+	/**
+	 * Log on initialization
+	 */
+	@Override
+	protected void initialize() {
+		Logger.addEvent("OverrideAutoShift init", this.getClass());
+	}
 
-    /**
-     * Toggle overriding autoshifting.
-     */
-    @Override
-    protected void execute() {
-        //Set whether or not we're overriding
-        subsystem.setOverrideAutoshift(!subsystem.getOverrideAutoshift());
-    }
+	/**
+	 * Toggle overriding autoshifting.
+	 */
+	@Override
+	protected void execute() {
+		//Set whether or not we're overriding
+		subsystem.setOverrideAutoshift(!subsystem.getOverrideAutoshift());
+	}
 
-    /**
-     * Finish immediately because this is a state-change command.
-     *
-     * @return true
-     */
-    @Override
-    protected boolean isFinished() {
-        return true;
-    }
+	/**
+	 * Finish immediately because this is a state-change command.
+	 *
+	 * @return true
+	 */
+	@Override
+	protected boolean isFinished() {
+		return true;
+	}
 
-    /**
-     * Log when this command ends.
-     */
-    @Override
-    protected void end() {
-        Logger.addEvent("OverrideAutoShift end", this.getClass());
-    }
+	/**
+	 * Log when this command ends.
+	 */
+	@Override
+	protected void end() {
+		Logger.addEvent("OverrideAutoShift end", this.getClass());
+	}
 
-    /**
-     * Log when interrupted
-     */
-    @Override
-    protected void interrupted() {
-        Logger.addEvent("OverrideAutoShift Interrupted!", this.getClass());
-    }
+	/**
+	 * Log when interrupted
+	 */
+	@Override
+	protected void interrupted() {
+		Logger.addEvent("OverrideAutoShift Interrupted!", this.getClass());
+	}
 }
 

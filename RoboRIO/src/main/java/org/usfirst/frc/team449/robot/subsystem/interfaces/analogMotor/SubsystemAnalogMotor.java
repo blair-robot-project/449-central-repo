@@ -8,14 +8,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface SubsystemAnalogMotor {
 
-    /**
-     * Set output to a given input.
-     * @param input The input to give to the motor.
-     */
-    void set(double input);
+	/**
+	 * Set output to a given input.
+	 *
+	 * @param input The input to give to the motor.
+	 */
+	void set(double input);
 
-    /**
-     * Disable the motor.
-     */
-    void disable();
+	/**
+	 * Disable the motor.
+	 */
+	void disable();
 }

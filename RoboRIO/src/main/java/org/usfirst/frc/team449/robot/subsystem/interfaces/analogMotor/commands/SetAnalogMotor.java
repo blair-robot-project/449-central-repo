@@ -25,16 +25,16 @@ public class SetAnalogMotor extends YamlCommandWrapper {
 	 * The setpoint to run the motor at.
 	 */
 	private final double setpoint;
-	
+
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param setpoint The setpoint to run the motor at.
+	 * @param setpoint  The setpoint to run the motor at.
 	 */
 	@JsonCreator
 	public SetAnalogMotor(@NotNull @JsonProperty(required = true) SubsystemAnalogMotor subsystem,
-	                          @JsonProperty(required = true) double setpoint) {
+	                      @JsonProperty(required = true) double setpoint) {
 		this.subsystem = subsystem;
 		this.setpoint = setpoint;
 	}

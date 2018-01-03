@@ -16,15 +16,15 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CommandSequence extends YamlCommandGroupWrapper {
 
-    /**
-     * Default constructor
-     *
-     * @param commandList The commands to run, in order.
-     */
-    @JsonCreator
-    public CommandSequence(@NotNull @JsonProperty(required = true) List<YamlCommand> commandList) {
-        for (YamlCommand command : commandList) {
-            addSequential(command.getCommand());
-        }
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param commandList The commands to run, in order.
+	 */
+	@JsonCreator
+	public CommandSequence(@NotNull @JsonProperty(required = true) List<YamlCommand> commandList) {
+		for (YamlCommand command : commandList) {
+			addSequential(command.getCommand());
+		}
+	}
 }

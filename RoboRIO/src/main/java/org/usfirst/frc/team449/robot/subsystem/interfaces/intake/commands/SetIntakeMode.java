@@ -15,70 +15,70 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SetIntakeMode extends YamlCommandWrapper {
 
-    /**
-     * The subsystem to execute this command on.
-     */
-    @NotNull
-    private final SubsystemIntake subsystem;
+	/**
+	 * The subsystem to execute this command on.
+	 */
+	@NotNull
+	private final SubsystemIntake subsystem;
 
-    /**
-     * The mode to set this subsystem to.
-     */
-    @NotNull
-    private final SubsystemIntake.IntakeMode mode;
+	/**
+	 * The mode to set this subsystem to.
+	 */
+	@NotNull
+	private final SubsystemIntake.IntakeMode mode;
 
-    /**
-     * Default constructor
-     *
-     * @param subsystem The subsystem to execute this command on.
-     * @param mode      The mode to set the intake to.
-     */
-    @JsonCreator
-    public SetIntakeMode(@NotNull @JsonProperty(required = true) SubsystemIntake subsystem,
-                         @NotNull @JsonProperty(required = true) SubsystemIntake.IntakeMode mode) {
-        this.subsystem = subsystem;
-        this.mode = mode;
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 * @param mode      The mode to set the intake to.
+	 */
+	@JsonCreator
+	public SetIntakeMode(@NotNull @JsonProperty(required = true) SubsystemIntake subsystem,
+	                     @NotNull @JsonProperty(required = true) SubsystemIntake.IntakeMode mode) {
+		this.subsystem = subsystem;
+		this.mode = mode;
+	}
 
-    /**
-     * Log when this command is initialized
-     */
-    @Override
-    protected void initialize() {
-        Logger.addEvent("SetIntakeMode init.", this.getClass());
-    }
+	/**
+	 * Log when this command is initialized
+	 */
+	@Override
+	protected void initialize() {
+		Logger.addEvent("SetIntakeMode init.", this.getClass());
+	}
 
-    /**
-     * Set the intake to the given mode.
-     */
-    @Override
-    protected void execute() {
-        subsystem.setMode(mode);
-    }
+	/**
+	 * Set the intake to the given mode.
+	 */
+	@Override
+	protected void execute() {
+		subsystem.setMode(mode);
+	}
 
-    /**
-     * Finish immediately because this is a state-change command.
-     *
-     * @return true
-     */
-    @Override
-    protected boolean isFinished() {
-        return true;
-    }
+	/**
+	 * Finish immediately because this is a state-change command.
+	 *
+	 * @return true
+	 */
+	@Override
+	protected boolean isFinished() {
+		return true;
+	}
 
-    /**
-     * Log when this command ends
-     */
-    @Override
-    protected void end() {
-        Logger.addEvent("SetIntakeMode end.", this.getClass());
-    }
+	/**
+	 * Log when this command ends
+	 */
+	@Override
+	protected void end() {
+		Logger.addEvent("SetIntakeMode end.", this.getClass());
+	}
 
-    /**
-     * Log when this command is interrupted.
-     */
-    @Override
-    protected void interrupted() {
-        Logger.addEvent("SetIntakeMode Interrupted!", this.getClass());
-    }
+	/**
+	 * Log when this command is interrupted.
+	 */
+	@Override
+	protected void interrupted() {
+		Logger.addEvent("SetIntakeMode Interrupted!", this.getClass());
+	}
 }

@@ -16,15 +16,15 @@ import java.util.Set;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ParallelCommandGroup extends YamlCommandGroupWrapper {
 
-    /**
-     * Default constructor
-     *
-     * @param commandSet The commands to run.
-     */
-    @JsonCreator
-    public ParallelCommandGroup(@NotNull @JsonProperty(required = true) Set<YamlCommand> commandSet) {
-        for (YamlCommand command : commandSet) {
-            addParallel(command.getCommand());
-        }
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param commandSet The commands to run.
+	 */
+	@JsonCreator
+	public ParallelCommandGroup(@NotNull @JsonProperty(required = true) Set<YamlCommand> commandSet) {
+		for (YamlCommand command : commandSet) {
+			addParallel(command.getCommand());
+		}
+	}
 }
