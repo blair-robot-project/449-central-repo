@@ -16,38 +16,38 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.SubsystemA
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class DisableAnalogMotorWithRequires<T extends YamlSubsystem & SubsystemAnalogMotor> extends DisableAnalogMotor {
 
-	/**
-	 * Default constructor
-	 *
-	 * @param subsystem The subsystem to execute this command on.
-	 */
-	@JsonCreator
-	public DisableAnalogMotorWithRequires(@NotNull @JsonProperty(required = true) T subsystem) {
-		super(subsystem);
-		requires(subsystem);
-	}
+    /**
+     * Default constructor
+     *
+     * @param subsystem The subsystem to execute this command on.
+     */
+    @JsonCreator
+    public DisableAnalogMotorWithRequires(@NotNull @JsonProperty(required = true) T subsystem) {
+        super(subsystem);
+        requires(subsystem);
+    }
 
-	/**
-	 * Log when this command is initialized
-	 */
-	@Override
-	protected void initialize() {
-		Logger.addEvent("DisableAnalogMotorWithRequires init.", this.getClass());
-	}
+    /**
+     * Log when this command is initialized
+     */
+    @Override
+    protected void initialize() {
+        Logger.addEvent("DisableAnalogMotorWithRequires init.", this.getClass());
+    }
 
-	/**
-	 * Log when this command ends
-	 */
-	@Override
-	protected void end() {
-		Logger.addEvent("DisableAnalogMotorWithRequires end.", this.getClass());
-	}
+    /**
+     * Log when this command ends
+     */
+    @Override
+    protected void end() {
+        Logger.addEvent("DisableAnalogMotorWithRequires end.", this.getClass());
+    }
 
-	/**
-	 * Log when this command is interrupted.
-	 */
-	@Override
-	protected void interrupted() {
-		Logger.addEvent("DisableAnalogMotorWithRequires Interrupted!", this.getClass());
-	}
+    /**
+     * Log when this command is interrupted.
+     */
+    @Override
+    protected void interrupted() {
+        Logger.addEvent("DisableAnalogMotorWithRequires Interrupted!", this.getClass());
+    }
 }

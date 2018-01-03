@@ -14,11 +14,11 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class AnalogMotorSimple extends YamlSubsystem implements SubsystemAnalogMotor {
 
-	/**
-	 * The motor this subsystem controls.
-	 */
-	@NotNull
-	private final SimpleMotor motor;
+    /**
+     * The motor this subsystem controls.
+     */
+    @NotNull
+    private final SimpleMotor motor;
 
     /**
      * Default constructor.
@@ -38,22 +38,22 @@ public class AnalogMotorSimple extends YamlSubsystem implements SubsystemAnalogM
         //Do nothing
     }
 
-	/**
-	 * Set output to a given input.
-	 *
-	 * @param input The input to give to the motor.
-	 */
-	@Override
-	public void set(double input) {
-		motor.enable();
-		motor.setVelocity(input);
-	}
+    /**
+     * Set output to a given input.
+     *
+     * @param input The input to give to the motor.
+     */
+    @Override
+    public void set(double input) {
+        motor.enable();
+        motor.setVelocity(input);
+    }
 
-	/**
-	 * Disable the motor.
-	 */
-	@Override
-	public void disable() {
-		motor.disable();
-	}
+    /**
+     * Disable the motor.
+     */
+    @Override
+    public void disable() {
+        motor.disable();
+    }
 }

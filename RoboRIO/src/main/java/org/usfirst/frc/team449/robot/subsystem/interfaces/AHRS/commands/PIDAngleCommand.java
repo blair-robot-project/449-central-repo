@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
  * A command that uses a AHRS to turn to a certain angle.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public abstract class PIDAngleCommand extends PIDCommand{
+public abstract class PIDAngleCommand extends PIDCommand {
 
     /**
      * The subsystem to execute this command on.

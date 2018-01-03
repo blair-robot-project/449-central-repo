@@ -41,10 +41,10 @@ public class CommandButton {
         }
     }
 
-	/**
-	 * The possible actions for the button to do to the command.
-	 */
-	enum Action {
-		WHEN_PRESSED, WHILE_HELD, WHEN_RELEASED, TOGGLE_WHEN_PRESSED, CANCEL_WHEN_PRESSED
-	}
+    /**
+     * The possible actions for the button to do to the command.
+     */
+    enum Action {
+        WHEN_PRESSED, WHILE_HELD, WHEN_RELEASED, TOGGLE_WHEN_PRESSED, CANCEL_WHEN_PRESSED
+    }
 }

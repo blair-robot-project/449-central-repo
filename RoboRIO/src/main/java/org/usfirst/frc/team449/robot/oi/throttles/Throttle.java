@@ -10,17 +10,17 @@ import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface Throttle extends Updatable, Loggable {
 
-	/**
-	 * Get the output of the throttle this object represents.
-	 *
-	 * @return The output from [-1, 1].
-	 */
-	double getValue();
+    /**
+     * Get the output of the throttle this object represents.
+     *
+     * @return The output from [-1, 1].
+     */
+    double getValue();
 
-	/**
-	 * Get the cached output of the throttle this object represents.
-	 *
-	 * @return The output from [-1, 1].
-	 */
-	double getValueCached();
+    /**
+     * Get the cached output of the throttle this object represents.
+     *
+     * @return The output from [-1, 1].
+     */
+    double getValueCached();
 }

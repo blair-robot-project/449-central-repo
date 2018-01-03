@@ -1,3 +1,4 @@
+org.usfirst.frc.team449.robot
 org.usfirst.frc.team449.robot.commands.autonomous
 org.usfirst.frc.team449.robot.commands.general
 org.usfirst.frc.team449.robot.commands.multiInterface
@@ -18,6 +19,7 @@ org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands
 org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor
 org.usfirst.frc.team449.robot.generalInterfaces.updatable
 org.usfirst.frc.team449.robot.jacksonWrappers
+org.usfirst.frc.team449.robot.mixIn
 org.usfirst.frc.team449.robot.oi
 org.usfirst.frc.team449.robot.oi.buttons
 org.usfirst.frc.team449.robot.oi.fieldoriented
