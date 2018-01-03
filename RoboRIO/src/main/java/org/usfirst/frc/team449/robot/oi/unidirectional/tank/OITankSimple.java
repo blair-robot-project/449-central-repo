@@ -93,7 +93,7 @@ public class OITankSimple extends OITank {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "OI";
     }
 }

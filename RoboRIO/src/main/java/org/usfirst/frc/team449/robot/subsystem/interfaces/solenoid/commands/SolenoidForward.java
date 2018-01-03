@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
@@ -14,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSole
  * A command that extends a piston.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SolenoidForward extends Command {
+public class SolenoidForward extends InstantCommand {
 
     /**
      * The subsystem to execute this command on.
@@ -46,16 +47,6 @@ public class SolenoidForward extends Command {
     @Override
     protected void execute() {
         subsystem.setSolenoid(DoubleSolenoid.Value.kForward);
-    }
-
-    /**
-     * Finish immediately because this is a state-change command.
-     *
-     * @return true
-     */
-    @Override
-    protected boolean isFinished() {
-        return true;
     }
 
     /**

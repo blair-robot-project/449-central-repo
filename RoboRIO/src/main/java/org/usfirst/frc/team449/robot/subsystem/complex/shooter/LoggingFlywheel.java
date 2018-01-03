@@ -119,7 +119,7 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "loggingShooter";
     }
 
@@ -178,7 +178,7 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
      * @return Time from giving the multiSubsystem voltage to being ready to fire, in milliseconds.
      */
     @Override
-    public long getSpinUpTimeMillis() {
+    public long getSpinUpTime() {
         return spinUpTime;
     }
 }

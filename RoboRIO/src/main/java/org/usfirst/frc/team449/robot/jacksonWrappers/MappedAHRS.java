@@ -215,7 +215,7 @@ public class MappedAHRS implements Loggable, Updatable {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "AHRS";
     }
 

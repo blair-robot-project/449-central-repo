@@ -111,10 +111,10 @@ public class ThrottleSum implements Throttle {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         StringBuilder toRet = new StringBuilder();
         for (Throttle throttle : throttles) {
-            toRet.append(throttle.getName()).append("+");
+            toRet.append(throttle.getLogName()).append("+");
         }
         return toRet.toString();
     }

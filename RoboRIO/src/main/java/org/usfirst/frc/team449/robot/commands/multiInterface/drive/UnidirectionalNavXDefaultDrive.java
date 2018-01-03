@@ -225,7 +225,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
     @Override
     @NotNull
     @Contract(pure = true)
-    public String getName() {
+    public String getLogName() {
         return "UnidirectionalNavXDefaultDrive";
     }
 }

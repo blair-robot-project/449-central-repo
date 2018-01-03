@@ -109,7 +109,7 @@ public class Logger implements Runnable {
             //For each datum
             for (int j = 0; j < items.length; j++) {
                 //Format name as Subsystem.dataName
-                String itemName = this.subsystems[i].getName() + "." + items[j];
+                String itemName = this.subsystems[i].getLogName() + "." + items[j];
                 itemNames[i][j] = itemName;
                 telemetryHeader.append(itemName);
                 telemetryHeader.append(",");

@@ -164,7 +164,7 @@ public class OIOutreach implements OIUnidirectional {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "OIOutreach";
     }
 }

@@ -852,7 +852,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return name;
     }
 

@@ -4,7 +4,7 @@ plugins {
     id 'idea'
     id 'maven'
     id 'org.hidetake.ssh' version "2.9.0"
-    id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
+    id 'jaci.openrio.gradle.GradleRIO' version "2018-beta-5b"
 }
 
 repositories {
@@ -18,15 +18,15 @@ repositories {
 }
 
 wpi {
-    wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
-    ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
-    opencvVersion = "3.1.0"         // The OpenCV version to use.
-    cscoreVersion = "1.0.2"         // The CSCore version to use.
-    wpiutilVersion = "1.0.2"
-    ctreVersion = "4.4.1.14"        // The CTRE Toolsuite (Talon SRX) version to use.
-    navxVersion = "3.0.331"         // The NavX-MXP library version to use.
-    smartDashboardVersion = '2.0.4'
-    javaInstallerVersion = '2.0.3'
+    wpilibVersion = "2018.1.1-beta-5"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+    ntcoreVersion = "4.0.0-beta-4"         // The NetworkTables Core version to use.
+    opencvVersion = "3.2.0"         // The OpenCV version to use.
+    cscoreVersion = "1.1.0-beta-4"         // The CSCore version to use.
+    wpiutilVersion = "3.0.0-beta-4"
+//    ctreVersion = "4.4.1.14"        // The CTRE Toolsuite (Talon SRX) version to use.
+//    navxVersion = "3.0.331"         // The NavX-MXP library version to use.
+    smartDashboardVersion = '2.0.5'
+    shuffleboardVersion = '0.6.0'
 }
 
 dependencies {
@@ -41,8 +41,8 @@ dependencies {
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.3'
     compile 'org.jetbrains:annotations:15.0'
     compile wpilib()
-    compile ctre()
-    compile navx()
+//    compile ctre()
+    compile navx(), bare
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

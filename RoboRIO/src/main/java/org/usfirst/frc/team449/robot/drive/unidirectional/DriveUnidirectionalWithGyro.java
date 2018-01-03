@@ -313,7 +313,7 @@ public class DriveUnidirectionalWithGyro extends YamlSubsystem implements Subsys
     @Override
     @NotNull
     @Contract(pure = true)
-    public String getName() {
+    public String getLogName() {
         return "Drive";
     }
 

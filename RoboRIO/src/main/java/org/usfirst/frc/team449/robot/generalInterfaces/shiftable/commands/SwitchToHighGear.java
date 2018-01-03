@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -13,7 +14,7 @@ import org.usfirst.frc.team449.robot.other.Logger;
  * A command that switches to high gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SwitchToHighGear extends Command {
+public class SwitchToHighGear extends InstantCommand {
 
     /**
      * The drive subsystem to execute this command on.
@@ -45,16 +46,6 @@ public class SwitchToHighGear extends Command {
     @Override
     protected void execute() {
         subsystem.setGear(Shiftable.gear.HIGH.getNumVal());
-    }
-
-    /**
-     * Finish immediately because this is a state-change command.
-     *
-     * @return true
-     */
-    @Override
-    protected boolean isFinished() {
-        return true;
     }
 
     /**

@@ -38,9 +38,9 @@ public class FlywheelSimple extends YamlSubsystem implements SubsystemFlywheel {
     private final double feederVelocity;
 
     /**
-     * Time from giving the flywheel voltage to being ready to fire, in milliseconds.
+     * Time from giving the flywheel voltage to being ready to fire, in seconds.
      */
-    private final long spinUpTimeMillis;
+    private final double spinUpTime;
 
     /**
      * The current state of the flywheel.
@@ -51,24 +51,23 @@ public class FlywheelSimple extends YamlSubsystem implements SubsystemFlywheel {
     /**
      * Default constructor
      *
-     * @param shooterMotor     The motor that controls the flywheel.
-     * @param feederMotor      The motor that controls the feeder.
-     * @param shooterVelocity  The velocity for the flywheel to run at, on [-1, 1].
-     * @param feederVelocity   The velocity for the feeder to run at, on [-1, 1]. Defaults to 1.
-     * @param spinUpTimeMillis Time from giving the flywheel voltage to being ready to fire, in milliseconds. Defaults
-     *                         to 0.
+     * @param shooterMotor    The motor that controls the flywheel.
+     * @param feederMotor     The motor that controls the feeder.
+     * @param shooterVelocity The velocity for the flywheel to run at, on [-1, 1].
+     * @param feederVelocity  The velocity for the feeder to run at, on [-1, 1]. Defaults to 1.
+     * @param spinUpTime      Time from giving the flywheel voltage to being ready to fire, in seconds. Defaults to 0.
      */
     @JsonCreator
     public FlywheelSimple(@NotNull @JsonProperty(required = true) SimpleMotor shooterMotor,
                           @NotNull @JsonProperty(required = true) SimpleMotor feederMotor,
                           @JsonProperty(required = true) double shooterVelocity,
                           @Nullable Double feederVelocity,
-                          long spinUpTimeMillis) {
+                          double spinUpTime) {
         this.shooterMotor = shooterMotor;
         this.feederMotor = feederMotor;
         this.shooterVelocity = shooterVelocity;
         this.feederVelocity = feederVelocity != null ? feederVelocity : 1;
-        this.spinUpTimeMillis = spinUpTimeMillis;
+        this.spinUpTime = spinUpTime;
         this.state = FlywheelState.OFF;
     }
 
@@ -139,7 +138,7 @@ public class FlywheelSimple extends YamlSubsystem implements SubsystemFlywheel {
      * @return Time from giving the flywheel voltage to being ready to fire, in milliseconds.
      */
     @Override
-    public long getSpinUpTimeMillis() {
-        return spinUpTimeMillis;
+    public double getSpinUpTime() {
+        return spinUpTime;
     }
 }

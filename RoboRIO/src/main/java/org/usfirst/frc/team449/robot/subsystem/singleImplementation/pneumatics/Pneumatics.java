@@ -91,7 +91,7 @@ public class Pneumatics extends YamlSubsystem implements Loggable {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "pneumatics";
     }
 }
