@@ -33,7 +33,7 @@ public class ControlAnalogMotorWithThrottle<T extends YamlSubsystem & SubsystemA
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param throttle The throttle that controls the motor.
+	 * @param throttle  The throttle that controls the motor.
 	 */
 	@JsonCreator
 	public ControlAnalogMotorWithThrottle(@NotNull @JsonProperty(required = true) T subsystem,

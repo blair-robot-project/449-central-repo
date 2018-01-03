@@ -1,75 +1,75 @@
 plugins {
-    id 'java'
-    id 'eclipse'
-    id 'idea'
-    id 'maven'
-    id 'org.hidetake.ssh' version "2.9.0"
-    id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'maven'
+	id 'org.hidetake.ssh' version "2.9.0"
+	id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        name = "GradleRio"
-        url = "http://dev.imjac.in/maven"
-    }
+	mavenCentral()
+	maven {
+		name = "GradleRio"
+		url = "http://dev.imjac.in/maven"
+	}
 
-    maven { url "https://plugins.gradle.org/m2/" }
+	maven { url "https://plugins.gradle.org/m2/" }
 }
 
 wpi {
-    wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
-    ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
-    opencvVersion = "3.1.0"         // The OpenCV version to use.
-    cscoreVersion = "1.0.2"         // The CSCore version to use.
-    wpiutilVersion = "1.0.2"
-    ctreVersion = "4.4.1.14"        // The CTRE Toolsuite (Talon SRX) version to use.
-    navxVersion = "3.0.331"         // The NavX-MXP library version to use.
-    smartDashboardVersion = '2.0.4'
-    javaInstallerVersion = '2.0.3'
+	wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+	ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
+	opencvVersion = "3.1.0"         // The OpenCV version to use.
+	cscoreVersion = "1.0.2"         // The CSCore version to use.
+	wpiutilVersion = "1.0.2"
+	ctreVersion = "4.4.1.14"        // The CTRE Toolsuite (Talon SRX) version to use.
+	navxVersion = "3.0.331"         // The NavX-MXP library version to use.
+	smartDashboardVersion = '2.0.4'
+	javaInstallerVersion = '2.0.3'
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
-    //com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
-    compile 'org.jetbrains:annotations:13.0'
-    compile wpilib()
-    compile ctre()
-    compile navx()
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
+	//com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
+	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
+	compile 'org.jetbrains:annotations:13.0'
+	compile wpilib()
+	compile ctre()
+	compile navx()
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+	classifier = 'sources'
+	from sourceSets.main.allSource
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+	classifier = 'javadoc'
+	from javadoc.destinationDir
 }
 
 task deleteDocs(type: Delete) {
-    delete '../docs'
-    followSymlinks = false
+	delete '../docs'
+	followSymlinks = false
 }
 
 task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]) {
-    from 'build/docs/javadoc'
-    into '../docs'
+	from 'build/docs/javadoc'
+	into '../docs'
 }
 
 artifacts {
-    archives sourcesJar
-    archives genJavadoc
+	archives sourcesJar
+	archives genJavadoc
 }
 
 compileJava {
-    options.compilerArgs << '-parameters'
+	options.compilerArgs << '-parameters'
 }

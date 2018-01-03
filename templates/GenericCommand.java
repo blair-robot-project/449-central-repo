@@ -14,62 +14,62 @@ import org.usfirst.frc.team449.robot.other.Logger;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class GenericCommand extends YamlCommandWrapper {
 
-    /**
-     * The subsystem to execute this command on
-     */
-    @NotNull
-    private final GenericSubsytemInterface subsystem;
+	/**
+	 * The subsystem to execute this command on
+	 */
+	@NotNull
+	private final GenericSubsytemInterface subsystem;
 
-    /**
-     * Default constructor
-     *
-     * @param subsystem The subsystem to execute this command on.
-     */
-    @JsonCreator
-    public RunMotorWhileConditonMet(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
-        this.subsystem = subsystem;
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 */
+	@JsonCreator
+	public RunMotorWhileConditonMet(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
+		this.subsystem = subsystem;
+	}
 
-    /**
-     * Log when this command is initialized
-     */
-    @Override
-    protected void initialize() {
-        Logger.addEvent("GenericCommand init", this.getClass());
-    }
+	/**
+	 * Log when this command is initialized
+	 */
+	@Override
+	protected void initialize() {
+		Logger.addEvent("GenericCommand init", this.getClass());
+	}
 
-    /**
-     * Do something
-     */
-    @Override
-    protected void execute() {
-        //Put something to do here
-    }
+	/**
+	 * Do something
+	 */
+	@Override
+	protected void execute() {
+		//Put something to do here
+	}
 
-    /**
-     * Stop when finished.
-     *
-     * @return true if finished, false otherwise.
-     */
-    @Override
-    protected boolean isFinished() {
-        //Return whether something is true or not
-    }
+	/**
+	 * Stop when finished.
+	 *
+	 * @return true if finished, false otherwise.
+	 */
+	@Override
+	protected boolean isFinished() {
+		//Return whether something is true or not
+	}
 
-    /**
-     * Log that the command has ended.
-     */
-    @Override
-    protected void end() {
-        Logger.addEvent("GenericSubsytemInterface end", this.getClass());
-    }
+	/**
+	 * Log that the command has ended.
+	 */
+	@Override
+	protected void end() {
+		Logger.addEvent("GenericSubsytemInterface end", this.getClass());
+	}
 
-    /**
-     * Log that the command has been interrupted.
-     */
-    @Override
-    protected void interrupted() {
-        Logger.addEvent("GenericSubsytemInterface interrupted!", this.getClass());
-    }
+	/**
+	 * Log that the command has been interrupted.
+	 */
+	@Override
+	protected void interrupted() {
+		Logger.addEvent("GenericSubsytemInterface interrupted!", this.getClass());
+	}
 
 }

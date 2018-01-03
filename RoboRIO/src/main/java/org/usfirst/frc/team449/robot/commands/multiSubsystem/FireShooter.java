@@ -17,20 +17,20 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetInt
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FireShooter extends CommandGroup {
 
-    /**
-     * Constructs a FireShooter command group
-     *
-     * @param subsystemFlywheel flywheel subsystem. Can be null.
-     * @param subsystemIntake   intake subsystem. Can be null.
-     */
-    @JsonCreator
-    public FireShooter(@Nullable SubsystemFlywheel subsystemFlywheel,
-                       @Nullable SubsystemIntake subsystemIntake) {
-        if (subsystemFlywheel != null) {
-            addParallel(new TurnAllOn(subsystemFlywheel));
-        }
-        if (subsystemIntake != null) {
-            addParallel(new SetIntakeMode(subsystemIntake, SubsystemIntake.IntakeMode.IN_SLOW));
-        }
-    }
+	/**
+	 * Constructs a FireShooter command group
+	 *
+	 * @param subsystemFlywheel flywheel subsystem. Can be null.
+	 * @param subsystemIntake   intake subsystem. Can be null.
+	 */
+	@JsonCreator
+	public FireShooter(@Nullable SubsystemFlywheel subsystemFlywheel,
+	                   @Nullable SubsystemIntake subsystemIntake) {
+		if (subsystemFlywheel != null) {
+			addParallel(new TurnAllOn(subsystemFlywheel));
+		}
+		if (subsystemIntake != null) {
+			addParallel(new SetIntakeMode(subsystemIntake, SubsystemIntake.IntakeMode.IN_SLOW));
+		}
+	}
 }

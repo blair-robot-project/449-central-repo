@@ -48,15 +48,15 @@ public class Auto2017Feeder extends CommandGroup {
         if (dropGearSwitch.get()) {
             addSequential(dropGear);
 
-            addSequential(new WaitForMillis(waitBetweenProfilesMillis));
+			addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
-            if (allianceSwitch.get()) { //Red is true
-                addSequential(runRedBackupProfile);
-            } else {
-                addSequential(runBlueBackupProfile);
-            }
+			if (allianceSwitch.get()) { //Red is true
+				addSequential(runRedBackupProfile);
+			} else {
+				addSequential(runBlueBackupProfile);
+			}
 
-            addSequential(new WaitForMillis(waitBetweenProfilesMillis));
+			addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
             if (allianceSwitch.get()) {
                 addSequential(driveForwardsRed);

@@ -16,18 +16,18 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideM
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RunProfile<T extends YamlSubsystem & SubsystemMPTwoSides> extends CommandGroup {
 
-    /**
-     * Default constructor.
-     *
-     * @param subsystem The subsystem to execute this command on.
-     * @param profile   The motion profile to load and execute.
-     * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
-     */
-    @JsonCreator
-    public RunProfile(@NotNull @JsonProperty(required = true) T subsystem,
-                      @NotNull @JsonProperty(required = true) MotionProfileData profile,
-                      @JsonProperty(required = true) double timeout) {
-        addSequential(new LoadProfile(subsystem, profile));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
-    }
+	/**
+	 * Default constructor.
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 * @param profile   The motion profile to load and execute.
+	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
+	 */
+	@JsonCreator
+	public RunProfile(@NotNull @JsonProperty(required = true) T subsystem,
+	                  @NotNull @JsonProperty(required = true) MotionProfileData profile,
+	                  @JsonProperty(required = true) double timeout) {
+		addSequential(new LoadProfile(subsystem, profile));
+		addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+	}
 }

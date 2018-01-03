@@ -1,8 +1,8 @@
-plugins{
-    id 'java'
-    id 'eclipse'
-    id 'idea'
-    id 'maven'
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'maven'
 }
 
 group 'com.github.blair-robot-project'

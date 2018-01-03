@@ -51,14 +51,14 @@ public class Auto2017Boiler extends CommandGroup {
             addSequential(dropGear);
         }
 
-        addSequential(new WaitForMillis(waitBetweenProfilesMillis));
+		addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
-        //Red is true, blue is false
-        if (allianceSwitch.get()) {
-            addSequential(runRedPegToKeyProfile);
-        } else {
-            addSequential(runBluePegToKeyProfile);
-        }
+		//Red is true, blue is false
+		if (allianceSwitch.get()) {
+			addSequential(runRedPegToKeyProfile);
+		} else {
+			addSequential(runBluePegToKeyProfile);
+		}
 
         if (fireShooter != null) {
             addSequential(fireShooter);
