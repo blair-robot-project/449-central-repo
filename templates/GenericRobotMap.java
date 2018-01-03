@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.other.Logger;
 
@@ -76,17 +75,17 @@ public class GenericRobotMap {
     public RobotMap2017(@Nullable List<CommandButton> buttons,
                         @NotNull @JsonProperty(required = true) Logger logger,
                         @NotNull @JsonProperty(required = true) MappedRunnable updater,
-                        @Nullable YamlCommand autoCommand,
-                        @Nullable YamlCommand autoStartupCommand,
-                        @Nullable YamlCommand teleopStartupCommand,
-                        @Nullable YamlCommand startupCommand) {
+                        @Nullable Command autoCommand,
+                        @Nullable Command autoStartupCommand,
+                        @Nullable Command teleopStartupCommand,
+                        @Nullable Command startupCommand) {
         this.buttons = buttons != null ? buttons : new ArrayList<>();
         this.logger = logger;
         this.updater = updater;
-        this.autoCommand = autoCommand != null ? autoCommand.getCommand() : null;
-        this.autoStartupCommand = autoStartupCommand != null ? autoStartupCommand.getCommand() : null;
-        this.teleopStartupCommand = teleopStartupCommand != null ? teleopStartupCommand.getCommand() : null;
-        this.startupCommand = startupCommand != null ? startupCommand.getCommand() : null;
+        this.autoCommand = autoCommand;
+        this.autoStartupCommand = autoStartupCommand;
+        this.teleopStartupCommand = teleopStartupCommand;
+        this.startupCommand = startupCommand;
     }
 
     /**

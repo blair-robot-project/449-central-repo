@@ -73,6 +73,8 @@ public class Robot extends IterativeRobot {
             String fixed = mapper.writeValueAsString(normalized);
             //Use a parameter name module so we don't have to specify name for every field.
             mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
+            //Add mix-ins
+            mapper.registerModule(new WPIModule());
             //Deserialize the map into an object.
             robotMap = mapper.readValue(fixed, GenericRobotMap.class);
         } catch (IOException e) {
