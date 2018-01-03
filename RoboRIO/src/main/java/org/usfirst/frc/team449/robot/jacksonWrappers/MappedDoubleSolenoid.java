@@ -12,17 +12,17 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedDoubleSolenoid extends DoubleSolenoid {
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param module  The module number of the PCM. Defaults to 0.
-	 * @param forward The forward port on the PCM.
-	 * @param reverse The reverse port on the PCM.
-	 */
-	@JsonCreator
-	public MappedDoubleSolenoid(int module,
-	                            @JsonProperty(required = true) int forward,
-	                            @JsonProperty(required = true) int reverse) {
-		super(module, forward, reverse);
-	}
+    /**
+     * Default constructor.
+     *
+     * @param module  The module number of the PCM. Defaults to 0.
+     * @param forward The forward port on the PCM.
+     * @param reverse The reverse port on the PCM.
+     */
+    @JsonCreator
+    public MappedDoubleSolenoid(int module,
+                                @JsonProperty(required = true) int forward,
+                                @JsonProperty(required = true) int reverse) {
+        super(module, forward, reverse);
+    }
 }

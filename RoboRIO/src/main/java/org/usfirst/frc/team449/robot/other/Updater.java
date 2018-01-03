@@ -14,29 +14,29 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Updater implements MappedRunnable {
 
-	/**
-	 * The objects to update.
-	 */
-	@NotNull
-	private final Updatable[] updatables;
+    /**
+     * The objects to update.
+     */
+    @NotNull
+    private final Updatable[] updatables;
 
-	/**
-	 * Default constructor
-	 *
-	 * @param updatables The objects to update.
-	 */
-	@JsonCreator
-	public Updater(@NotNull @JsonProperty(required = true) Updatable[] updatables) {
-		this.updatables = updatables;
-	}
+    /**
+     * Default constructor
+     *
+     * @param updatables The objects to update.
+     */
+    @JsonCreator
+    public Updater(@NotNull @JsonProperty(required = true) Updatable[] updatables) {
+        this.updatables = updatables;
+    }
 
-	/**
-	 * Update all the updatables.
-	 */
-	@Override
-	public void run() {
-		for (Updatable updatable : updatables) {
-			updatable.update();
-		}
-	}
+    /**
+     * Update all the updatables.
+     */
+    @Override
+    public void run() {
+        for (Updatable updatable : updatables) {
+            updatable.update();
+        }
+    }
 }
