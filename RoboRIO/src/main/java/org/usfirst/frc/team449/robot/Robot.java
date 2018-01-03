@@ -1,16 +1,12 @@
 package org.usfirst.frc.team449.robot;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.yaml.snakeyaml.Yaml;
 
@@ -21,7 +17,6 @@ import java.util.Map;
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
  */
-@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Robot extends IterativeRobot {
 
     /**
@@ -31,25 +26,24 @@ public class Robot extends IterativeRobot {
     public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
     /**
+     * The name of the map to read from. Should be overriden by a subclass to change the name.
+     */
+    protected String mapName = "map.yml";
+
+    /**
      * The object constructed directly from the yaml map.
      */
-    private GenericRobotMap robotMap;
+    protected RobotMap robotMap;
 
     /**
      * The Notifier running the logging thread.
      */
-    private Notifier loggerNotifier;
-
-    /**
-     * The command to run during autonomous. Null to do nothing during autonomous.
-     */
-    @Nullable
-    private Command autonomousCommand;
+    protected Notifier loggerNotifier;
 
     /**
      * Whether or not the robot has been enabled yet.
      */
-    private boolean enabled;
+    protected boolean enabled;
 
     /**
      * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -67,7 +61,7 @@ public class Robot extends IterativeRobot {
         Yaml yaml = new Yaml();
         try {
             //Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
-            Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "map.yml"));
+            Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + mapName));
             YAMLMapper mapper = new YAMLMapper();
             //Turn the Map read by SnakeYaml into a String so Jackson can read it.
             String fixed = mapper.writeValueAsString(normalized);
@@ -76,7 +70,7 @@ public class Robot extends IterativeRobot {
             //Add mix-ins
             mapper.registerModule(new WPIModule());
             //Deserialize the map into an object.
-            robotMap = mapper.readValue(fixed, GenericRobotMap.class);
+            robotMap = mapper.readValue(fixed, RobotMap.class);
         } catch (IOException e) {
             //This is either the map file not being in the file system OR it being improperly formatted.
             System.out.println("Config file is bad/nonexistent!");
@@ -88,8 +82,6 @@ public class Robot extends IterativeRobot {
 
         //Set fields from the map.
         this.loggerNotifier = new Notifier(robotMap.getLogger());
-
-        autonomousCommand = robotMap.getAutoCommand();
 
         //Run the logger to write all the events that happened during initialization to a file.
         robotMap.getLogger().run();
@@ -164,11 +156,6 @@ public class Robot extends IterativeRobot {
         //Run the auto startup command
         if (robotMap.getAutoStartupCommand() != null) {
             robotMap.getAutoStartupCommand().start();
-        }
-
-        //Start running the autonomous command
-        if (autonomousCommand != null) {
-            autonomousCommand.start();
         }
 
         //Log
