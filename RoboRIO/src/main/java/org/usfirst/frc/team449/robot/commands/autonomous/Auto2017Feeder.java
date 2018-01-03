@@ -46,12 +46,12 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 		addSequential(runWallToPegProfile);
 
 		//Only do this stuff if we drop the gear
-		if (dropGearSwitch.getStatus().get(0)) {
+		if (dropGearSwitch.get()) {
 			addSequential(dropGear.getCommand());
 
 			addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
-			if (allianceSwitch.getStatus().get(0)) { //Red is true
+			if (allianceSwitch.get()) { //Red is true
 				addSequential(runRedBackupProfile);
 			} else {
 				addSequential(runBlueBackupProfile);
@@ -59,7 +59,7 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 
 			addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
-			if (allianceSwitch.getStatus().get(0)) {
+			if (allianceSwitch.get()) {
 				addSequential(driveForwardsRed.getCommand());
 			} else {
 				addSequential(driveForwardsBlue.getCommand());

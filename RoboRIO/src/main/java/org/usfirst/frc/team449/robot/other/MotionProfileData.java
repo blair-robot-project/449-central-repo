@@ -45,7 +45,7 @@ public class MotionProfileData {
 	 * @param inverted      Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 * @param velocityOnly  Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to
 	 *                      false.
-	 * @param resetPosition Whether or not to reset the talon position when this profile starts.
+	 * @param resetPosition Whether or not to reset the talon position when this profile starts. Defaults to false.
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
@@ -57,7 +57,7 @@ public class MotionProfileData {
 		this.resetPosition = resetPosition;
 
 		try {
-			readFile("/home/lvuser/449_resources/" + filename);
+			readFile(filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

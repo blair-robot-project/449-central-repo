@@ -32,7 +32,7 @@ public class Auto2017Center extends YamlCommandGroupWrapper {
 			@NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
 			@NotNull @JsonProperty(required = true) YamlCommand driveBack) {
 		addSequential(runWallToPegProfile);
-		if (dropGearSwitch.getStatus().get(0)) {
+		if (dropGearSwitch.get()) {
 			addSequential(dropGear.getCommand());
 		}
 		addSequential(driveBack.getCommand());

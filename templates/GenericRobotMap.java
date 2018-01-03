@@ -12,7 +12,6 @@ import org.usfirst.frc.team449.robot.other.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The Jackson-compatible object representing the entire robot.
@@ -38,8 +37,7 @@ public class GenericRobotMap {
 	private final Runnable updater;
 
 	/**
-	 * The command to run during autonomous. Can be null, and if it is, no command is run during
-	 * autonomous.
+	 * The command to run during autonomous. Can be null, and if it is, no command is run during autonomous.
 	 */
 	@Nullable
 	private final Command autoCommand;
@@ -68,8 +66,8 @@ public class GenericRobotMap {
 	 * @param buttons              The buttons for controlling this robot. Can be null for an empty list.
 	 * @param logger               The logger for recording events and telemetry data.
 	 * @param updater              A runnable that updates cached variables.
-	 * @param autoCommand     The command to run during autonomous. Can be null, and if it is, no
-	 *                             command is run during autonomous.
+	 * @param autoCommand          The command to run during autonomous. Can be null, and if it is, no command is run
+	 *                             during autonomous.
 	 * @param autoStartupCommand   The command to be run when first enabled in autonomous mode.
 	 * @param teleopStartupCommand The command to be run when first enabled in teleoperated mode.
 	 * @param startupCommand       The command to be run when first enabled.

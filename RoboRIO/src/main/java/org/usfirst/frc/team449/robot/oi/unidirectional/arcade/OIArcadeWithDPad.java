@@ -110,38 +110,10 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 		} else if (getFwd() == 0) { //Turning in place
 			return rotThrottle.getValue() * turnInPlaceRotScale;
 		} else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
-			return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(getFwd()));
+			return rotThrottle.getValue() * scaleRotByFwdPoly.applyAsDouble(Math.abs(getFwd()));
 		} else { //Plain and simple
 			return rotThrottle.getValue();
 		}
-	}
-
-	/**
-	 * Get the headers for the data this subsystem logs every loop.
-	 *
-	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
-	 */
-	@NotNull
-	@Override
-	public String[] getHeader() {
-		return new String[]{
-				"Fwd",
-				"Rot"
-		};
-	}
-
-	/**
-	 * Get the data this subsystem logs every loop.
-	 *
-	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
-	 */
-	@NotNull
-	@Override
-	public Object[] getData() {
-		return new Object[]{
-				getFwd(),
-				getRot()
-		};
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.fasterxml.jackson.annotation.*;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,13 +23,13 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 * The reed switches that detect if the shifter pistons are in high gear.
 	 */
 	@NotNull
-	private final MappedDigitalInput highGearSensors;
+	private final List<MappedDigitalInput> highGearSensors;
 
 	/**
 	 * The reed switches that detect if the shifter pistons are in low gear.
 	 */
 	@NotNull
-	private final MappedDigitalInput lowGearSensors;
+	private final List<MappedDigitalInput> lowGearSensors;
 
 	/**
 	 * The motors that should be disabled while the piston is shifting.
@@ -71,7 +70,6 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 *
 	 * @param otherShiftables         All objects that should be shifted when this component's piston is.
 	 * @param piston                  The piston that shifts.
-	 * @param lowGearPistonPos        The piston position for low gear. Defaults to Forward.
 	 * @param startingGear            The gear to start in. Can be null, and if it is, the starting gear is gotten from
 	 *                                the piston's position.
 	 * @param highGearSensors         The reed switches that detect if the shifter pistons are in high gear.
@@ -85,14 +83,13 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	@JsonCreator
 	public ShiftWithSensorComponent(@NotNull @JsonProperty(required = true) List<Shiftable> otherShiftables,
 	                                @NotNull @JsonProperty(required = true) MappedDoubleSolenoid piston,
-	                                @Nullable DoubleSolenoid.Value lowGearPistonPos,
 	                                @Nullable Shiftable.gear startingGear,
-	                                @NotNull @JsonProperty(required = true) MappedDigitalInput highGearSensors,
-	                                @NotNull @JsonProperty(required = true) MappedDigitalInput lowGearSensors,
+	                                @NotNull @JsonProperty(required = true) List<MappedDigitalInput> highGearSensors,
+	                                @NotNull @JsonProperty(required = true) List<MappedDigitalInput> lowGearSensors,
 	                                @NotNull @JsonProperty(required = true) List<SimpleMotor> motorsToDisable,
 	                                @NotNull @JsonProperty(required = true) BufferTimer motorDisableTimer,
 	                                @JsonProperty(required = true) double sensorCheckerPeriodSecs) {
-		super(otherShiftables, piston, lowGearPistonPos, startingGear);
+		super(otherShiftables, piston, startingGear);
 		this.highGearSensors = highGearSensors;
 		this.lowGearSensors = lowGearSensors;
 		this.motorsToDisable = motorsToDisable;
@@ -109,14 +106,14 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 		//Check if the piston is in correct position by making sure each sensor is reading correctly.
 		pistonCorrect = true;
 		if (currentGear == Shiftable.gear.HIGH.getNumVal()) {
-			for (boolean sensor : highGearSensors.getStatus()) {
+			for (MappedDigitalInput sensor : highGearSensors) {
 				//The position is correct if all the sensors read true.
-				pistonCorrect = pistonCorrect && sensor;
+				pistonCorrect = pistonCorrect && sensor.get();
 			}
 		} else {
-			for (boolean sensor : lowGearSensors.getStatus()) {
+			for (MappedDigitalInput sensor : lowGearSensors) {
 				//The position is correct if all the sensors read true.
-				pistonCorrect = pistonCorrect && sensor;
+				pistonCorrect = pistonCorrect && sensor.get();
 			}
 		}
 

@@ -1,56 +1,70 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DigitalInput;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 
 /**
- * A series of roboRIO digital input pins.
+ * A roboRIO digital input pin.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class MappedDigitalInput {
+public class MappedDigitalInput extends DigitalInput implements Loggable {
 
 	/**
-	 * The digitalInputs this class represents
-	 */
-	@JsonIgnore
-	private final List<DigitalInput> digitalInputs;
-
-	/**
-	 * Value of the inputs. Field to avoid garbage collection.
-	 */
-	private List<Boolean> digitalValues;
-
-	/**
-	 * Construct a MappedDigitalInput.
+	 * Create an instance of a Digital Input class. Creates a digital input given a channel.
 	 *
-	 * @param ports The ports to read from, in order.
+	 * @param channel the DIO channel for the digital input 0-9 are on-board, 10-25 are on the MXP
 	 */
 	@JsonCreator
-	public MappedDigitalInput(@NotNull @JsonProperty(required = true) int[] ports) {
-		digitalInputs = new ArrayList<>();
-		for (int portNum : ports) {
-			DigitalInput tmp = new DigitalInput(portNum);
-			digitalInputs.add(tmp);
-		}
+	public MappedDigitalInput(@JsonProperty(required = true) int channel) {
+		super(channel);
 	}
 
 	/**
-	 * Get the status of each pin specified in the map, in the order they were specified.
+	 * Get the value from a digital input channel. Retrieve the value of a single digital input
+	 * channel from the FPGA.
 	 *
-	 * @return A list of booleans where 1 represents the input receiving a signal and 0 represents no signal.
+	 * @return the status of the digital input
 	 */
-	@JsonIgnore
+	@Override
+	public boolean get() {
+		return !super.get(); //true is off by default in WPILib, and that's dumb
+	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+	 */
 	@NotNull
-	public List<Boolean> getStatus() {
-		digitalValues = new ArrayList<>();
-		for (DigitalInput digitalInput : digitalInputs) {
-			//Negated because, by default, false means signal and true means no signal, and that's dumb.
-			digitalValues.add(!digitalInput.get());
-		}
-		return digitalValues;
+	@Override
+	public String[] getHeader() {
+		return new String[]{"value"};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{this.get()};
+	}
+
+	/**
+	 * Get the name of this object.
+	 *
+	 * @return A string that will identify this object in the log file.
+	 */
+	@NotNull
+	@Override
+	public String getName() {
+		return "DigitalInput" + this.getChannel();
 	}
 }

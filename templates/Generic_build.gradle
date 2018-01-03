@@ -1,13 +1,19 @@
-//All these version numbers should be updated, but only during preseason.
+import jaci.openrio.gradle.GradleRIOPlugin
+import jaci.openrio.gradle.frc.RoboRIO
+
 plugins {
 	id 'org.hidetake.ssh' version "2.9.0"
 	id 'java'
 	id 'eclipse'
 	id 'idea'
-	id 'jaci.openrio.gradle.GradleRIO' version "2017.1.5"
+	id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
 }
 
-group 'org.usfirst.frc.robotYEAR'
+group 'org.usfirst.frc.team449.ProjectName'
+version '1.0'
+
+def TEAM = 449
+def ROBOT_CLASS = "org.usfirst.frc.team449.robot.Robot"
 
 repositories {
 	mavenCentral()
@@ -17,6 +23,7 @@ repositories {
 	}
 
 	maven { url "https://plugins.gradle.org/m2/" }
+	maven { url 'https://jitpack.io' }
 }
 
 wpi {
@@ -24,11 +31,15 @@ wpi {
 	ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
 	opencvVersion = "3.1.0"         // The OpenCV version to use.
 	cscoreVersion = "1.0.2"         // The CSCore version to use.
-	talonSrxVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
+	wpiutilVersion = "1.0.2"
+	ctreVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
 	navxVersion = "3.0.331"         // The NavX-MXP library version to use.
+	smartDashboardVersion = '2.0.4'
+	javaInstallerVersion = '2.0.3'
 }
 
 dependencies {
+	compile 'com.github.blair-robot-project:449-central-repo:v6.1.0'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
@@ -40,22 +51,17 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
 	compile 'org.jetbrains:annotations:13.0'
 	compile wpilib()
-	compile talonSrx()
+	compile ctre()
 	compile navx()
 }
 
-/* GradleRIO stuff */
+/* ssh stuff */
 remotes {
 	rio {
 		host = 'roboRIO-449-frc.local'
 		user = 'lvuser'
 		knownHosts = allowAnyHosts
 	}
-}
-
-def robotManifest = {
-	attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-	attributes 'Robot-Class': frc.robotClass
 }
 
 task('copyResources') {
@@ -65,16 +71,28 @@ task('copyResources') {
 				execute 'mkdir ~/449_resources', ignoreError: true
 				execute 'mkdir ~/logs', ignoreError: true
 				put from: fileTree('src/main/resources'), into: './449_resources/'
-				execute "./etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
+				execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
 			}
 		}
 	}
 }
 
-/* Generic artifact gen stuff */
+deploy {
+	targets {
+		target("roborio", RoboRIO) {
+			team = TEAM
+		}
+	}
+	artifacts {
+		artifact('frcJava', FRCJavaArtifact) {
+			targets << "roborio"
+		}
+	}
+}
+
 jar {
 	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-	manifest robotManifest
+	manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
@@ -82,14 +100,14 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task deleteDocs(type: Delete){
-	delete '../docs'
+task deleteDocs(type: Delete) {
+	delete 'docs'
 	followSymlinks = false
 }
 
-task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]){
+task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]) {
 	from 'build/docs/javadoc'
-	into '../docs'
+	into 'docs'
 }
 
 artifacts {
@@ -98,4 +116,8 @@ artifacts {
 
 compileJava {
 	options.compilerArgs << '-parameters'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.2.1'
 }

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi.unidirectional.tank;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 
 /**
@@ -89,5 +90,35 @@ public abstract class OITank implements OIUnidirectional {
 	public void update() {
 		leftThrottleCached = getLeftThrottle();
 		rightThrottleCached = getRightThrottle();
+	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+	 */
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"left",
+				"right",
+				"commandingStraight"
+		};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				getLeftOutputCached(),
+				getRightOutputCached(),
+				commandingStraight()
+		};
 	}
 }

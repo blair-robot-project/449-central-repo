@@ -109,4 +109,41 @@ public class ThrottleBasic implements Throttle, PIDSource {
 	public double pidGet() {
 		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
 	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+	 */
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"value"
+		};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				getValueCached()
+		};
+	}
+
+	/**
+	 * Get the name of this object.
+	 *
+	 * @return A string that will identify this object in the log file.
+	 */
+	@NotNull
+	@Override
+	public String getName() {
+		return "Stick_" + stick.getPort() + "_Axis_" + axis;
+	}
 }

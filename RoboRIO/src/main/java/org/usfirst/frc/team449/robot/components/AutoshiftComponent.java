@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Clock;
@@ -41,8 +41,8 @@ public class AutoshiftComponent {
 	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time
 	 * before shifting actually happens.
 	 */
-	@NotNull
-	private final BufferTimer upshiftBufferTimer, downshiftBufferTimer;
+	@Nullable
+	private final BufferTimer upshiftDebouncer, downshiftDebouncer;
 
 	/**
 	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
@@ -69,8 +69,8 @@ public class AutoshiftComponent {
 	 *
 	 * @param upshiftSpeed           The minimum speed both sides the drive must be going at to shift to high gear.
 	 * @param downshiftSpeed         The maximum speed both sides must be going at to shift to low gear.
-	 * @param upshiftBufferTimer     Buffer timer for upshifting.
-	 * @param downshiftBufferTimer   Buffer timer for downshifting.
+	 * @param upshiftDebouncer       Buffer timer for upshifting.
+	 * @param downshiftDebouncer     Buffer timer for downshifting.
 	 * @param cooldownAfterDownshift The minimum time, in seconds, between downshifting and then upshifting again.
 	 *                               Defaults to 0.
 	 * @param cooldownAfterUpshift   The minimum time, in seconds, between upshifting and then downshifting again.
@@ -81,8 +81,8 @@ public class AutoshiftComponent {
 	@JsonCreator
 	public AutoshiftComponent(@JsonProperty(required = true) double upshiftSpeed,
 	                          @JsonProperty(required = true) double downshiftSpeed,
-	                          @NotNull @JsonProperty(required = true) BufferTimer upshiftBufferTimer,
-	                          @NotNull @JsonProperty(required = true) BufferTimer downshiftBufferTimer,
+	                          @Nullable BufferTimer upshiftDebouncer,
+	                          @Nullable BufferTimer downshiftDebouncer,
 	                          double upshiftFwdThresh,
 	                          double cooldownAfterUpshift,
 	                          double cooldownAfterDownshift) {
@@ -91,8 +91,8 @@ public class AutoshiftComponent {
 		this.upshiftFwdThresh = upshiftFwdThresh;
 		this.cooldownAfterUpshift = (long) (cooldownAfterUpshift * 1000.);
 		this.cooldownAfterDownshift = (long) (cooldownAfterDownshift * 1000.);
-		this.upshiftBufferTimer = upshiftBufferTimer;
-		this.downshiftBufferTimer = downshiftBufferTimer;
+		this.upshiftDebouncer = upshiftDebouncer;
+		this.downshiftDebouncer = downshiftDebouncer;
 	}
 
 	/**
@@ -113,9 +113,11 @@ public class AutoshiftComponent {
 		//But we can only shift if we're out of the cooldown period.
 		okayToDownshift = okayToDownshift && Clock.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
-		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
-		// This avoids brief blips causing shifting.
-		okayToDownshift = downshiftBufferTimer.get(okayToDownshift);
+		if (downshiftDebouncer != null) {
+			//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
+			// This avoids brief blips causing shifting.
+			okayToDownshift = downshiftDebouncer.get(okayToDownshift);
+		}
 
 		//Record the time if we do decide to shift.
 		if (okayToDownshift) {
@@ -140,9 +142,12 @@ public class AutoshiftComponent {
 		//But we can only shift if we're out of the cooldown period.
 		okayToUpshift = okayToUpshift && Clock.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
-		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
-		// This avoids brief blips causing shifting.
-		okayToUpshift = upshiftBufferTimer.get(okayToUpshift);
+		if (upshiftDebouncer != null) {
+			//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
+			// This avoids brief blips causing shifting.
+			okayToUpshift = upshiftDebouncer.get(okayToUpshift);
+		}
+
 		if (okayToUpshift) {
 			timeLastUpshifted = Clock.currentTimeMillis();
 		}

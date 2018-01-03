@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi.unidirectional.arcade;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 
 /**
@@ -71,7 +72,7 @@ public abstract class OIArcade implements OIUnidirectional {
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return getRot() == 0;
+		return getRotCached() == 0;
 	}
 
 	/**
@@ -101,5 +102,39 @@ public abstract class OIArcade implements OIUnidirectional {
 		fwdCached = getFwd();
 		leftCached = fwdCached + rotCached;
 		rightCached = fwdCached - rotCached;
+	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+	 */
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"left",
+				"right",
+				"commandingStraight",
+				"rot",
+				"fwd"
+		};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				getLeftOutputCached(),
+				getRightOutputCached(),
+				commandingStraight(),
+				getRotCached(),
+				getFwdCached()
+		};
 	}
 }

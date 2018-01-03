@@ -5,23 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
 import org.usfirst.frc.team449.robot.other.Clock;
-import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,7 +74,7 @@ public class Robot extends IterativeRobot {
 			//Use a parameter name module so we don't have to specify name for every field.
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 			//Deserialize the map into an object.
-			robotMap = mapper.readValue(fixed, RobotMap2017.class);
+			robotMap = mapper.readValue(fixed, GenericRobotMap.class);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");
@@ -105,8 +99,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		//Do the startup tasks
-		doStartupTasks();
+		//Refresh the current time.
+		Clock.updateTime();
 
 		//Read sensors
 		this.robotMap.getUpdater().run();
@@ -119,9 +113,13 @@ public class Robot extends IterativeRobot {
 			enabled = true;
 		}
 
+		//Run the teleop startup command
 		if (robotMap.getTeleopStartupCommand() != null) {
 			robotMap.getTeleopStartupCommand().start();
 		}
+
+		//Log
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -137,6 +135,9 @@ public class Robot extends IterativeRobot {
 
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+
+		//Log
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -144,8 +145,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//Do startup tasks
-		doStartupTasks();
+		//Refresh the current time.
+		Clock.updateTime();
 
 		//Read sensors
 		this.robotMap.getUpdater().run();
@@ -158,6 +159,7 @@ public class Robot extends IterativeRobot {
 			enabled = true;
 		}
 
+		//Run the auto startup command
 		if (robotMap.getAutoStartupCommand() != null) {
 			robotMap.getAutoStartupCommand().start();
 		}
@@ -166,6 +168,9 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
 		}
+
+		//Log
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -179,6 +184,9 @@ public class Robot extends IterativeRobot {
 		this.robotMap.getUpdater().run();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+
+		//Log
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -211,17 +219,5 @@ public class Robot extends IterativeRobot {
 		Clock.updateTime();
 		//Read sensors
 		this.robotMap.getUpdater().run();
-	}
-
-
-	/**
-	 * Do tasks that should be done when we first enable, in both auto and teleop.
-	 */
-	private void doStartupTasks() {
-		//Refresh the current time.
-		Clock.updateTime();
-
-		//Start running the logger
-		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 	}
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 
@@ -14,13 +15,13 @@ import org.usfirst.frc.team449.robot.other.Logger;
  * A command to ramp up the motors to full power at a given voltage rate.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class VoltageRamp extends YamlCommandWrapper {
+public class VoltageRamp<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final DriveUnidirectional subsystem;
+	private final T subsystem;
 
 	/**
 	 * The number of percentage points to increase motor output by per millisecond.
@@ -44,7 +45,7 @@ public class VoltageRamp extends YamlCommandWrapper {
 	 * @param voltsPerSecond How many volts to increase the output by per second.
 	 */
 	@JsonCreator
-	public VoltageRamp(@NotNull @JsonProperty(required = true) DriveUnidirectional subsystem,
+	public VoltageRamp(@NotNull @JsonProperty(required = true) T subsystem,
 	                   @JsonProperty(required = true) double voltsPerSecond) {
 		this.subsystem = subsystem;
 		this.percentPerMillis = voltsPerSecond / 12. / 1000.;

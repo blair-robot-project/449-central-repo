@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.commands.multiInterface.drive;
 
 import com.fasterxml.jackson.annotation.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
@@ -116,7 +115,6 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 				}
 			}
 			this.getPIDController().setSetpoint(theta);
-			SmartDashboard.putNumber("Theta navx setpoint", theta);
 		}
 	}
 
@@ -153,11 +151,8 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		SmartDashboard.putNumber("Unprocessed loop output", output);
 		//Process or zero the input depending on whether the NavX is being overriden.
 		output = subsystem.getOverrideGyro() ? 0 : processPIDOutput(output);
-
-		SmartDashboard.putNumber("PID loop output", output);
 
 		//Adjust the heading according to the PID output, it'll be positive if we want to go right.
 		subsystem.setOutput(oi.getVelCached() - output, oi.getVelCached() + output);
