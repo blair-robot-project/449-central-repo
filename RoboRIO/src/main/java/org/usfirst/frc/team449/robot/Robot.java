@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
     public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
     /**
-     * The name of the mpa to read from. Should be overriden by a subclass to change the name.
+     * The name of the map to read from. Should be overriden by a subclass to change the name.
      */
     protected String mapName = "map.yml";
 
