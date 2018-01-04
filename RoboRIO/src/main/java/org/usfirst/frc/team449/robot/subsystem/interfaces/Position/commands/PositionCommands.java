@@ -1,39 +1,25 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.Position.commands;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.Position.SubsystemPosition;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
 
-public class PositionCommands extends YamlCommandWrapper implements SubsystemPosition {
-	@Override
-	public void setPosition(int value) {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class PositionCommands extends YamlCommandWrapper {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
+	@NotNull
+	private final SubsystemPosition subsystem;
+
+	public PositionCommands (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem){
+		this.subsystem = subsystem;
 	}
-
-	@Override
-	public void setMotorOutput(int value) {
-
-	}
-
-	@Override
-	public boolean getReverseLimit() {
-		return false;
-	}
-
-	@Override
-	public boolean getForwardLimit() {
-		return false;
-	}
-
-	@Override
-	public void enableMotor() {
-
-	}
-
-	@Override
-	public void disableMotor() {
-
-	}
-
 	@Override
 	protected boolean isFinished() {
 		return false;
