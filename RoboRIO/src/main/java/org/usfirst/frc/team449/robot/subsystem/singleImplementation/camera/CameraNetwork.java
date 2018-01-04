@@ -13,13 +13,13 @@ import org.usfirst.frc.team449.robot.other.Logger;
 import java.util.List;
 
 /**
- * Subsystem to initialize cameras and put video on SmartDashboard.
+ * Subsystem to initialize cameras and put video on Shuffleboard.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CameraNetwork extends YamlSubsystem {
 
     /**
-     * Video server to view on SmartDashboard.
+     * Video server to view on Shuffleboard.
      */
     @NotNull
     private final MjpegServer server;
@@ -76,7 +76,7 @@ public class CameraNetwork extends YamlSubsystem {
     }
 
     /**
-     * @return Video server to view on SmartDashboard.
+     * @return Video server to view on Shuffleboard.
      */
     @NotNull
     public MjpegServer getServer() {

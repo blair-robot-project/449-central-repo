@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 
@@ -48,11 +49,27 @@ public class Logger implements Runnable {
     private final Loggable[] subsystems;
 
     /**
-     * A 2d array of the names of the each datum logged by each subsystem. Organized as
+     * A 2d array of the entries of the each datum logged by each subsystem. Organized as
      * itemNames[subsystem][dataIndex].
      */
     @NotNull
-    private final String[][] itemNames;
+    private final NetworkTableEntry[][] itemNames;
+
+    /**
+     * The networkTable entries for the most recent event, the time, and the clock time.
+     */
+    @NotNull
+    private final NetworkTableEntry eventNTEntry, timeNTEntry, clockTimeNTEntry;
+
+    /**
+     * Filewriters for the log files. Fields to avoid garbage collection.
+     */
+    private FileWriter eventLogWriter, telemetryLogWriter;
+
+    /**
+     * The time, in milliseconds, since the robot code started. Field to avoid garbage collection.
+     */
+    private long time;
 
     /**
      * The period of the loop running this logger, in seconds.
@@ -86,6 +103,12 @@ public class Logger implements Runnable {
         this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
         this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
 
+        //Set up network table
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("log");
+        eventNTEntry = table.getEntry("event");
+        timeNTEntry = table.getEntry("time");
+        clockTimeNTEntry = table.getEntry("clockTime");
+
         //Set the loop time variable
         this.loopTimeSecs = loopTimeSecs;
 
@@ -93,10 +116,10 @@ public class Logger implements Runnable {
         this.subsystems = subsystems;
 
         //Construct itemNames.
-        itemNames = new String[this.subsystems.length][];
+        itemNames = new NetworkTableEntry[this.subsystems.length][];
 
-        FileWriter eventLogWriter = new FileWriter(this.eventLogFilename);
-        FileWriter telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
+        eventLogWriter = new FileWriter(this.eventLogFilename);
+        telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
         //Write the file headers
         eventLogWriter.write("time,class,message" + "\n");
         //We use a StringBuilder because it's better for building up a string via concatenation.
@@ -104,15 +127,14 @@ public class Logger implements Runnable {
         telemetryHeader.append("time,Clock.time,");
         for (int i = 0; i < this.subsystems.length; i++) {
             String[] items = this.subsystems[i].getHeader();
+            String subsystemName = this.subsystems[i].getLogName();
             //Initialize itemNames rows
-            itemNames[i] = new String[items.length];
+            itemNames[i] = new NetworkTableEntry[items.length];
             //For each datum
             for (int j = 0; j < items.length; j++) {
                 //Format name as Subsystem.dataName
-                String itemName = this.subsystems[i].getLogName() + "." + items[j];
-                itemNames[i][j] = itemName;
-                telemetryHeader.append(itemName);
-                telemetryHeader.append(",");
+                itemNames[i][j] = table.getSubTable(subsystemName).getEntry(items[j]);
+                telemetryHeader.append(subsystemName).append(".").append(items[j]).append(",");
             }
         }
         //Delete the trailing comma
@@ -140,14 +162,12 @@ public class Logger implements Runnable {
      */
     @Override
     public void run() {
-        FileWriter eventLogWriter = null;
         try {
             eventLogWriter = new FileWriter(eventLogFilename, true);
         } catch (IOException e) {
             System.out.println("Event log not found!");
             e.printStackTrace();
         }
-        FileWriter telemetryLogWriter = null;
         try {
             telemetryLogWriter = new FileWriter(telemetryLogFilename, true);
         } catch (IOException e) {
@@ -158,54 +178,43 @@ public class Logger implements Runnable {
             //Log each event to a file
             for (LogEvent event : events) {
                 eventLogWriter.write(event.toString() + "\n");
+                eventNTEntry.setString(event.toString());
             }
         } catch (IOException e) {
             System.out.println("Logging failed!");
             e.printStackTrace();
         }
-        //Collect telemetry data and write it to SmartDashboard and a file.
+        //Collect telemetry data and write it to Shuffleboard and a file.
         events = new ArrayList<>();
         //We use a StringBuilder because it's better for building up a string via concatenation.
         StringBuilder telemetryData = new StringBuilder();
 
         //Log the times
-        telemetryData.append(System.currentTimeMillis() - startTime).append(",");
+        time = System.currentTimeMillis() - startTime;
+        telemetryData.append(time).append(",");
         telemetryData.append(Clock.currentTimeMillis()).append(",");
+        timeNTEntry.setNumber(time);
+        clockTimeNTEntry.setNumber(Clock.currentTimeMillis());
 
         //Loop through each datum
         for (int i = 0; i < subsystems.length; i++) {
             Object[] data = subsystems[i].getData();
             for (int j = 0; j < data.length; j++) {
                 Object datum = data[j];
-                //We do this big thing here so we log it to SmartDashboard as the correct data type, so we make each
-                //thing into a booleanBox, graph, etc.
                 if (datum != null) {
-                    if (datum.getClass().equals(boolean.class) || datum.getClass().equals(Boolean.class)) {
-                        SmartDashboard.putBoolean(itemNames[i][j], (boolean) datum);
-                    } else if (datum.getClass().equals(int.class) || datum.getClass().equals(Integer.class)) {
-                        SmartDashboard.putNumber(itemNames[i][j], (int) datum);
-                    } else if (datum.getClass().equals(double.class)) {
-                        System.out.println("Double item name: " + itemNames[i][j]);
-                        System.out.println("Double: " + datum);
-                        System.out.println("Double class: " + datum.getClass());
-                        SmartDashboard.putNumber(itemNames[i][j], (double) datum);
-                    } else if (datum.getClass().equals(Double.class)) {
-                        SmartDashboard.putNumber(itemNames[i][j], (Double) datum);
-                    } else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)) {
-                        SmartDashboard.putNumber(itemNames[i][j], (long) datum);
-                    } else if (datum.getClass().equals(Sendable.class)) {
-                        SmartDashboard.putData(itemNames[i][j], (Sendable) datum);
-                    } else if (datum.getClass().equals(String.class)) {
-                        SmartDashboard.putString(itemNames[i][j], (String) datum);
-                    } else {
-                        SmartDashboard.putString(itemNames[i][j], datum.toString());
+                    try {
+                        itemNames[i][j].setValue(datum);
+                    } catch (IllegalArgumentException e){
+                        //If it's not a type NetworkTables recognizes, convert to string.
+                        System.out.println("You forgot to convert to String in getData!!");
+                        e.printStackTrace();
+                        itemNames[i][j].setValue(datum.toString());
                     }
                     telemetryData.append(datum.toString());
                 } else {
-                    SmartDashboard.putString(itemNames[i][j], "null");
+                    itemNames[i][j].setString("null");
                     telemetryData.append("null");
                 }
-
 
                 //Build up the line of data
                 telemetryData.append(",");
