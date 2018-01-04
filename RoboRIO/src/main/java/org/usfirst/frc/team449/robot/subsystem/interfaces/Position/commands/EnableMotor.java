@@ -7,10 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.Position.SubsystemPosition;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PositionCommands extends YamlCommandWrapper {
+public class EnableMotor extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
@@ -23,7 +22,7 @@ public class PositionCommands extends YamlCommandWrapper {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public PositionCommands (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem){
+	public EnableMotor(@NotNull@JsonProperty(required = true) SubsystemPosition subsystem){
 		this.subsystem = subsystem;
 	}
 
@@ -32,7 +31,7 @@ public class PositionCommands extends YamlCommandWrapper {
 	 */
 
 	@Override
-	protected void initialize() { Logger.addEvent("PositionCommands init.", this.getClass());}
+	protected void initialize() { Logger.addEvent("EnableMotor init.", this.getClass());}
 
 	/**
 	 * Enables the motor.
@@ -57,7 +56,15 @@ public class PositionCommands extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("PositionCommands end.", this.getClass());
+		Logger.addEvent("EnableMotor end.", this.getClass());
+	}
+
+	/**
+	 * Log when this command is interrupted.
+	 */
+	@Override
+	protected void interrupted(){
+		Logger.addEvent("EnableMotor interrupted!", this.getClass());
 	}
 
 }
