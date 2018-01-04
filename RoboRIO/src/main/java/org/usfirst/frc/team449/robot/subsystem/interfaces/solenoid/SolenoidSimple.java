@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 
 /**
- * A simple SubsystemSolenoid.
+ * A simple SubsystemSolenoid.java.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SolenoidSimple extends YamlSubsystem implements SubsystemSolenoid {
