@@ -41,7 +41,7 @@ public class SetPosition extends YamlCommandWrapper {
 	/**
 	 * Sets position.
 	 */
-	//Finish!!!!
+
 	@Override
 	protected void execute(){
 		subsystem.setPosition(value);
