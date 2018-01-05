@@ -40,9 +40,9 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
     private final double shooterThrottle;
 
     /**
-     * Time from giving the multiSubsystem voltage to being ready to fire, in milliseconds.
+     * Time from giving the multiSubsystem voltage to being ready to fire, in seconds.
      */
-    private final long spinUpTime;
+    private final double spinUpTime;
 
     /**
      * Whether the flywheel is currently commanded to spin
@@ -71,7 +71,7 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
         this.feederMotor = feederMotor;
         this.feederThrottle = feederThrottle;
         state = FlywheelState.OFF;
-        spinUpTime = (long) (spinUpTimeSecs * 1000.);
+        spinUpTime = spinUpTimeSecs;
     }
 
     /**
@@ -175,10 +175,10 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
     }
 
     /**
-     * @return Time from giving the multiSubsystem voltage to being ready to fire, in milliseconds.
+     * @return Time from giving the multiSubsystem voltage to being ready to fire, in seconds.
      */
     @Override
-    public long getSpinUpTime() {
+    public double getSpinUpTime() {
         return spinUpTime;
     }
 }
