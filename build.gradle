@@ -14,3 +14,8 @@ task wrapper(type: Wrapper) {
 allprojects {
     tasks.withType(Javadoc).all { enabled = true }
 }
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
