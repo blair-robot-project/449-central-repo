@@ -1,6 +1,8 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from FPS built in. Every non-unit-conversion
+ * Component wrapper on the CTRE {@link TalonSRX}, with unit conversions to/from FPS built in. Every non-unit-conversion
  * in this class takes arguments in post-gearing FPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
@@ -32,7 +34,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * The CTRE CAN Talon SRX that this class is a wrapper on
      */
     @NotNull
-    protected final CANTalon canTalon;
+    protected final TalonSRX canTalon;
 
     /**
      * The counts per rotation of the encoder being used, or null if there is no encoder.
@@ -60,7 +62,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * The motion profile motionProfileStatus of the Talon.
      */
     @NotNull
-    private final CANTalon.MotionProfileStatus motionProfileStatus;
+    private final MotionProfileStatus motionProfileStatus;
 
     /**
      * A notifier that moves points from the API-level buffer to the talon-level one.
@@ -79,29 +81,23 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     private final Map<Integer, PerGearSettings> perGearSettings;
 
     /**
-     * Whether or not to invert the motor in voltage mode.
-     */
-    private final boolean invertInVoltage;
-    /**
      * The talon's name, used for logging purposes.
      */
     @NotNull
     private final String name;
+
     /**
      * The settings currently being used by this Talon.
      */
     @NotNull
     protected PerGearSettings currentGearSettings;
+
     /**
      * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
      * traffic.
      */
     private long timeMPStatusLastRead;
-    /**
-     * The voltage to scale voltage compensation based on. Null for no voltage compensation.
-     */
-    @Nullable
-    private Double voltageCompVoltage;
+
     /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
@@ -112,27 +108,23 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *
      * @param port                       CAN port of this Talon.
      * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
-     * @param invertInVoltage            Whether or not to invert the motor in voltage mode.
-     * @param reverseOutput              Whether to reverse the output (identical effect to inverting outside of
-     *                                   position PID)
+     * @param reverseOutput              Whether to reverse the output.
      * @param enableBrakeMode            Whether to brake or coast when stopped.
      * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
      *                                   the forward limit switch is disabled.
      * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
      *                                   the reverse limit switch is disabled.
      * @param fwdSoftLimit               The forward software limit, in feet. If this is null, the forward software
-     *                                   limit is disabled.
+     *                                   limit is disabled. Ignored if there's no encoder.
      * @param revSoftLimit               The reverse software limit, in feet. If this is null, the reverse software
-     *                                   limit is disabled.
+     *                                   limit is disabled. Ignored if there's no encoder.
      * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
      *                                   this would be 1/70 if there was a 70:1 gearing between the encoder and the
      *                                   final output. Defaults to 1.
      * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to.
      *                                   Defaults to 1.
      * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
-     * @param voltageCompVoltage         The voltage to scale voltage compensation based on, e.g. input of 1 will
-     *                                   produce this voltage, input of 0.5 will produce half, etc. This feature
-     *                                   compensates for low battery voltage. Defaults to no voltage compensation.
+     * @param enableVoltageComp         Whether or not to use voltage compensation. Defaults to false.
      * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
      *                                   null if there is no encoder attached to this Talon.
      * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
@@ -149,13 +141,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
      *                                   seconds. Defaults to 0.005.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
-     * @param controlFrameRateMillis     The update rate, in milliseconds, for the control frame. Defaults to 10.
-     * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
+     * @param controlFrameRatesMillis     The update rate, in milliseconds, for each of the control frame.
+     * @param slaves                     The other {@link TalonSRX}s that are slaved to this one.
      */
     @JsonCreator
     public FPSTalon(@JsonProperty(required = true) int port,
                     @Nullable String name,
-                    boolean invertInVoltage,
                     boolean reverseOutput,
                     @JsonProperty(required = true) boolean enableBrakeMode,
                     @Nullable Boolean fwdLimitSwitchNormallyOpen,
@@ -165,8 +156,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable Double postEncoderGearing,
                     @Nullable Double feetPerRotation,
                     @Nullable Integer currentLimit,
-                    double voltageCompVoltage,
-                    @Nullable CANTalon.FeedbackDevice feedbackDevice,
+                    boolean enableVoltageComp,
+                    @Nullable FeedbackDevice feedbackDevice,
                     @Nullable Integer encoderCPR,
                     boolean reverseSensor,
                     @Nullable List<PerGearSettings> perGearSettings,
@@ -174,35 +165,37 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable Integer startingGearNum,
                     @Nullable Integer minNumPointsInBottomBuffer,
                     @Nullable Double updaterProcessPeriodSecs,
-                    @Nullable Map<CANTalon.StatusFrameRate, Integer> statusFrameRatesMillis,
-                    @Nullable Integer controlFrameRateMillis,
+                    @Nullable Map<StatusFrameEnhanced, Integer> statusFrameRatesMillis,
+                    @Nullable Map<ControlFrame, Integer> controlFrameRatesMillis,
                     @Nullable List<SlaveTalon> slaves) {
         //Instantiate the base CANTalon this is a wrapper on.
-        canTalon = new CANTalon(port, controlFrameRateMillis != null ? controlFrameRateMillis : 10);
+        canTalon = new TalonSRX(port);
         //Set the name to the given one or to talon_portnum
         this.name = name != null ? name : ("talon_" + port);
         //Set this to false because we only use reverseOutput for slaves.
-        canTalon.reverseOutput(reverseOutput);
-        //NO TOUCHY
-        canTalon.setInverted(false);
+        canTalon.setInverted(reverseOutput);
         //Set brake mode
-        canTalon.enableBrakeMode(enableBrakeMode);
+        canTalon.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
 
         //Set frame rates
+        if (controlFrameRatesMillis != null){
+            for (ControlFrame controlFrame : controlFrameRatesMillis.keySet()) {
+                canTalon.setControlFramePeriod(controlFrame, controlFrameRatesMillis.get(controlFrame));
+            }
+        }
         if (statusFrameRatesMillis != null) {
-            for (CANTalon.StatusFrameRate statusFrameRate : statusFrameRatesMillis.keySet()) {
-                canTalon.setStatusFrameRateMs(statusFrameRate, statusFrameRatesMillis.get(statusFrameRate));
+            for (StatusFrameEnhanced statusFrame : statusFrameRatesMillis.keySet()) {
+                canTalon.setStatusFramePeriod(statusFrame, statusFrameRatesMillis.get(statusFrame), 0);
             }
         }
 
         //Set fields
-        this.invertInVoltage = invertInVoltage;
         this.feetPerRotation = feetPerRotation != null ? feetPerRotation : 1;
         this.updaterProcessPeriodSecs = updaterProcessPeriodSecs != null ? updaterProcessPeriodSecs : 0.005;
         this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 20;
 
         //Initialize
-        this.motionProfileStatus = new CANTalon.MotionProfileStatus();
+        this.motionProfileStatus = new MotionProfileStatus();
         this.timeMPStatusLastRead = 0;
         this.perGearSettings = new HashMap<>();
 
@@ -236,31 +229,48 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         currentGearSettings = this.perGearSettings.get(currentGear);
 
         //Only enable the limit switches if it was specified if they're normally open or closed.
-        boolean fwdSwitchEnable = false, revSwitchEnable = false;
         if (fwdLimitSwitchNormallyOpen != null) {
-            canTalon.ConfigFwdLimitSwitchNormallyOpen(fwdLimitSwitchNormallyOpen);
-            fwdSwitchEnable = true;
+            canTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
+                    fwdLimitSwitchNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed, 0);
+        } else {
+            canTalon.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
         }
         if (revLimitSwitchNormallyOpen != null) {
-            canTalon.ConfigRevLimitSwitchNormallyOpen(revLimitSwitchNormallyOpen);
-            revSwitchEnable = true;
+            canTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
+                    revLimitSwitchNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed, 0);
+        } else {
+            canTalon.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
         }
-        canTalon.enableLimitSwitch(fwdSwitchEnable, revSwitchEnable);
 
         //Set up the feedback device if it exists.
         if (feedbackDevice != null) {
             //CTRE encoder use RPM instead of native units, and can be used as QuadEncoders, so we switch them to avoid
             //having to support RPM.
-            if (feedbackDevice.equals(CANTalon.FeedbackDevice.CtreMagEncoder_Absolute) ||
-                    feedbackDevice.equals(CANTalon.FeedbackDevice.CtreMagEncoder_Relative)) {
-                canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+            if (feedbackDevice.equals(FeedbackDevice.CTRE_MagEncoder_Absolute) ||
+                    feedbackDevice.equals(FeedbackDevice.CTRE_MagEncoder_Relative)) {
+                canTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0 ,0);
             } else {
-                canTalon.setFeedbackDevice(feedbackDevice);
+                canTalon.configSelectedFeedbackSensor(feedbackDevice, 0, 0);
             }
             this.encoderCPR = encoderCPR;
-            canTalon.reverseSensor(reverseSensor);
+            canTalon.setSensorPhase(reverseSensor);
+
+            //Only enable the software limits if they were given a value and there's an encoder.
+            if (fwdSoftLimit != null) {
+                canTalon.configForwardSoftLimitEnable(true, 0);
+                canTalon.configForwardSoftLimitThreshold(feetToEncoder(fwdSoftLimit).intValue(), 0);
+            } else {
+                canTalon.configForwardSoftLimitEnable(false, 0);
+            }
+            if (revSoftLimit != null) {
+                canTalon.configReverseSoftLimitEnable(true, 0);
+                canTalon.configReverseSoftLimitThreshold(feetToEncoder(revSoftLimit).intValue(), 0);
+            } else {
+                canTalon.configReverseSoftLimitEnable(false, 0);
+            }
         } else {
             this.encoderCPR = null;
+            canTalon.configSelectedFeedbackSensor(FeedbackDevice.None, 0, 0);
         }
 
         //postEncoderGearing defaults to 1
@@ -271,63 +281,49 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
 
         //Set the current limit if it was given
         if (currentLimit != null) {
-            canTalon.setCurrentLimit(currentLimit);
-            canTalon.EnableCurrentLimit(true);
+            canTalon.configPeakCurrentLimit(currentLimit, 0);
+            canTalon.configPeakCurrentDuration(0, 0); // No duration
+            canTalon.enableCurrentLimit(true);
         } else {
             //If we don't have a current limit, disable current limiting.
-            canTalon.EnableCurrentLimit(false);
+            canTalon.enableCurrentLimit(false);
         }
 
-        //Only enable the software limits if they were given a value.
-        if (fwdSoftLimit != null) {
-            canTalon.enableForwardSoftLimit(true);
-            canTalon.setForwardSoftLimit(feetToEncoder(fwdSoftLimit));
-        } else {
-            canTalon.enableForwardSoftLimit(false);
-        }
-        if (revSoftLimit != null) {
-            canTalon.enableReverseSoftLimit(true);
-            canTalon.setReverseSoftLimit(feetToEncoder(revSoftLimit));
-        } else {
-            canTalon.enableReverseSoftLimit(false);
-        }
-
-        //Set the nominal closed loop battery voltage. Different thing from NominalOutputVoltage.
-        canTalon.setNominalClosedLoopVoltage(voltageCompVoltage);
-        this.voltageCompVoltage = voltageCompVoltage != 0 ? voltageCompVoltage : null;
+        //Enable or disable voltage comp
+        canTalon.enableVoltageCompensation(enableVoltageComp);
 
         //Set up MP notifier
         bottomBufferLoader = new Notifier(canTalon::processMotionProfileBuffer);
 
+        //Use slot 0
+        canTalon.selectProfileSlot(0, 0);
+
         if (slaves != null) {
             //Set up slaves.
             for (SlaveTalon slave : slaves) {
-                CANTalon tmp = new CANTalon(slave.getPort());
-                //To invert slaves, use reverseOutput. See section 9.1.4 of the TALON SRX Software Reference Manual.
-                tmp.reverseOutput(slave.isInverted());
-                //Don't use the other inversion options
-                tmp.reverseSensor(false);
-                tmp.setInverted(false);
+                TalonSRX tmp = new TalonSRX(slave.getPort());
+                tmp.setInverted(slave.isInverted());
 
-                tmp.enableLimitSwitch(false, false);
-                tmp.enableForwardSoftLimit(false);
-                tmp.enableReverseSoftLimit(false);
-                tmp.configMaxOutputVoltage(12);
+                //Turn everything off
+                tmp.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+                tmp.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+                tmp.configForwardSoftLimitEnable(false, 0);
+                tmp.configReverseSoftLimitEnable(false, 0);
+                tmp.configPeakOutputForward(1, 0);
 
                 //Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
-                tmp.enableBrakeMode(enableBrakeMode);
+                tmp.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
                 if (currentLimit != null) {
-                    tmp.setCurrentLimit(currentLimit);
-                    tmp.EnableCurrentLimit(true);
+                    tmp.configPeakCurrentLimit(currentLimit, 0);
+                    tmp.configPeakCurrentDuration(0, 0); // No duration
+                    tmp.enableCurrentLimit(true);
                 } else {
                     //If we don't have a current limit, disable current limiting.
-                    tmp.EnableCurrentLimit(false);
+                    tmp.enableCurrentLimit(false);
                 }
 
                 //Set the slave up to follow this talon.
-                tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
-                tmp.set(port);
-                tmp.enable();
+                tmp.set(ControlMode.Follower, port);
             }
         }
     }
@@ -344,14 +340,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             percentVoltage = Math.signum(percentVoltage);
         }
 
-        //Switch to voltage mode, which one depends on whether comp is turned on
-        if (voltageCompVoltage != null) {
-            canTalon.changeControlMode(CANTalon.TalonControlMode.Voltage);
-            canTalon.set(percentVoltage * (invertInVoltage ? -1 : 1) * voltageCompVoltage);
-        } else {
-            canTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-            canTalon.set(percentVoltage * (invertInVoltage ? -1 : 1));
-        }
+        canTalon.set(ControlMode.PercentOutput, percentVoltage);
     }
 
     /**
@@ -372,23 +361,25 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Set the current gear
         currentGearSettings = perGearSettings.get(gear);
 
-        //Set general max voltage
-        canTalon.configMaxOutputVoltage(Math.max(currentGearSettings.getFwdPeakOutputVoltage(), -currentGearSettings.getRevPeakOutputVoltage()));
+        //Set max voltage
+        canTalon.configPeakOutputForward(currentGearSettings.getFwdPeakOutputVoltage()/12., 0);
+        canTalon.configPeakOutputReverse(-currentGearSettings.getRevPeakOutputVoltage()/12., 0);
 
-        //Set closed loop max and min voltages
-        canTalon.configPeakOutputVoltage(currentGearSettings.getFwdPeakOutputVoltage(), currentGearSettings.getRevPeakOutputVoltage());
-        canTalon.configNominalOutputVoltage(currentGearSettings.getFwdNominalOutputVoltage(), currentGearSettings.getRevNominalOutputVoltage());
+        //Set min voltage
+        canTalon.configNominalOutputForward(currentGearSettings.getFwdNominalOutputVoltage()/12., 0);
+        canTalon.configNominalOutputReverse(currentGearSettings.getRevNominalOutputVoltage()/12., 0);
 
+        //Set ramp rate, converting from volts/sec to seconds until 12 volts.
+        canTalon.configClosedloopRamp(1/(currentGearSettings.getRampRate()/12.), 0);
+        canTalon.configOpenloopRamp(1/(currentGearSettings.getRampRate()/12.), 0);
         //Set PID stuff
         if (currentGearSettings.getkVFwd() != null) {
-            //Put driving constants in slot 0
-            canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-                    1023. / currentGearSettings.getFwdPeakOutputVoltage() * (currentGearSettings.getkVFwd() + currentGearSettings.getInterceptVoltageFwd()),
-                    0, currentGearSettings.getClosedLoopRampRate(), 0);
-            //Put MP constants in slot 1, F of 1023/voltage lets us deal in voltage
-            canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(), currentGearSettings.getMotionProfileDFwd(),
-                    1023. / currentGearSettings.getFwdPeakOutputVoltage(), 0, currentGearSettings.getClosedLoopRampRate(), 1);
-            canTalon.setProfile(0);
+            //Slot 0 velocity gains. We don't set F yet because that changes based on setpoint.
+            canTalon.config_kP(0, currentGearSettings.getkP(), 0);
+            canTalon.config_kI(0, currentGearSettings.getkI(), 0);
+            canTalon.config_kD(0, currentGearSettings.getkD(), 0);
+
+            //We set the MP gains when loading a profile so no need to do it here.
         }
     }
 
@@ -488,9 +479,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param feet An absolute position setpoint, in feet.
      */
     public void setPositionSetpoint(double feet) {
-        canTalon.changeControlMode(CANTalon.TalonControlMode.Position);
-        canTalon.setF(0);
-        canTalon.set(feetToEncoder(feet));
+        canTalon.config_kF(0, 0, 0);
+        canTalon.set(ControlMode.Position, feetToEncoder(feet));
     }
 
     /**
@@ -500,7 +490,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @Nullable
     public Double getVelocity() {
-        return encoderToFPS(canTalon.getSpeed());
+        return encoderToFPS(canTalon.getSelectedSensorVelocity(0));
     }
 
     /**
@@ -523,17 +513,15 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param velocity velocity setpoint in FPS.
      */
     protected void setVelocityFPS(double velocity) {
-        //Switch control mode to velocity closed-loop
-        canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
         velocity = FPSToEncoder(velocity);
         if (velocity > 0) {
-            canTalon.setF(1023. / currentGearSettings.getFwdPeakOutputVoltage() *
-                    (currentGearSettings.getkVFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity));
+            canTalon.config_kF(0, 1023. / currentGearSettings.getFwdPeakOutputVoltage() *
+                    (currentGearSettings.getkVFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity), 0);
         } else if (velocity < 0) {
-            canTalon.setF(1023. / -currentGearSettings.getRevPeakOutputVoltage() *
-                    (currentGearSettings.getkVRev() - currentGearSettings.getInterceptVoltageRev() / velocity));
+            canTalon.config_kF(0, 1023. / -currentGearSettings.getRevPeakOutputVoltage() *
+                    (currentGearSettings.getkVRev() - currentGearSettings.getInterceptVoltageRev() / velocity), 0);
         }
-        canTalon.set(velocity);
+        canTalon.set(ControlMode.Velocity, velocity);
     }
 
     /**
@@ -543,18 +531,19 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @Nullable
     public Double getError() {
-        return encoderToFPS(canTalon.getError());
+        return encoderToFPS(canTalon.getClosedLoopError(0));
     }
 
-    /**
-     * Get the current velocity setpoint of the Talon in FPS. WARNING: will give garbage if not in velocity mode.
-     *
-     * @return The closed-loop velocity setpoint in FPS, or null if no encoder CPR was given.
-     */
-    @Nullable
-    public Double getSetpoint() {
-        return encoderToFPS(canTalon.getSetpoint());
-    }
+    //This appears to not be supported by Phoenix.
+//    /**
+//     * Get the current velocity setpoint of the Talon in FPS. WARNING: will give garbage if not in velocity mode.
+//     *
+//     * @return The closed-loop velocity setpoint in FPS, or null if no encoder CPR was given.
+//     */
+//    @Nullable
+//    public Double getSetpoint() {
+//        return encoderToFPS(canTalon.());
+//    }
 
     /**
      * Get the voltage the Talon is currently drawing from the PDP.
@@ -562,7 +551,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @return Voltage in volts.
      */
     public double getOutputVoltage() {
-        return canTalon.getOutputVoltage();
+        return canTalon.getMotorOutputVoltage();
     }
 
     /**
@@ -597,7 +586,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @Override
     public void enable() {
-        canTalon.enable();
+        //Not a thing anymore
     }
 
     /**
@@ -605,7 +594,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @Override
     public void disable() {
-        canTalon.disable();
+        canTalon.set(ControlMode.Disabled, 0);
     }
 
     /**
@@ -742,12 +731,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             canTalon.setPID(currentGearSettings.getMotionProfilePRev(), currentGearSettings.getMotionProfileIRev(),
                     currentGearSettings.getMotionProfileDRev(),
                     1023. / -currentGearSettings.getRevPeakOutputVoltage(), 0,
-                    currentGearSettings.getClosedLoopRampRate(), 1);
+                    currentGearSettings.getRampRate(), 1);
         } else {
             canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(),
                     currentGearSettings.getMotionProfileDFwd(),
                     1023. / currentGearSettings.getFwdPeakOutputVoltage(), 0,
-                    currentGearSettings.getClosedLoopRampRate(), 1);
+                    currentGearSettings.getRampRate(), 1);
         }
 
         //Only call position getter once
@@ -921,9 +910,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         private final double fwdNominalOutputVoltage, revNominalOutputVoltage;
 
         /**
-         * The closed loop ramp rate, in volts/sec. 0 means no ramp rate.
+         * The ramp rate, in volts/sec. 0 means no ramp rate.
          */
-        private final double closedLoopRampRate;
+        private final double rampRate;
 
         /**
          * The maximum speed of the motor in this gear, in FPS. Used for throttle scaling. Ignored if kVFwd is null.
@@ -977,7 +966,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          * @param revNominalOutputVoltage The minimum output voltage for closed-loop modes in the reverse direction.
          *                                This does not rescale, it just sets any output below this voltage to this
          *                                voltage. Defaults to -fwdNominalOutputVoltage.
-         * @param closedLoopRampRate      The closed loop ramp rate, in volts/sec. Can be null, and if it is, no ramp
+         * @param rampRate      The ramp rate, in volts/sec. Can be null, and if it is, no ramp
          *                                rate is used.
          * @param maxSpeed                The maximum speed of the motor in this gear, in FPS. Used for throttle
          *                                scaling. Ignored if kVFwd is null. Calculated from the drive characterization
@@ -1022,7 +1011,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                                @Nullable Double revPeakOutputVoltage,
                                @Nullable Double fwdNominalOutputVoltage,
                                @Nullable Double revNominalOutputVoltage,
-                               @Nullable Double closedLoopRampRate,
+                               @Nullable Double rampRate,
                                @Nullable Double maxSpeed,
                                double kP,
                                double kI,
@@ -1044,12 +1033,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             this.revPeakOutputVoltage = revPeakOutputVoltage != null ? revPeakOutputVoltage : -this.fwdPeakOutputVoltage;
             this.fwdNominalOutputVoltage = fwdNominalOutputVoltage != null ? fwdNominalOutputVoltage : 0;
             this.revNominalOutputVoltage = revNominalOutputVoltage != null ? revNominalOutputVoltage : -this.fwdNominalOutputVoltage;
-            if (closedLoopRampRate != null) {
+            if (rampRate != null) {
                 //The talons have a minimum closed loop ramp rate of 1.173 volts/sec, anything lower becomes 0 which is
                 //no ramp rate. That's obviously not what someone who inputs 1 volt/sec wants, so we bump things up.
-                this.closedLoopRampRate = Math.max(closedLoopRampRate, 1.173);
+                this.rampRate = Math.max(rampRate, 1.173);
             } else {
-                this.closedLoopRampRate = 0;
+                this.rampRate = 0;
             }
             this.kP = kP;
             this.kI = kI;
@@ -1122,10 +1111,10 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         }
 
         /**
-         * @return The closed loop ramp rate, in volts/sec.
+         * @return The ramp rate, in volts/sec.
          */
-        public double getClosedLoopRampRate() {
-            return closedLoopRampRate;
+        public double getRampRate() {
+            return rampRate;
         }
 
         /**
