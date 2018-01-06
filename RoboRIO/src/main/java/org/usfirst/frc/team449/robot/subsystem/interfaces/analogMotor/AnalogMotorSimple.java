@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A simple analogMotor that uses velocity.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class AnalogMotorSimple extends YamlSubsystem implements SubsystemAnalogMotor {
+public class AnalogMotorSimple extends Subsystem implements SubsystemAnalogMotor {
 
     /**
      * The motor this subsystem controls.

@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -19,7 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
     /**
      * The drive to execute this command on.

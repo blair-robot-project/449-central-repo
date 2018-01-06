@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.tank.OITank;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngle
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXDriveStraight<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
+public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
     /**
      * The drive subsystem to give output to.

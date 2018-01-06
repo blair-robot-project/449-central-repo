@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
@@ -18,7 +18,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSole
  * An intake with a piston that actuates it and a fixed and actuated motor.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSolenoid, SubsystemIntake {
+public class IntakeFixedAndActuated extends Subsystem implements SubsystemSolenoid, SubsystemIntake {
 
     /**
      * Motor for the fixed intake

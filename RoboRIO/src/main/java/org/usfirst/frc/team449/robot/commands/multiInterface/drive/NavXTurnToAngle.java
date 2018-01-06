@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -18,7 +18,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngle
  * Turns to a specified angle, relative to the angle the AHRS was at when the robot was turned on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
+public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
     /**
      * The drive subsystem to execute this command on and to get the gyro reading from.

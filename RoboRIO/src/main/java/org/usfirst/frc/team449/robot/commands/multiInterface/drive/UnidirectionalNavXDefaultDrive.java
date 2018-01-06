@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -18,7 +18,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngle
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand implements Loggable {
+public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand implements Loggable {
 
     /**
      * The drive this command is controlling.

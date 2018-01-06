@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
+public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
     /**
      * The drive this command is controlling.

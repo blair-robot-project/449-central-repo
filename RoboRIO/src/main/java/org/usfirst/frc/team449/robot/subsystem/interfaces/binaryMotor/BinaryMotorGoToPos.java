@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A binary motor subsystem that uses PID to go to a given position when turned on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class BinaryMotorGoToPos extends YamlSubsystem implements SubsystemBinaryMotor {
+public class BinaryMotorGoToPos extends Subsystem implements SubsystemBinaryMotor {
 
     /**
      * The talon to move to the given position.

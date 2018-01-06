@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A simple unidirectional drive with no encoders.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUnidirectional {
+public class DriveUnidirectionalSimple extends Subsystem implements DriveUnidirectional {
 
     /**
      * The motor for the left side of the drive.

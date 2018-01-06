@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable>
+public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable>
         extends FieldOrientedUnidirectionalDriveCommand {
 
     /**

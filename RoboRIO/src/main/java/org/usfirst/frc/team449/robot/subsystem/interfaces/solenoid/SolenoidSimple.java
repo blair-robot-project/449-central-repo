@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A simple SubsystemSolenoid.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SolenoidSimple extends YamlSubsystem implements SubsystemSolenoid {
+public class SolenoidSimple extends Subsystem implements SubsystemSolenoid {
 
     /**
      * Piston for pushing gears

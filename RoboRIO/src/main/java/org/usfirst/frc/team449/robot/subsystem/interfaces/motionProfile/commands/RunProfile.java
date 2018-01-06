@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 
@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideM
  * Loads and runs the given profile into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfile<T extends YamlSubsystem & SubsystemMPTwoSides> extends CommandGroup {
+public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends CommandGroup {
 
     /**
      * Default constructor.

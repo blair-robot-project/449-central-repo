@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A simple flywheel subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FlywheelSimple extends YamlSubsystem implements SubsystemFlywheel {
+public class FlywheelSimple extends Subsystem implements SubsystemFlywheel {
 
     /**
      * The motor that controls the flywheel.

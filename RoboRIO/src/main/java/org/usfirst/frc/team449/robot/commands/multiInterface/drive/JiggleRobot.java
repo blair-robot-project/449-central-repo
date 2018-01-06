@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
  * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class JiggleRobot<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends CommandGroup {
+public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends CommandGroup {
 
     /**
      * Instantiate the CommandGroup

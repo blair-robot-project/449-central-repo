@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 
 /**
  * A flywheel multiSubsystem with a single flywheel and a single-motor feeder system.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoggingFlywheel extends YamlSubsystem implements Loggable, SubsystemFlywheel {
+public class LoggingFlywheel extends Subsystem implements Loggable, SubsystemFlywheel {
 
     /**
      * The flywheel's Talon

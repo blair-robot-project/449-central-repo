@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedUsbCamera;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * Subsystem to initialize cameras and put video on Shuffleboard.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class CameraNetwork extends YamlSubsystem {
+public class CameraNetwork extends Subsystem {
 
     /**
      * Video server to view on Shuffleboard.

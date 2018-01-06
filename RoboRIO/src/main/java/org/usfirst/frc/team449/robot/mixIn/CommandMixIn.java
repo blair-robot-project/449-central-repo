@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * A mix-in for {@link edu.wpi.first.wpilibj.command.Command} that adds JsonTypeInfo and then ignores any setters. Don't make sublasses of this.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class CommandMixIn {
 

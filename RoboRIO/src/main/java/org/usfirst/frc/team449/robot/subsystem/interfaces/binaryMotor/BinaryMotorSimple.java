@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A simple example of a binary motor subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class BinaryMotorSimple extends YamlSubsystem implements SubsystemBinaryMotor {
+public class BinaryMotorSimple extends Subsystem implements SubsystemBinaryMotor {
 
     /**
      * The motor that this subsystem controls.

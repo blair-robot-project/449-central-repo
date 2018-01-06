@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
  * Turn a certain number of degrees from the current heading.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngleRelative<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends NavXTurnToAngle {
+public class NavXTurnToAngleRelative<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends NavXTurnToAngle {
 
     /**
      * Default constructor.
