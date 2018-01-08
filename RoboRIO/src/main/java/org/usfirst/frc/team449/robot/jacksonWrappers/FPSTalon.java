@@ -382,6 +382,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             //Set ramp rate, converting from volts/sec to seconds until 12 volts.
             canTalon.configClosedloopRamp(1 / (currentGearSettings.getRampRate() / 12.), 0);
             canTalon.configOpenloopRamp(1 / (currentGearSettings.getRampRate() / 12.), 0);
+        } else {
+            canTalon.configClosedloopRamp(0, 0);
+            canTalon.configOpenloopRamp(0,0);
         }
 
         //Set PID stuff
