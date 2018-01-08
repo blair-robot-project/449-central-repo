@@ -47,6 +47,7 @@ public class VoltageRamp<T extends YamlSubsystem & DriveUnidirectional> extends 
     @JsonCreator
     public VoltageRamp(@NotNull @JsonProperty(required = true) T subsystem,
                        @JsonProperty(required = true) double voltsPerSecond) {
+        requires(subsystem);
         this.subsystem = subsystem;
         this.percentPerMillis = voltsPerSecond / 12. / 1000.;
     }
