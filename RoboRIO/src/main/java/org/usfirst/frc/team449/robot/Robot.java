@@ -209,5 +209,8 @@ public class Robot extends TimedRobot {
         Clock.updateTime();
         //Read sensors
         this.robotMap.getUpdater().run();
+
+        //Log
+        loggerNotifier.startSingle(0);
     }
 }

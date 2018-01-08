@@ -372,15 +372,18 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
 
         //Set max voltage
         canTalon.configPeakOutputForward(currentGearSettings.getFwdPeakOutputVoltage()/12., 0);
-        canTalon.configPeakOutputReverse(-currentGearSettings.getRevPeakOutputVoltage()/12., 0);
+        canTalon.configPeakOutputReverse(currentGearSettings.getRevPeakOutputVoltage()/12., 0);
 
         //Set min voltage
         canTalon.configNominalOutputForward(currentGearSettings.getFwdNominalOutputVoltage()/12., 0);
         canTalon.configNominalOutputReverse(currentGearSettings.getRevNominalOutputVoltage()/12., 0);
 
-        //Set ramp rate, converting from volts/sec to seconds until 12 volts.
-        canTalon.configClosedloopRamp(1/(currentGearSettings.getRampRate()/12.), 0);
-        canTalon.configOpenloopRamp(1/(currentGearSettings.getRampRate()/12.), 0);
+        if (currentGearSettings.getRampRate() != null) {
+            //Set ramp rate, converting from volts/sec to seconds until 12 volts.
+            canTalon.configClosedloopRamp(1 / (currentGearSettings.getRampRate() / 12.), 0);
+            canTalon.configOpenloopRamp(1 / (currentGearSettings.getRampRate() / 12.), 0);
+        }
+
         //Set PID stuff
         if (currentGearSettings.getkVFwd() != null) {
             //Slot 0 velocity gains. We don't set F yet because that changes based on setpoint.
@@ -727,9 +730,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         disable();
         clearMP();
 
-        //Read velocityOnly out here so we only have to call data.isVelocityOnly() once.
-        boolean velocityOnly = data.isVelocityOnly();
-
         //Declare this out here to avoid garbage collection
         double feedforward;
 
@@ -922,9 +922,10 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         private final double fwdNominalOutputVoltage, revNominalOutputVoltage;
 
         /**
-         * The ramp rate, in volts/sec. 0 means no ramp rate.
+         * The ramp rate, in volts/sec. null means no ramp rate.
          */
-        private final double rampRate;
+        @Nullable
+        private final Double rampRate;
 
         /**
          * The maximum speed of the motor in this gear, in FPS. Used for throttle scaling. Ignored if kVFwd is null.
@@ -978,7 +979,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          * @param revNominalOutputVoltage The minimum output voltage for closed-loop modes in the reverse direction.
          *                                This does not rescale, it just sets any output below this voltage to this
          *                                voltage. Defaults to -fwdNominalOutputVoltage.
-         * @param rampRate      The ramp rate, in volts/sec. Can be null, and if it is, no ramp
+         * @param rampRate                The ramp rate, in volts/sec. Can be null, and if it is, no ramp
          *                                rate is used.
          * @param maxSpeed                The maximum speed of the motor in this gear, in FPS. Used for throttle
          *                                scaling. Ignored if kVFwd is null. Calculated from the drive characterization
@@ -1045,13 +1046,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             this.revPeakOutputVoltage = revPeakOutputVoltage != null ? revPeakOutputVoltage : -this.fwdPeakOutputVoltage;
             this.fwdNominalOutputVoltage = fwdNominalOutputVoltage != null ? fwdNominalOutputVoltage : 0;
             this.revNominalOutputVoltage = revNominalOutputVoltage != null ? revNominalOutputVoltage : -this.fwdNominalOutputVoltage;
-            if (rampRate != null) {
-                //The talons have a minimum closed loop ramp rate of 1.173 volts/sec, anything lower becomes 0 which is
-                //no ramp rate. That's obviously not what someone who inputs 1 volt/sec wants, so we bump things up.
-                this.rampRate = Math.max(rampRate, 1.173);
-            } else {
-                this.rampRate = 0;
-            }
+            this.rampRate = rampRate;
             this.kP = kP;
             this.kI = kI;
             this.kD = kD;
@@ -1125,7 +1120,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         /**
          * @return The ramp rate, in volts/sec.
          */
-        public double getRampRate() {
+        public Double getRampRate() {
             return rampRate;
         }
 
