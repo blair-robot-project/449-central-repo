@@ -85,4 +85,15 @@ public class OITankSimple extends OITank {
     public boolean commandingStraight() {
         return Math.abs(getLeftOutputCached() - getRightOutputCached()) <= commandingStraightTolerance;
     }
+
+    /**
+     * Get the name of this object.
+     *
+     * @return A string that will identify this object in the log file.
+     */
+    @NotNull
+    @Override
+    public String getName() {
+        return "OI";
+    }
 }

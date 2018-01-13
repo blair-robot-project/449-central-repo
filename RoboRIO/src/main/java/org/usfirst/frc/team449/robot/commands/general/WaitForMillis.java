@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.other.Clock;
 
 /**
@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.other.Clock;
  * CommandGroups.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class WaitForMillis extends YamlCommandWrapper {
+public class WaitForMillis extends Command {
 
     /**
      * How long this command takes to finish, in milliseconds.

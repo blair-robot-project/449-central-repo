@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 
 /**
- * A generic example of a subsystem.
+ * A simple unidirectional drive with no encoders.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUnidirectional {

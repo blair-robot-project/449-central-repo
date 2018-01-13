@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
+import org.usfirst.frc.team449.robot.generalInterfaces.poseEstimator.PoseEstimator;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
  * A Runnable for pose estimation that can take absolute positions.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirectional> implements MappedRunnable, Loggable {
+public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirectional> implements PoseEstimator, Loggable {
 
     /**
      * The subsystem to get gyro and encoder data from.
@@ -277,6 +277,7 @@ public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirec
      * @return The current x,y position in feet.
      */
     @NotNull
+    @Override
     public double[] getPos() {
         return currentPos;
     }

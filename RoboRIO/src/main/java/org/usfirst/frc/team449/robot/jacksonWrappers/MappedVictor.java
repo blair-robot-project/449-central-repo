@@ -24,6 +24,7 @@ public class MappedVictor extends VictorSP implements SimpleMotor {
                         boolean inverted) {
         super(port);
         this.setInverted(inverted);
+        this.setSafetyEnabled(false);
     }
 
     /**

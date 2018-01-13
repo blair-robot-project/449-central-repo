@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
@@ -18,7 +17,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.conditional.SubsystemC
  * A climber subsystem that uses power monitoring to stop climbing.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, SubsystemBinaryMotor, SubsystemConditional {
+public class ClimberCurrentLimited extends YamlSubsystem implements SubsystemBinaryMotor, SubsystemConditional {
 
     /**
      * The CANTalon controlling one of the climber motors.
@@ -95,43 +94,6 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
         if (simpleMotor != null) {
             simpleMotor.setVelocity(percentVbus);
         }
-    }
-
-    /**
-     * Get the headers for the data this subsystem logs every loop.
-     *
-     * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
-     */
-    @NotNull
-    @Override
-    public String[] getHeader() {
-        return new String[]{"current",
-                "voltage",
-                "power"};
-    }
-
-    /**
-     * Get the data this subsystem logs every loop.
-     *
-     * @return An N-length array of Objects, where N is the number of labels given by getHeader.
-     */
-    @NotNull
-    @Override
-    public Object[] getData() {
-        return new Object[]{canTalonSRX.getOutputCurrent(),
-                canTalonSRX.getOutputVoltage(),
-                canTalonSRX.getOutputCurrent() * canTalonSRX.getOutputVoltage()};
-    }
-
-    /**
-     * Get the name of this object.
-     *
-     * @return A string that will identify this object in the log file.
-     */
-    @NotNull
-    @Override
-    public String getName() {
-        return "climber";
     }
 
     /**

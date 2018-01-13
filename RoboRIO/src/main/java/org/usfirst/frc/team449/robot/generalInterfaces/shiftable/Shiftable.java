@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.generalInterfaces.shiftable;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.Contract;
 
 /**
  * An interface for any object that different settings for different gears
@@ -29,6 +30,7 @@ public interface Shiftable {
             this.numVal = numVal;
         }
 
+        @Contract(pure = true)
         public int getNumVal() {
             return numVal;
         }

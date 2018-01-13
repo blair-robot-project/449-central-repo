@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi.fieldoriented;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.oi.OI;
 
@@ -64,6 +65,34 @@ public abstract class OIFieldOriented implements OI {
     public void update() {
         cachedVel = getVel();
         cachedTheta = getTheta();
+    }
+
+    /**
+     * Get the headers for the data this subsystem logs every loop.
+     *
+     * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+     */
+    @NotNull
+    @Override
+    public String[] getHeader() {
+        return new String[]{
+                "theta",
+                "vel"
+        };
+    }
+
+    /**
+     * Get the data this subsystem logs every loop.
+     *
+     * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+     */
+    @NotNull
+    @Override
+    public Object[] getData() {
+        return new Object[]{
+                getThetaCached(),
+                getVelCached()
+        };
     }
 
 }

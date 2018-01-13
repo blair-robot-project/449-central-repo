@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.other.Logger;
  * A command to ramp up the motors to full power at a given voltage rate.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class VoltageRamp<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
+public class VoltageRamp<T extends YamlSubsystem & DriveUnidirectional> extends Command {
 
     /**
      * The subsystem to execute this command on.
@@ -47,6 +47,7 @@ public class VoltageRamp<T extends YamlSubsystem & DriveUnidirectional> extends 
     @JsonCreator
     public VoltageRamp(@NotNull @JsonProperty(required = true) T subsystem,
                        @JsonProperty(required = true) double voltsPerSecond) {
+        requires(subsystem);
         this.subsystem = subsystem;
         this.percentPerMillis = voltsPerSecond / 12. / 1000.;
     }

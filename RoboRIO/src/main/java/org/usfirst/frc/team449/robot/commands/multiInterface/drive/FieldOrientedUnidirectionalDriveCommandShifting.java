@@ -42,14 +42,16 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsy
     /**
      * Default constructor
      *
-     * @param toleranceBuffer            How many consecutive loops have to be run while within tolerance to be considered on
-     *                                   target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-     * @param absoluteTolerance          The maximum number of degrees off from the target at which we can be considered within
-     *                                   tolerance.
+     * @param toleranceBuffer            How many consecutive loops have to be run while within tolerance to be
+     *                                   considered on target. Multiply by loop period of ~20 milliseconds for time.
+     *                                   Defaults to 0.
+     * @param absoluteTolerance          The maximum number of degrees off from the target at which we can be considered
+     *                                   within tolerance.
      * @param minimumOutput              The minimum output of the loop. Defaults to zero.
-     * @param maximumOutput              The maximum output of the loop. Can be null, and if it is, no maximum output is used.
-     * @param deadband                   The deadband around the setpoint, in degrees, within which no output is given to the
-     *                                   motors. Defaults to zero.
+     * @param maximumOutput              The maximum output of the loop. Can be null, and if it is, no maximum output is
+     *                                   used.
+     * @param deadband                   The deadband around the setpoint, in degrees, within which no output is given
+     *                                   to the motors. Defaults to zero.
      * @param inverted                   Whether the loop is inverted. Defaults to false.
      * @param kP                         Proportional gain. Defaults to zero.
      * @param kI                         Integral gain. Defaults to zero.

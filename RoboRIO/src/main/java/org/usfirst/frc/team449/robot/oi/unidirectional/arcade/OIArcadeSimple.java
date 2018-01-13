@@ -53,4 +53,15 @@ public class OIArcadeSimple extends OIArcade {
     public double getFwd() {
         return velThrottle.getValue();
     }
+
+    /**
+     * Get the name of this object.
+     *
+     * @return A string that will identify this object in the log file.
+     */
+    @NotNull
+    @Override
+    public String getName() {
+        return "OI";
+    }
 }

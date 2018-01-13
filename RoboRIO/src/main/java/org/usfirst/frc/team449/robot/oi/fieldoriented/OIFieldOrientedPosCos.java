@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
-import org.usfirst.frc.team449.robot.other.Clock;
 
 /**
- * A field-oriented OI that always points the robot an angle where cosine is positive, i.e. always pointing away from the driver station.
+ * A field-oriented OI that always points the robot an angle where cosine is positive, i.e. always pointing away from
+ * the driver station.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class OIFieldOrientedPosCos extends OIFieldOriented {
@@ -27,6 +26,7 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
      */
     @NotNull
     private final Throttle yThrottle;
+
     /**
      * The radius, from [0,1], within which the joystick is considered to be "at rest."
      */
@@ -40,10 +40,7 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
      * The velocity value calculated the last time calcValues was called.
      */
     private double vel;
-    /**
-     * The time calcValues was last called, in milliseconds
-     */
-    private long timeLastUpdated;
+
     /**
      * Variables for the outputs of the x and y throttles. Fields to avoid garbage collection.
      */
@@ -68,28 +65,25 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
     /**
      * Calculate the theta and vel values, can be called multiple times per tic but will only execute logic once.
      */
-    protected void calcValues() {
-        if (timeLastUpdated != Clock.currentTimeMillis()) {
-            x = xThrottle.getValue();
-            y = yThrottle.getValue();
-            vel = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    private void calcValues() {
+        x = xThrottle.getValue();
+        y = yThrottle.getValue();
+        vel = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-            //0,0ish has no angle so null
-            if (vel < rDeadband) {
-                theta = null;
-                vel = 0;
-            } else {
-                //Use atan2 to get angle from -180 to 180
-                theta = Math.toDegrees(Math.atan2(y, x));
-                if (theta > 90) {
-                    vel *= -1;
-                    theta -= 180;
-                } else if (theta < -90) {
-                    vel *= -1;
-                    theta += 180;
-                }
+        //0,0ish has no angle so null
+        if (vel < rDeadband) {
+            theta = null;
+            vel = 0;
+        } else {
+            //Use atan2 to get angle from -180 to 180
+            theta = Math.toDegrees(Math.atan2(y, x));
+            if (theta > 90) {
+                vel *= -1;
+                theta -= 180;
+            } else if (theta < -90) {
+                vel *= -1;
+                theta += 180;
             }
-            timeLastUpdated = Clock.currentTimeMillis();
         }
     }
 
@@ -104,12 +98,6 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
     @Nullable
     public Double getTheta() {
         calcValues();
-        if (theta != null) {
-            SmartDashboard.putNumber("theta", theta);
-            SmartDashboard.putBoolean("thetaNull", false);
-        } else {
-            SmartDashboard.putBoolean("thetaNull", true);
-        }
         return theta;
     }
 
@@ -121,7 +109,17 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
     @Override
     public double getVel() {
         calcValues();
-        SmartDashboard.putNumber("Vel", vel);
         return vel;
+    }
+
+    /**
+     * Get the name of this object.
+     *
+     * @return A string that will identify this object in the log file.
+     */
+    @NotNull
+    @Override
+    public String getName() {
+        return "OI";
     }
 }

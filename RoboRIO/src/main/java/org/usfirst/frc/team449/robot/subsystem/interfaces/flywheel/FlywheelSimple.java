@@ -55,8 +55,8 @@ public class FlywheelSimple extends YamlSubsystem implements SubsystemFlywheel {
      * @param feederMotor      The motor that controls the feeder.
      * @param shooterVelocity  The velocity for the flywheel to run at, on [-1, 1].
      * @param feederVelocity   The velocity for the feeder to run at, on [-1, 1]. Defaults to 1.
-     * @param spinUpTimeMillis Time from giving the flywheel voltage to being ready to fire, in milliseconds. Defaults to
-     *                         0.
+     * @param spinUpTimeMillis Time from giving the flywheel voltage to being ready to fire, in milliseconds. Defaults
+     *                         to 0.
      */
     @JsonCreator
     public FlywheelSimple(@NotNull @JsonProperty(required = true) SimpleMotor shooterMotor,
