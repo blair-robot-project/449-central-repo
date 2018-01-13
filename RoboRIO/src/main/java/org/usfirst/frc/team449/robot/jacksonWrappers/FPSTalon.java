@@ -529,16 +529,16 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param velocity velocity setpoint in FPS.
      */
     protected void setVelocityFPS(double velocity) {
-        velocity = FPSToEncoder(velocity);
+        double nativeVelocity = FPSToEncoder(velocity);
         if (velocity > 0) {
-            canTalon.config_kF(0, 1023. / currentGearSettings.getFwdPeakOutputVoltage() *
-                    (currentGearSettings.getkVFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity), 0);
+            canTalon.config_kF(0, (1023. / 12.) * //Convert from voltage to natives
+                    (currentGearSettings.getkVFwd() * velocity + currentGearSettings.getInterceptVoltageFwd()) / nativeVelocity, 0);
         } else if (velocity < 0) {
-            canTalon.config_kF(0, 1023. / -currentGearSettings.getRevPeakOutputVoltage() *
-                    (currentGearSettings.getkVRev() - currentGearSettings.getInterceptVoltageRev() / velocity), 0);
+            canTalon.config_kF(0, (1023. / 12.) * //Convert from voltage to natives
+                    (currentGearSettings.getkVRev() * velocity - currentGearSettings.getInterceptVoltageRev()) / nativeVelocity, 0);
         }
         setpoint = velocity;
-        canTalon.set(ControlMode.Velocity, velocity);
+        canTalon.set(ControlMode.Velocity, nativeVelocity);
     }
 
     /**
