@@ -526,15 +526,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
     protected void setVelocityFPS(double velocity) {
         //Switch control mode to velocity closed-loop
         canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-        velocity = FPSToEncoder(velocity);
+        double nativeVelocity = FPSToEncoder(velocity);
         if (velocity > 0) {
-            canTalon.setF(1023. / currentGearSettings.getFwdPeakOutputVoltage() *
-                    (currentGearSettings.getVoltsPerFPSFwd() + currentGearSettings.getInterceptVoltageFwd() / velocity));
+            canTalon.setF((1023. / 12.) * //Convert from voltage to natives
+                    (currentGearSettings.getVoltsPerFPSFwd()*velocity + currentGearSettings.getInterceptVoltageFwd()) / nativeVelocity);
         } else if (velocity < 0) {
-            canTalon.setF(1023. / -currentGearSettings.getRevPeakOutputVoltage() *
-                    (currentGearSettings.getVoltsPerFPSRev() - currentGearSettings.getInterceptVoltageRev() / velocity));
+            canTalon.setF((1023. / 12.) * //Convert from voltage to natives
+                    (currentGearSettings.getVoltsPerFPSRev()*velocity - currentGearSettings.getInterceptVoltageRev()) / nativeVelocity);
         }
-        canTalon.set(velocity);
+        canTalon.set(nativeVelocity);
     }
 
     /**
