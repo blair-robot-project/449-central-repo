@@ -764,11 +764,14 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Only call position getter once
         double startPosition = data.resetPosition() ? 0 : getPositionFeet();
 
+        //Set point time
+        canTalon.configMotionProfileTrajectoryPeriod(data.getPointTimeMillis(), 0);
+
         //Load in profiles
         for (int i = 0; i < data.getData().length; ++i) {
             TrajectoryPoint point = new TrajectoryPoint();
             //Set parameters that are true for all points
-            point.profileSlotSelect = 1;        // gain selection, we always put MP gains in slot 1.
+            point.profileSlotSelect0 = 1;        // gain selection, we always put MP gains in slot 1.
 
             // Set all the fields of the profile point
             point.position = feetToEncoder(startPosition + (data.getData()[i][0] * (data.isInverted() ? -1 : 1)));

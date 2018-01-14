@@ -32,6 +32,11 @@ public class MotionProfileData {
     private final boolean velocityOnly;
 
     /**
+     * The time, in milliseconds, that each point runs for.
+     */
+    private int pointTimeMillis;
+
+    /**
      * A 2D array containing 4 values for each point- position, velocity, acceleration and delta time respectively, in
      * feet, feet per second, feet per (second^2), and milliseconds.
      */
@@ -56,6 +61,7 @@ public class MotionProfileData {
         this.velocityOnly = velocityOnly;
         this.resetPosition = resetPosition;
 
+        pointTimeMillis = 0;
         try {
             readFile(filename);
         } catch (IOException e) {
@@ -75,7 +81,7 @@ public class MotionProfileData {
         int numLines = Integer.parseInt(br.readLine());
 
         //Instantiate data
-        data = new double[numLines][4];
+        data = new double[numLines][3];
 
         //Declare the arrays outside the loop to avoid garbage collection.
         String[] line;
@@ -92,8 +98,11 @@ public class MotionProfileData {
             tmp[1] = Double.parseDouble(line[1]);
             tmp[2] = Double.parseDouble(line[2]);
 
-            //Convert to milliseconds
-            tmp[3] = Double.parseDouble(line[3]) * 1000;
+            //Only set once
+            if(pointTimeMillis == 0) {
+                //Convert to milliseconds
+                pointTimeMillis = (int) (Double.parseDouble(line[3]) * 1000);
+            }
             data[i] = tmp;
         }
         //Close the reader
@@ -106,6 +115,13 @@ public class MotionProfileData {
     @NotNull
     public double[][] getData() {
         return data;
+    }
+
+    /**
+     * @return The time, in milliseconds, that each point runs for.
+     */
+    public int getPointTimeMillis(){
+        return pointTimeMillis;
     }
 
     /**
