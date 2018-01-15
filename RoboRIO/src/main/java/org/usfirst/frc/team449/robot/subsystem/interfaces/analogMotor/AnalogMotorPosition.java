@@ -21,24 +21,25 @@ public class AnalogMotorPosition extends Subsystem implements SubsystemAnalogMot
     private final FPSTalon motor;
 
     /**
-     * The constants that are added to and multiplied by a [-1, 1] setpoint to turn it into the desired range of distances in feet.
+     * The constants that are added to and multiplied by a [-1, 1] setpoint to turn it into the desired range of
+     * distances in feet.
      */
     private final double addToSP, multiplyBySP;
 
     /**
      * Default constructor.
      *
-     * @param motor The motor this subsystem controls.
+     * @param motor  The motor this subsystem controls.
      * @param minPos The lowest position, in feet, this subsystem should go to. Defaults to 0.
      * @param maxPos The greatest position, in feet, this subsystem should go to.
      */
     @JsonCreator
     public AnalogMotorPosition(@NotNull @JsonProperty(required = true) FPSTalon motor,
                                double minPos,
-                               @JsonProperty(required = true) double maxPos){
+                               @JsonProperty(required = true) double maxPos) {
         this.motor = motor;
-        this.addToSP = (maxPos+minPos)/2.;
-        this.multiplyBySP = Math.abs((maxPos-minPos)/2.);
+        this.addToSP = (maxPos + minPos) / 2.;
+        this.multiplyBySP = Math.abs((maxPos - minPos) / 2.);
     }
 
     /**
@@ -48,7 +49,7 @@ public class AnalogMotorPosition extends Subsystem implements SubsystemAnalogMot
      */
     @Override
     public void set(double input) {
-        motor.setPositionSetpoint(addToSP + input*multiplyBySP);
+        motor.setPositionSetpoint(addToSP + input * multiplyBySP);
     }
 
     /**

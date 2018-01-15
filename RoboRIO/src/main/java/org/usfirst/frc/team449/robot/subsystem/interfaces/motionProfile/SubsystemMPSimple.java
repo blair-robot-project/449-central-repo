@@ -26,7 +26,7 @@ public class SubsystemMPSimple extends Subsystem implements SubsystemMP {
      * @param motor The motor this subsystem controls.
      */
     @JsonCreator
-    public SubsystemMPSimple(@NotNull @JsonProperty(required = true)FPSTalon motor){
+    public SubsystemMPSimple(@NotNull @JsonProperty(required = true) FPSTalon motor) {
         this.motor = motor;
     }
 

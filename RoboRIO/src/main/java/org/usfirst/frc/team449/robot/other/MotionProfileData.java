@@ -99,7 +99,7 @@ public class MotionProfileData {
             tmp[2] = Double.parseDouble(line[2]);
 
             //Only set once
-            if(pointTimeMillis == 0) {
+            if (pointTimeMillis == 0) {
                 //Convert to milliseconds
                 pointTimeMillis = (int) (Double.parseDouble(line[3]) * 1000);
             }
@@ -120,7 +120,7 @@ public class MotionProfileData {
     /**
      * @return The time, in milliseconds, that each point runs for.
      */
-    public int getPointTimeMillis(){
+    public int getPointTimeMillis() {
         return pointTimeMillis;
     }
 

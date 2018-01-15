@@ -131,7 +131,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to.
      *                                   Defaults to 1.
      * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
-     * @param enableVoltageComp         Whether or not to use voltage compensation. Defaults to false.
+     * @param enableVoltageComp          Whether or not to use voltage compensation. Defaults to false.
      * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
      *                                   null if there is no encoder attached to this Talon.
      * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
@@ -148,7 +148,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
      *                                   seconds. Defaults to 0.005.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
-     * @param controlFrameRatesMillis     The update rate, in milliseconds, for each of the control frame.
+     * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
      * @param slaves                     The other {@link TalonSRX}s that are slaved to this one.
      */
     @JsonCreator
@@ -185,7 +185,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         canTalon.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
 
         //Set frame rates
-        if (controlFrameRatesMillis != null){
+        if (controlFrameRatesMillis != null) {
             for (ControlFrame controlFrame : controlFrameRatesMillis.keySet()) {
                 canTalon.setControlFramePeriod(controlFrame, controlFrameRatesMillis.get(controlFrame));
             }
@@ -255,7 +255,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             //having to support RPM.
             if (feedbackDevice.equals(FeedbackDevice.CTRE_MagEncoder_Absolute) ||
                     feedbackDevice.equals(FeedbackDevice.CTRE_MagEncoder_Relative)) {
-                canTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0 ,0);
+                canTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
             } else {
                 canTalon.configSelectedFeedbackSensor(feedbackDevice, 0, 0);
             }
@@ -371,12 +371,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         currentGearSettings = perGearSettings.get(gear);
 
         //Set max voltage
-        canTalon.configPeakOutputForward(currentGearSettings.getFwdPeakOutputVoltage()/12., 0);
-        canTalon.configPeakOutputReverse(currentGearSettings.getRevPeakOutputVoltage()/12., 0);
+        canTalon.configPeakOutputForward(currentGearSettings.getFwdPeakOutputVoltage() / 12., 0);
+        canTalon.configPeakOutputReverse(currentGearSettings.getRevPeakOutputVoltage() / 12., 0);
 
         //Set min voltage
-        canTalon.configNominalOutputForward(currentGearSettings.getFwdNominalOutputVoltage()/12., 0);
-        canTalon.configNominalOutputReverse(currentGearSettings.getRevNominalOutputVoltage()/12., 0);
+        canTalon.configNominalOutputForward(currentGearSettings.getFwdNominalOutputVoltage() / 12., 0);
+        canTalon.configNominalOutputReverse(currentGearSettings.getRevNominalOutputVoltage() / 12., 0);
 
         if (currentGearSettings.getRampRate() != null) {
             //Set ramp rate, converting from volts/sec to seconds until 12 volts.
@@ -384,11 +384,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             canTalon.configOpenloopRamp(1 / (currentGearSettings.getRampRate() / 12.), 0);
         } else {
             canTalon.configClosedloopRamp(0, 0);
-            canTalon.configOpenloopRamp(0,0);
+            canTalon.configOpenloopRamp(0, 0);
         }
 
         //Set motion magic stuff
-        if(currentGearSettings.motionMagicMaxVel != null){
+        if (currentGearSettings.motionMagicMaxVel != null) {
             canTalon.configMotionCruiseVelocity(FPSToEncoder(currentGearSettings.getMotionMagicMaxVel()).intValue(), 0);
             //We can convert accel the same way we do vel because both are per second.
             canTalon.configMotionAcceleration(FPSToEncoder(currentGearSettings.getMotionMagicMaxAccel()).intValue(), 0);
@@ -503,7 +503,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     public void setPositionSetpoint(double feet) {
         setpoint = feet;
         canTalon.config_kF(0, 0, 0);
-        if(currentGearSettings.getMotionMagicMaxVel() != null){
+        if (currentGearSettings.getMotionMagicMaxVel() != null) {
             canTalon.set(ControlMode.MotionMagic, feetToEncoder(feet));
         } else {
             canTalon.set(ControlMode.Position, feetToEncoder(feet));
@@ -749,7 +749,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
 
         //Set proper PID constants
         if (data.isInverted()) {
-            if (data.isVelocityOnly()){
+            if (data.isVelocityOnly()) {
                 canTalon.config_kP(1, 0, 0);
                 canTalon.config_kI(1, 0, 0);
                 canTalon.config_kD(1, 0, 0);
@@ -758,9 +758,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 canTalon.config_kI(1, currentGearSettings.getMotionProfileIRev(), 0);
                 canTalon.config_kD(1, currentGearSettings.getMotionProfileDRev(), 0);
             }
-            canTalon.config_kF(1, 1023./currentGearSettings.getRevPeakOutputVoltage(), 0);
+            canTalon.config_kF(1, 1023. / currentGearSettings.getRevPeakOutputVoltage(), 0);
         } else {
-            if (data.isVelocityOnly()){
+            if (data.isVelocityOnly()) {
                 canTalon.config_kP(1, 0, 0);
                 canTalon.config_kI(1, 0, 0);
                 canTalon.config_kD(1, 0, 0);
@@ -769,7 +769,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 canTalon.config_kI(1, currentGearSettings.getMotionProfileIFwd(), 0);
                 canTalon.config_kD(1, currentGearSettings.getMotionProfileDFwd(), 0);
             }
-            canTalon.config_kF(1, 1023./currentGearSettings.getFwdPeakOutputVoltage(), 0);
+            canTalon.config_kF(1, 1023. / currentGearSettings.getFwdPeakOutputVoltage(), 0);
         }
 
         //Only call position getter once
@@ -1010,8 +1010,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          * @param revNominalOutputVoltage The minimum output voltage for closed-loop modes in the reverse direction.
          *                                This does not rescale, it just sets any output below this voltage to this
          *                                voltage. Defaults to -fwdNominalOutputVoltage.
-         * @param rampRate                The ramp rate, in volts/sec. Can be null, and if it is, no ramp
-         *                                rate is used.
+         * @param rampRate                The ramp rate, in volts/sec. Can be null, and if it is, no ramp rate is used.
          * @param maxSpeed                The maximum speed of the motor in this gear, in FPS. Used for throttle
          *                                scaling. Ignored if kVFwd is null. Calculated from the drive characterization
          *                                terms if null.
@@ -1047,8 +1046,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          * @param interceptVoltageRev     The voltage required to overcome static friction in the reverse direction.
          *                                Vintercept in the drive characterization paper. Defaults to
          *                                interceptVoltageFwd.
-         * @param motionMagicMaxVel The maximum velocity for motion magic mode, in FPS. Can be null to not use motion magic.
-         * @param motionMagicMaxAccel The maximum acceleration for motion magic mode, in FPS per second.
+         * @param motionMagicMaxVel       The maximum velocity for motion magic mode, in FPS. Can be null to not use
+         *                                motion magic.
+         * @param motionMagicMaxAccel     The maximum acceleration for motion magic mode, in FPS per second.
          */
         @JsonCreator
         public PerGearSettings(int gearNum,
