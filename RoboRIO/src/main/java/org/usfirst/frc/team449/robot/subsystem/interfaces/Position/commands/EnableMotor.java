@@ -47,7 +47,7 @@ public class EnableMotor extends YamlCommandWrapper {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 
 	/**

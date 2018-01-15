@@ -11,7 +11,6 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.Position.SubsystemPosi
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SetPosition extends YamlCommandWrapper {
 
-
 	/**
 	 * The subsystem to execute this command on.
 	 */
@@ -41,7 +40,6 @@ public class SetPosition extends YamlCommandWrapper {
 	/**
 	 * Sets position.
 	 */
-
 	@Override
 	protected void execute(){
 		subsystem.setPosition(value);
@@ -54,7 +52,7 @@ public class SetPosition extends YamlCommandWrapper {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 
 	/**
@@ -69,7 +67,6 @@ public class SetPosition extends YamlCommandWrapper {
 	 * Log when this command is interrupted.
 	 */
 	@Override
-
 	protected void interrupted(){
 		Logger.addEvent("SetPosition interrupted!", this.getClass());
 	}

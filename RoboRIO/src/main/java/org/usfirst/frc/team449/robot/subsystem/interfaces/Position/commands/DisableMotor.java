@@ -43,11 +43,11 @@ public class DisableMotor extends YamlCommandWrapper {
 	/**
 	 * Finish immediately because this is a state-change command.
 	 *
-	 * @return true
+	 * @return false
 	 */
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 
 	/**

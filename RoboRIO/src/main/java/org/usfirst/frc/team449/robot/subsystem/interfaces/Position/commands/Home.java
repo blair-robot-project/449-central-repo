@@ -35,27 +35,18 @@ public class Home extends YamlCommandWrapper {
 
 	@Override
 	protected void execute(){
-		if(useForward){
-			subsystem.setMotorOutput(speed);
-		}else
-		{
-			subsystem.setMotorOutput(-speed);
-		}
+		if(useForward){ subsystem.setMotorOutput(speed); }
+			else { subsystem.setMotorOutput(-speed); }
 	}
 
 	@Override
 	protected boolean isFinished() {
-
-		if(useForward == true){
-			return subsystem.getForwardLimit();
-		}
-		else {
-			return subsystem.getReverseLimit();
-		}
+		if(useForward == true){ return subsystem.getForwardLimit(); }
+		else { return subsystem.getReverseLimit(); }
 	}
+
 	@Override
 	public void end(){
 		subsystem.disableMotor();
 	}
-
 }
