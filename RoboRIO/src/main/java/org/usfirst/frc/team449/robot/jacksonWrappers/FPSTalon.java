@@ -387,6 +387,13 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             canTalon.configOpenloopRamp(0,0);
         }
 
+        //Set motion magic stuff
+        if(currentGearSettings.motionMagicMaxVel != null){
+            canTalon.configMotionCruiseVelocity(FPSToEncoder(currentGearSettings.getMotionMagicMaxVel()).intValue(), 0);
+            //We can convert accel the same way we do vel because both are per second.
+            canTalon.configMotionAcceleration(FPSToEncoder(currentGearSettings.getMotionMagicMaxAccel()).intValue(), 0);
+        }
+
         //Set PID stuff
         if (currentGearSettings.getkVFwd() != null) {
             //Slot 0 velocity gains. We don't set F yet because that changes based on setpoint.
@@ -494,9 +501,13 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param feet An absolute position setpoint, in feet.
      */
     public void setPositionSetpoint(double feet) {
-        canTalon.config_kF(0, 0, 0);
         setpoint = feet;
-        canTalon.set(ControlMode.Position, feetToEncoder(feet));
+        canTalon.config_kF(0, 0, 0);
+        if(currentGearSettings.getMotionMagicMaxVel() != null){
+            canTalon.set(ControlMode.MotionMagic, feetToEncoder(feet));
+        } else {
+            canTalon.set(ControlMode.Position, feetToEncoder(feet));
+        }
     }
 
     /**
@@ -974,6 +985,17 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         private final double interceptVoltageFwd, interceptVoltageRev;
 
         /**
+         * The maximum velocity for motion magic mode, in FPS. Can be null to not use motion magic.
+         */
+        @Nullable
+        private final Double motionMagicMaxVel;
+
+        /**
+         * The maximum acceleration for motion magic mode, in FPS per second.
+         */
+        private final double motionMagicMaxAccel;
+
+        /**
          * Default constructor.
          *
          * @param gearNum                 The gear number this is the settings for. Ignored if gear isn't null.
@@ -1025,6 +1047,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          * @param interceptVoltageRev     The voltage required to overcome static friction in the reverse direction.
          *                                Vintercept in the drive characterization paper. Defaults to
          *                                interceptVoltageFwd.
+         * @param motionMagicMaxVel The maximum velocity for motion magic mode, in FPS. Can be null to not use motion magic.
+         * @param motionMagicMaxAccel The maximum acceleration for motion magic mode, in FPS per second.
          */
         @JsonCreator
         public PerGearSettings(int gearNum,
@@ -1049,7 +1073,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                                @Nullable Double kVFwd,
                                double interceptVoltageFwd,
                                @Nullable Double kVRev,
-                               @Nullable Double interceptVoltageRev) {
+                               @Nullable Double interceptVoltageRev,
+                               @Nullable Double motionMagicMaxVel,
+                               double motionMagicMaxAccel) {
             this.gear = gear != null ? gear.getNumVal() : gearNum;
             this.fwdPeakOutputVoltage = fwdPeakOutputVoltage != null ? fwdPeakOutputVoltage : 12;
             this.revPeakOutputVoltage = revPeakOutputVoltage != null ? revPeakOutputVoltage : -this.fwdPeakOutputVoltage;
@@ -1080,13 +1106,15 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 //Basically just setting it to null, but 0 instead so it can be a double instead of a Double.
                 this.maxSpeed = 0;
             }
+            this.motionMagicMaxVel = motionMagicMaxVel;
+            this.motionMagicMaxAccel = motionMagicMaxAccel;
         }
 
         /**
          * Empty constructor that uses all default options.
          */
         public PerGearSettings() {
-            this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, null, 0, null, null, 0, null, null);
+            this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, null, 0, null, null, 0, null, null, null, 0);
         }
 
         /**
@@ -1250,6 +1278,21 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          */
         public double getInterceptVoltageRev() {
             return interceptVoltageRev;
+        }
+
+        /**
+         * @return The maximum velocity for motion magic mode, in FPS. Can be null to not use motion magic.
+         */
+        @Nullable
+        public Double getMotionMagicMaxVel() {
+            return motionMagicMaxVel;
+        }
+
+        /**
+         * @return The maximum acceleration for motion magic mode, in FPS per second.
+         */
+        public double getMotionMagicMaxAccel() {
+            return motionMagicMaxAccel;
         }
     }
 }
