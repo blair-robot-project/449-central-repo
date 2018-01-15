@@ -124,7 +124,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
      * @return That output after being deadbanded with the map-given deadband.
      */
     protected double deadbandOutput(double output) {
-        return this.getPIDController().getError() > deadband ? output : 0;
+        return Math.abs(this.getPIDController().getError()) > deadband ? output : 0;
     }
 
     /**

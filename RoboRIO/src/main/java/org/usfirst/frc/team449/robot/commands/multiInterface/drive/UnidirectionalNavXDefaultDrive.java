@@ -49,6 +49,11 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     private boolean drivingStraight;
 
     /**
+     * Logging variables.
+     */
+    private double rawOutput, processedOutput, finalOutput;
+
+    /**
      * Default constructor
      *
      * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
@@ -169,21 +174,28 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      */
     @Override
     protected void usePIDOutput(double output) {
+        rawOutput = output;
         //If we're driving straight..
         if (drivingStraight) {
             //Process the output (minimumOutput, deadband, etc.)
             output = processPIDOutput(output);
+
+            processedOutput = output;
 
             //Deadband if we're stationary
             if (oi.getLeftOutputCached() == 0 || oi.getRightOutputCached() == 0) {
                 output = deadbandOutput(output);
             }
 
+            finalOutput = output;
+
             //Adjust the heading according to the PID output, it'll be positive if we want to go right.
             subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getRightOutputCached() + output);
         }
         //If we're free driving...
         else {
+            processedOutput = 0;
+            finalOutput = 0;
             //Set the throttle to normal arcade throttle.
             subsystem.setOutput(oi.getLeftOutputCached(), oi.getRightOutputCached());
         }
@@ -199,7 +211,10 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     public String[] getHeader() {
         return new String[]{
                 "drivingStraight",
-                "running"
+                "running",
+                "raw_output",
+                "processed_output",
+                "final_output"
         };
     }
 
@@ -213,7 +228,10 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     public Object[] getData() {
         return new Object[]{
                 drivingStraight,
-                this.isRunning()
+                this.isRunning(),
+                rawOutput,
+                processedOutput,
+                finalOutput
         };
     }
 
