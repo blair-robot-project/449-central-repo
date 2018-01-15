@@ -770,6 +770,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Load in profiles
         for (int i = 0; i < data.getData().length; ++i) {
             TrajectoryPoint point = new TrajectoryPoint();
+            //Have to set this so the Talon doesn't throw a null pointer. May be fixed in a future release.
+            point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
+
             //Set parameters that are true for all points
             point.profileSlotSelect0 = 1;        // gain selection, we always put MP gains in slot 1.
 
