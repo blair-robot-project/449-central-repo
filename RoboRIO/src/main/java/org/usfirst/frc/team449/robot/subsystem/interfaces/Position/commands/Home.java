@@ -7,18 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.Position.SubsystemPosition;
 
-
-/*
-- go backwards until the reverse limit switch is pressed
-Then finish and disable command
-
-- need to pass the speed to go in as a parameter
-
--pass whether to use the forward or reverse limit switch for homing in as a parameter
-
--speed should be a double from 0 to 1
- */
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Home extends YamlCommandWrapper {
 
