@@ -13,34 +13,35 @@ import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedVictor extends VictorSP implements SimpleMotor {
 
-	/**
-	 * Json constructor using a port and inversion.
-	 *
-	 * @param port     The port number of the Victor.
-	 * @param inverted Whether the motor is inverted. Defaults to false.
-	 */
-	@JsonCreator
-	public MappedVictor(@JsonProperty(required = true) int port,
-	                    boolean inverted) {
-		super(port);
-		this.setInverted(inverted);
-	}
+    /**
+     * Json constructor using a port and inversion.
+     *
+     * @param port     The port number of the Victor.
+     * @param inverted Whether the motor is inverted. Defaults to false.
+     */
+    @JsonCreator
+    public MappedVictor(@JsonProperty(required = true) int port,
+                        boolean inverted) {
+        super(port);
+        this.setInverted(inverted);
+        this.setSafetyEnabled(false);
+    }
 
-	/**
-	 * Set the velocity for the motor to go at.
-	 *
-	 * @param velocity the desired velocity, on [-1, 1].
-	 */
-	@Override
-	public void setVelocity(double velocity) {
-		set(velocity);
-	}
+    /**
+     * Set the velocity for the motor to go at.
+     *
+     * @param velocity the desired velocity, on [-1, 1].
+     */
+    @Override
+    public void setVelocity(double velocity) {
+        set(velocity);
+    }
 
-	/**
-	 * Enables the motor, if applicable.
-	 */
-	@Override
-	public void enable() {
-		//Do nothing.
-	}
+    /**
+     * Enables the motor, if applicable.
+     */
+    @Override
+    public void enable() {
+        //Do nothing.
+    }
 }

@@ -1,22 +1,25 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.Position;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 public interface SubsystemPosition {
 
 	// Method for setting the position to a value.
-	public void setPosition(double value);
+	void setPosition(double value);
 
 	// Method for setting the motor output to a value.
-	public void setMotorOutput(double value);
+	void setMotorOutput(double value);
 
 	// Method for returning the state of the reverse limit switch.
-	public boolean getReverseLimit();
+	boolean getReverseLimit();
 
 	// Method for returning the state of the forward limit switch.
-	public boolean getForwardLimit();
+	boolean getForwardLimit();
 
 	// Method for enabling the motor.
-	public void enableMotor();
+	void enableMotor();
 
 	// Method for disabling the motor.
-	public void disableMotor();
+	void disableMotor();
 }

@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface DriveShiftable extends Shiftable {
 
-	/**
-	 * @return true if currently overriding autoshifting, false otherwise.
-	 */
-	boolean getOverrideAutoshift();
+    /**
+     * @return true if currently overriding autoshifting, false otherwise.
+     */
+    boolean getOverrideAutoshift();
 
-	/**
-	 * @param override Whether or not to override autoshifting.
-	 */
-	void setOverrideAutoshift(boolean override);
+    /**
+     * @param override Whether or not to override autoshifting.
+     */
+    void setOverrideAutoshift(boolean override);
 }

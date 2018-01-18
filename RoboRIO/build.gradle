@@ -1,101 +1,75 @@
 plugins {
-	id 'org.hidetake.ssh' version "2.9.0"
-	id 'java'
-	id 'eclipse'
-	id 'idea'
-	id 'jaci.openrio.gradle.GradleRIO' version "2017.1.5"
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'maven'
+    id 'org.hidetake.ssh' version "2.9.0"
+    id 'jaci.openrio.gradle.GradleRIO' version "2018.01.14"
 }
 
-group 'org.usfirst.frc.team449.449-central-repo'
-version '1.0'
-
 repositories {
-	mavenCentral()
-	maven {
-		name = "GradleRio"
-		url = "http://dev.imjac.in/maven"
-	}
+    mavenCentral()
+    maven {
+        name = "GradleRio"
+        url = "http://dev.imjac.in/maven"
+    }
 
-	maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 wpi {
-	wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
-	ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
-	opencvVersion = "3.1.0"         // The OpenCV version to use.
-	cscoreVersion = "1.0.2"         // The CSCore version to use.
-	talonSrxVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
-	navxVersion = "3.0.331"         // The NavX-MXP library version to use.
+    wpilibVersion = "2018.1.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+    ntcoreVersion = "4.0.0"         // The NetworkTables Core version to use.
+    opencvVersion = "3.2.0"         // The OpenCV version to use.
+    cscoreVersion = "1.1.0"         // The CSCore version to use.
+    wpiutilVersion = "3.0.0"
+    ctreVersion = "5.2.1.1"        // The CTRE Toolsuite (Talon SRX) version to use.
+    navxVersion = "3.0.342"         // The NavX-MXP library version to use.
+    smartDashboardVersion = '3.0.0'
+    shuffleboardVersion = '1.0.0'
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
-	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
-	//com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
-	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
-	compile 'org.jetbrains:annotations:13.0'
-	compile wpilib()
-	compile talonSrx()
-	compile navx()
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.3'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.3'
+    //com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.3'
+    compile 'org.jetbrains:annotations:15.0'
+    compile wpilib()
+    compile ctre()
+    compile navx()
 }
 
-/* GradleRIO stuff */
-remotes {
-	rio {
-		host = 'roboRIO-449-frc.local'
-		user = 'lvuser'
-		knownHosts = allowAnyHosts
-	}
-}
-
-def robotManifest = {
-	attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-	attributes 'Robot-Class': frc.robotClass
-}
-
-task('copyResources') {
-	doLast {
-		ssh.run {
-			session(remotes.rio) {
-				execute 'mkdir ~/449_resources', ignoreError: true
-				execute 'mkdir ~/logs', ignoreError: true
-				put from: fileTree('src/main/resources'), into: './449_resources/'
-				execute "./etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
-			}
-		}
-	}
-}
-
-/* Generic artifact gen stuff */
-jar {
-	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-	manifest robotManifest
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
-task deleteDocs(type: Delete){
-	delete '../docs'
-	followSymlinks = false
+task deleteDocs(type: Delete) {
+    delete '../docs'
+    followSymlinks = false
 }
 
-task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]){
-	from 'build/docs/javadoc'
-	into '../docs'
+task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]) {
+    from 'build/docs/javadoc'
+    into '../docs'
 }
 
 artifacts {
-	archives genJavadoc
+    archives sourcesJar
+    archives genJavadoc
 }
 
 compileJava {
-	options.compilerArgs << '-parameters'
+    options.compilerArgs << '-parameters'
 }

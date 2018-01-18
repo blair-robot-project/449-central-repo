@@ -1,101 +1,123 @@
-//All these version numbers should be updated, but only during preseason.
+import jaci.openrio.gradle.GradleRIOPlugin
+import jaci.openrio.gradle.frc.RoboRIO
+
 plugins {
-	id 'org.hidetake.ssh' version "2.9.0"
-	id 'java'
-	id 'eclipse'
-	id 'idea'
-	id 'jaci.openrio.gradle.GradleRIO' version "2017.1.5"
+    id 'org.hidetake.ssh' version "2.9.0"
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
 }
 
-group 'org.usfirst.frc.robotYEAR'
+group 'org.usfirst.frc.team449.ProjectName'
+version '1.0'
+
+def TEAM = 449
+def ROBOT_CLASS = "org.usfirst.frc.team449.robot.Robot"
 
 repositories {
-	mavenCentral()
-	maven {
-		name = "GradleRio"
-		url = "http://dev.imjac.in/maven"
-	}
+    mavenCentral()
+    maven {
+        name = "GradleRio"
+        url = "http://dev.imjac.in/maven"
+    }
 
-	maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url 'https://jitpack.io' }
 }
 
 wpi {
-	wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
-	ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
-	opencvVersion = "3.1.0"         // The OpenCV version to use.
-	cscoreVersion = "1.0.2"         // The CSCore version to use.
-	talonSrxVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
-	navxVersion = "3.0.331"         // The NavX-MXP library version to use.
+    wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+    ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
+    opencvVersion = "3.1.0"         // The OpenCV version to use.
+    cscoreVersion = "1.0.2"         // The CSCore version to use.
+    wpiutilVersion = "1.0.2"
+    ctreVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
+    navxVersion = "3.0.331"         // The NavX-MXP library version to use.
+    smartDashboardVersion = '2.0.4'
+    javaInstallerVersion = '2.0.3'
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
-	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
-	//com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
-	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
-	compile 'org.jetbrains:annotations:13.0'
-	compile wpilib()
-	compile talonSrx()
-	compile navx()
+    compile 'com.github.blair-robot-project:449-central-repo:v6.1.0'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
+    //com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
+    compile 'org.jetbrains:annotations:13.0'
+    compile wpilib()
+    compile ctre()
+    compile navx()
 }
 
-/* GradleRIO stuff */
+/* ssh stuff */
 remotes {
-	rio {
-		host = 'roboRIO-449-frc.local'
-		user = 'lvuser'
-		knownHosts = allowAnyHosts
-	}
-}
-
-def robotManifest = {
-	attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-	attributes 'Robot-Class': frc.robotClass
+    rio {
+        host = 'roboRIO-449-frc.local'
+        user = 'lvuser'
+        knownHosts = allowAnyHosts
+    }
 }
 
 task('copyResources') {
-	doLast {
-		ssh.run {
-			session(remotes.rio) {
-				execute 'mkdir ~/449_resources', ignoreError: true
-				execute 'mkdir ~/logs', ignoreError: true
-				put from: fileTree('src/main/resources'), into: './449_resources/'
-				execute "./etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
-			}
-		}
-	}
+    doLast {
+        ssh.run {
+            session(remotes.rio) {
+                execute 'mkdir ~/449_resources', ignoreError: true
+                execute 'mkdir ~/logs', ignoreError: true
+                put from: fileTree('src/main/resources'), into: './449_resources/'
+                execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
+            }
+        }
+    }
 }
 
-/* Generic artifact gen stuff */
+deploy {
+    targets {
+        target("roborio", RoboRIO) {
+            team = TEAM
+        }
+    }
+    artifacts {
+        artifact('frcJava', FRCJavaArtifact) {
+            targets << "roborio"
+        }
+    }
+}
+
 jar {
-	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-	manifest robotManifest
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
-task deleteDocs(type: Delete){
-	delete '../docs'
-	followSymlinks = false
+task deleteDocs(type: Delete) {
+    delete 'docs'
+    followSymlinks = false
 }
 
-task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]){
-	from 'build/docs/javadoc'
-	into '../docs'
+task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]) {
+    from 'build/docs/javadoc'
+    into 'docs'
 }
 
 artifacts {
-	archives genJavadoc
+    archives genJavadoc
 }
 
 compileJava {
-	options.compilerArgs << '-parameters'
+    options.compilerArgs << '-parameters'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
 }
