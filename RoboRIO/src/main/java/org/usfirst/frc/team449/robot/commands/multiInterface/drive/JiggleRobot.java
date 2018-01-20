@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
@@ -20,8 +21,8 @@ public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAH
     /**
      * Instantiate the CommandGroup
      *
-     * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
-     *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+     * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
+     *                          no buffer.
      * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
@@ -36,7 +37,7 @@ public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAH
      */
     @JsonCreator
     public JiggleRobot(@JsonProperty(required = true) double absoluteTolerance,
-                       int toleranceBuffer,
+                       @Nullable BufferTimer onTargetBuffer,
                        double minimumOutput, @Nullable Double maximumOutput,
                        double deadband,
                        boolean inverted,
@@ -44,7 +45,7 @@ public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAH
                        int kI,
                        int kD,
                        @NotNull @JsonProperty(required = true) T subsystem) {
-        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
-        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
+        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
+        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
     }
 }

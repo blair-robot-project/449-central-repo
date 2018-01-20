@@ -56,9 +56,8 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     /**
      * Default constructor
      *
-     * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
-     *                                    considered on target. Multiply by loop period of ~20 milliseconds for time.
-     *                                    Defaults to 0.
+     * @param onTargetBuffer              A buffer timer for having the loop be on target before it stops running. Can
+     *                                    be null for no buffer.
      * @param absoluteTolerance           The maximum number of degrees off from the target at which we can be
      *                                    considered within tolerance.
      * @param minimumOutput               The minimum output of the loop. Defaults to zero.
@@ -78,7 +77,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      */
     @JsonCreator
     public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
-                                          int toleranceBuffer,
+                                          @Nullable BufferTimer onTargetBuffer,
                                           double minimumOutput, @Nullable Double maximumOutput,
                                           double deadband,
                                           @Nullable Double maxAngularVelToEnterLoop,
@@ -90,7 +89,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
                                           @NotNull @JsonProperty(required = true) T subsystem,
                                           @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
         //Assign stuff
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
 

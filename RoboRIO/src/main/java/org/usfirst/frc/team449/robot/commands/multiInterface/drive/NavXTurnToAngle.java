@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -44,8 +45,8 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     /**
      * Default constructor.
      *
-     * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
-     *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+     * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
+     *                          no buffer.
      * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
@@ -63,7 +64,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
      */
     @JsonCreator
     public NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
-                           int toleranceBuffer,
+                           @Nullable BufferTimer onTargetBuffer,
                            double minimumOutput, @Nullable Double maximumOutput,
                            double deadband,
                            boolean inverted,
@@ -73,7 +74,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
                            @JsonProperty(required = true) double setpoint,
                            @NotNull @JsonProperty(required = true) T subsystem,
                            @JsonProperty(required = true) double timeout) {
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
         //Convert from seconds to milliseconds

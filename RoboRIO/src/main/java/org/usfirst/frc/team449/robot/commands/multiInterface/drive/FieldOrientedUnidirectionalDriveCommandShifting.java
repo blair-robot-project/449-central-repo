@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
@@ -42,9 +43,8 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
     /**
      * Default constructor
      *
-     * @param toleranceBuffer            How many consecutive loops have to be run while within tolerance to be
-     *                                   considered on target. Multiply by loop period of ~20 milliseconds for time.
-     *                                   Defaults to 0.
+     * @param onTargetBuffer             A buffer timer for having the loop be on target before it stops running. Can be
+     *                                   null for no buffer.
      * @param absoluteTolerance          The maximum number of degrees off from the target at which we can be considered
      *                                   within tolerance.
      * @param minimumOutput              The minimum output of the loop. Defaults to zero.
@@ -64,7 +64,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
      */
     @JsonCreator
     public FieldOrientedUnidirectionalDriveCommandShifting(@JsonProperty(required = true) double absoluteTolerance,
-                                                           int toleranceBuffer,
+                                                           @Nullable BufferTimer onTargetBuffer,
                                                            double minimumOutput, @Nullable Double maximumOutput,
                                                            double deadband,
                                                            boolean inverted,
@@ -77,7 +77,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
                                                            @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                            @Nullable Double highGearAngularCoefficient) {
         //Assign stuff
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
         this.subsystem = subsystem;
         this.autoshiftComponent = autoshiftComponent;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;
