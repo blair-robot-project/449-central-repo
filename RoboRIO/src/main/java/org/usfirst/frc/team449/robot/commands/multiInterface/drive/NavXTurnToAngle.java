@@ -51,6 +51,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -66,6 +67,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     public NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
                            @Nullable BufferTimer onTargetBuffer,
                            double minimumOutput, @Nullable Double maximumOutput,
+                           @Nullable Integer loopTimeMillis,
                            double deadband,
                            boolean inverted,
                            int kP,
@@ -74,7 +76,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
                            @JsonProperty(required = true) double setpoint,
                            @NotNull @JsonProperty(required = true) T subsystem,
                            @JsonProperty(required = true) double timeout) {
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
         //Convert from seconds to milliseconds

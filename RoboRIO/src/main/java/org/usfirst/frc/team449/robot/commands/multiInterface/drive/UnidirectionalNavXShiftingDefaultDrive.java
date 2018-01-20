@@ -48,6 +48,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
      * @param minimumOutput               The minimum output of the loop. Defaults to zero.
      * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
      *                                    is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
      *                                    to the motors. Defaults to zero.
      * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
@@ -66,6 +67,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     public UnidirectionalNavXShiftingDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
                                                   @Nullable BufferTimer onTargetBuffer,
                                                   double minimumOutput, @Nullable Double maximumOutput,
+                                                  @Nullable Integer loopTimeMillis,
                                                   double deadband,
                                                   @Nullable Double maxAngularVelToEnterLoop,
                                                   boolean inverted,
@@ -77,7 +79,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
                                                   @NotNull @JsonProperty(required = true) OIUnidirectional oi,
                                                   @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                   @Nullable Double highGearAngularCoefficient) {
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, maxAngularVelToEnterLoop,
                 inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
         this.autoshiftComponent = autoshiftComponent;
         this.subsystem = subsystem;

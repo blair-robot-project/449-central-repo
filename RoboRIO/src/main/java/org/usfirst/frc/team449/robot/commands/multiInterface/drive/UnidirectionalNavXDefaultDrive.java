@@ -63,6 +63,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      * @param minimumOutput               The minimum output of the loop. Defaults to zero.
      * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
      *                                    is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
      *                                    to the motors. Defaults to zero.
      * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
@@ -79,6 +80,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
                                           @Nullable BufferTimer onTargetBuffer,
                                           double minimumOutput, @Nullable Double maximumOutput,
+                                          @Nullable Integer loopTimeMillis,
                                           double deadband,
                                           @Nullable Double maxAngularVelToEnterLoop,
                                           boolean inverted,
@@ -89,7 +91,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
                                           @NotNull @JsonProperty(required = true) T subsystem,
                                           @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
         //Assign stuff
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
 

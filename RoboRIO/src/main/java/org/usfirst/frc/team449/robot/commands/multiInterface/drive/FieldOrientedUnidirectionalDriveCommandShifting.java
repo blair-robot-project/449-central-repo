@@ -50,6 +50,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
      * @param minimumOutput              The minimum output of the loop. Defaults to zero.
      * @param maximumOutput              The maximum output of the loop. Can be null, and if it is, no maximum output is
      *                                   used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                   The deadband around the setpoint, in degrees, within which no output is given
      *                                   to the motors. Defaults to zero.
      * @param inverted                   Whether the loop is inverted. Defaults to false.
@@ -66,6 +67,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
     public FieldOrientedUnidirectionalDriveCommandShifting(@JsonProperty(required = true) double absoluteTolerance,
                                                            @Nullable BufferTimer onTargetBuffer,
                                                            double minimumOutput, @Nullable Double maximumOutput,
+                                                           @Nullable Integer loopTimeMillis,
                                                            double deadband,
                                                            boolean inverted,
                                                            double kP,
@@ -77,7 +79,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
                                                            @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                            @Nullable Double highGearAngularCoefficient) {
         //Assign stuff
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
         this.subsystem = subsystem;
         this.autoshiftComponent = autoshiftComponent;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;

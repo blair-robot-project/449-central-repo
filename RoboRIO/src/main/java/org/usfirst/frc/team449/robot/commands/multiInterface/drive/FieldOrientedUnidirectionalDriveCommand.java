@@ -54,6 +54,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -68,6 +69,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     public FieldOrientedUnidirectionalDriveCommand(@JsonProperty(required = true) double absoluteTolerance,
                                                    @Nullable BufferTimer onTargetBuffer,
                                                    double minimumOutput, @Nullable Double maximumOutput,
+                                                   @Nullable Integer loopTimeMillis,
                                                    double deadband,
                                                    boolean inverted,
                                                    double kP,
@@ -77,7 +79,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
                                                    @NotNull @JsonProperty(required = true) OIFieldOriented oi,
                                                    @Nullable List<AngularSnapPoint> snapPoints) {
         //Assign stuff
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
         this.snapPoints = snapPoints != null ? snapPoints : new ArrayList<>();

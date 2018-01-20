@@ -27,6 +27,7 @@ public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAH
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -39,13 +40,14 @@ public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAH
     public JiggleRobot(@JsonProperty(required = true) double absoluteTolerance,
                        @Nullable BufferTimer onTargetBuffer,
                        double minimumOutput, @Nullable Double maximumOutput,
+                       @Nullable Integer loopTimeMillis,
                        double deadband,
                        boolean inverted,
                        int kP,
                        int kI,
                        int kD,
                        @NotNull @JsonProperty(required = true) T subsystem) {
-        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
-        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
+        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
+        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
     }
 }
