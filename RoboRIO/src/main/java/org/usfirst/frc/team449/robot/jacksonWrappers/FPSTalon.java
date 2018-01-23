@@ -321,9 +321,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 //Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
                 tmp.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
                 if (currentLimit != null) {
-                    tmp.configPeakCurrentLimit(currentLimit, 0);
-                    tmp.configPeakCurrentDuration(0, 0); // No duration
-                    tmp.enableCurrentLimit(true);
+                    canTalon.configContinuousCurrentLimit(currentLimit, 0);
+                    canTalon.configPeakCurrentLimit(0, 0); // No duration
+                    canTalon.enableCurrentLimit(true);
                 } else {
                     //If we don't have a current limit, disable current limiting.
                     tmp.enableCurrentLimit(false);
