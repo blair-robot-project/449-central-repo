@@ -12,54 +12,54 @@ import java.util.List;
  */
 public class SimpleMotorCluster implements SimpleMotor {
 
-	/**
-	 * The motors in this cluster. Contains at least 1 element.
-	 */
-	@NotNull
-	private List<SimpleMotor> motors;
+    /**
+     * The motors in this cluster. Contains at least 1 element.
+     */
+    @NotNull
+    private List<SimpleMotor> motors;
 
-	/**
-	 * Default constructor
-	 *
-	 * @param motors The motors in this cluster. Must have at least 1 element.
-	 */
-	@JsonCreator
-	public SimpleMotorCluster(@JsonProperty(required = true) @NotNull List<SimpleMotor> motors) {
-		if (motors.size() == 0) {
-			throw new IllegalArgumentException("motors must have at least 1 element!");
-		}
-		this.motors = motors;
-	}
+    /**
+     * Default constructor
+     *
+     * @param motors The motors in this cluster. Must have at least 1 element.
+     */
+    @JsonCreator
+    public SimpleMotorCluster(@JsonProperty(required = true) @NotNull List<SimpleMotor> motors) {
+        if (motors.size() == 0) {
+            throw new IllegalArgumentException("motors must have at least 1 element!");
+        }
+        this.motors = motors;
+    }
 
-	/**
-	 * Set the velocity for the motor to go at.
-	 *
-	 * @param velocity the desired velocity, on [-1, 1].
-	 */
-	@Override
-	public void setVelocity(double velocity) {
-		for (SimpleMotor motor : motors) {
-			motor.setVelocity(velocity);
-		}
-	}
+    /**
+     * Set the velocity for the motor to go at.
+     *
+     * @param velocity the desired velocity, on [-1, 1].
+     */
+    @Override
+    public void setVelocity(double velocity) {
+        for (SimpleMotor motor : motors) {
+            motor.setVelocity(velocity);
+        }
+    }
 
-	/**
-	 * Enables the motor, if applicable.
-	 */
-	@Override
-	public void enable() {
-		for (SimpleMotor motor : motors) {
-			motor.enable();
-		}
-	}
+    /**
+     * Enables the motor, if applicable.
+     */
+    @Override
+    public void enable() {
+        for (SimpleMotor motor : motors) {
+            motor.enable();
+        }
+    }
 
-	/**
-	 * Disables the motor, if applicable.
-	 */
-	@Override
-	public void disable() {
-		for (SimpleMotor motor : motors) {
-			motor.disable();
-		}
-	}
+    /**
+     * Disables the motor, if applicable.
+     */
+    @Override
+    public void disable() {
+        for (SimpleMotor motor : motors) {
+            motor.disable();
+        }
+    }
 }

@@ -1,3 +1,4 @@
+org.usfirst.frc.team449.robot
 org.usfirst.frc.team449.robot.commands.autonomous
 org.usfirst.frc.team449.robot.commands.general
 org.usfirst.frc.team449.robot.commands.multiInterface
@@ -11,12 +12,14 @@ org.usfirst.frc.team449.robot.drive.shifting.commands
 org.usfirst.frc.team449.robot.drive.unidirectional
 org.usfirst.frc.team449.robot.drive.unidirectional.commands
 org.usfirst.frc.team449.robot.generalInterfaces.loggable
+org.usfirst.frc.team449.robot.generalInterfaces.poseEstimator
 org.usfirst.frc.team449.robot.generalInterfaces.rumbleable
 org.usfirst.frc.team449.robot.generalInterfaces.shiftable
 org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands
 org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor
 org.usfirst.frc.team449.robot.generalInterfaces.updatable
 org.usfirst.frc.team449.robot.jacksonWrappers
+org.usfirst.frc.team449.robot.mixIn
 org.usfirst.frc.team449.robot.oi
 org.usfirst.frc.team449.robot.oi.buttons
 org.usfirst.frc.team449.robot.oi.fieldoriented
@@ -30,6 +33,8 @@ org.usfirst.frc.team449.robot.subsystem.complex.intake
 org.usfirst.frc.team449.robot.subsystem.complex.shooter
 org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS
 org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands
+org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor
+org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor
 org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.conditional
@@ -38,9 +43,9 @@ org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.intake
 org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile
-org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands
+org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid
 org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands
 org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera
