@@ -9,21 +9,21 @@ import org.jetbrains.annotations.NotNull;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface SubsystemIntake {
 
-	/**
-	 * @return the current mode of the intake.
-	 */
-	@NotNull
-	IntakeMode getMode();
+    /**
+     * @return the current mode of the intake.
+     */
+    @NotNull
+    IntakeMode getMode();
 
-	/**
-	 * @param mode The mode to switch the intake to.
-	 */
-	void setMode(@NotNull IntakeMode mode);
+    /**
+     * @param mode The mode to switch the intake to.
+     */
+    void setMode(@NotNull IntakeMode mode);
 
-	/**
-	 * An enum for the possible states of the intake.
-	 */
-	enum IntakeMode {
-		OFF, IN_SLOW, IN_FAST, OUT_SLOW, OUT_FAST
-	}
+    /**
+     * An enum for the possible states of the intake.
+     */
+    enum IntakeMode {
+        OFF, IN_SLOW, IN_FAST, OUT_SLOW, OUT_FAST
+    }
 }
