@@ -31,5 +31,5 @@ public interface Loggable {
      * @return A string that will identify this object in the log file.
      */
     @NotNull
-    String getName();
+    String getLogName();
 }

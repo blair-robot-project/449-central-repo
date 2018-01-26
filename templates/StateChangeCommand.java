@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
  * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class StateChangeCommand extends YamlCommandWrapper {
+public class StateChangeCommand extends InstantCommand {
 
     /**
      * The subsystem to execute this command on.
@@ -44,16 +44,6 @@ public class StateChangeCommand extends YamlCommandWrapper {
     @Override
     protected void execute() {
         subsystem.doAThing();
-    }
-
-    /**
-     * Finish immediately because this is a state-change command.
-     *
-     * @return true
-     */
-    @Override
-    protected boolean isFinished() {
-        return true;
     }
 
     /**

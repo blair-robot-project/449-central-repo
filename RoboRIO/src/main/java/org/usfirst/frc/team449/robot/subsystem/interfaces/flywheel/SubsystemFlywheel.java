@@ -41,9 +41,9 @@ public interface SubsystemFlywheel {
     void setFlywheelState(@NotNull FlywheelState state);
 
     /**
-     * @return Time from giving the flywheel voltage to being ready to fire, in milliseconds.
+     * @return Time from giving the flywheel voltage to being ready to fire, in seconds.
      */
-    long getSpinUpTimeMillis();
+    double getSpinUpTime();
 
     /**
      * An enum for the possible states of the flywheel.

@@ -1,12 +1,12 @@
 package org.usfirst.frc.team449.robot.commands.multiInterface.drive;
 
 import com.fasterxml.jackson.annotation.*;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -18,7 +18,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngle
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand implements Loggable {
+public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand implements Loggable {
 
     /**
      * The drive this command is controlling.
@@ -56,14 +56,14 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
     /**
      * Default constructor
      *
-     * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
-     *                                    considered on target. Multiply by loop period of ~20 milliseconds for time.
-     *                                    Defaults to 0.
+     * @param onTargetBuffer              A buffer timer for having the loop be on target before it stops running. Can
+     *                                    be null for no buffer.
      * @param absoluteTolerance           The maximum number of degrees off from the target at which we can be
      *                                    considered within tolerance.
      * @param minimumOutput               The minimum output of the loop. Defaults to zero.
      * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
      *                                    is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
      *                                    to the motors. Defaults to zero.
      * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
@@ -78,8 +78,9 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
      */
     @JsonCreator
     public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
-                                          int toleranceBuffer,
+                                          @Nullable BufferTimer onTargetBuffer,
                                           double minimumOutput, @Nullable Double maximumOutput,
+                                          @Nullable Integer loopTimeMillis,
                                           double deadband,
                                           @Nullable Double maxAngularVelToEnterLoop,
                                           boolean inverted,
@@ -90,7 +91,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
                                           @NotNull @JsonProperty(required = true) T subsystem,
                                           @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
         //Assign stuff
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
 
@@ -243,7 +244,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
     @Override
     @NotNull
     @Contract(pure = true)
-    public String getName() {
+    public String getLogName() {
         return "UnidirectionalNavXDefaultDrive";
     }
 }

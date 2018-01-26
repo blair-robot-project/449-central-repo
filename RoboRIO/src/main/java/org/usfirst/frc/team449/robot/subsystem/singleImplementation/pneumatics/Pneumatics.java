@@ -5,17 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.PressureSensor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 
 /**
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Pneumatics extends YamlSubsystem implements Loggable {
+public class Pneumatics extends Subsystem implements Loggable {
 
     /**
      * The compressor that provides pressure to the robot's pneumatics.
@@ -91,7 +91,7 @@ public class Pneumatics extends YamlSubsystem implements Loggable {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "pneumatics";
     }
 }

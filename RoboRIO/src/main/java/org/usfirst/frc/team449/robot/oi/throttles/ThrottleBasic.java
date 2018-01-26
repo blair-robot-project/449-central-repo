@@ -143,7 +143,7 @@ public class ThrottleBasic implements Throttle, PIDSource {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "Stick_" + stick.getPort() + "_Axis_" + axis;
     }
 }

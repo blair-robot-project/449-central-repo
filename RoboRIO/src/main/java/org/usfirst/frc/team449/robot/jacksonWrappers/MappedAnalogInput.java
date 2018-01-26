@@ -89,7 +89,7 @@ public class MappedAnalogInput extends AnalogInput implements Updatable, Loggabl
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "Analog_" + this.getChannel();
     }
 }

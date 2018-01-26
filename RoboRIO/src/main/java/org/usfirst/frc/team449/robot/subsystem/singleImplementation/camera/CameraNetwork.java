@@ -5,21 +5,21 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedUsbCamera;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 import java.util.List;
 
 /**
- * Subsystem to initialize cameras and put video on SmartDashboard.
+ * Subsystem to initialize cameras and put video on Shuffleboard.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class CameraNetwork extends YamlSubsystem {
+public class CameraNetwork extends Subsystem {
 
     /**
-     * Video server to view on SmartDashboard.
+     * Video server to view on Shuffleboard.
      */
     @NotNull
     private final MjpegServer server;
@@ -76,7 +76,7 @@ public class CameraNetwork extends YamlSubsystem {
     }
 
     /**
-     * @return Video server to view on SmartDashboard.
+     * @return Video server to view on Shuffleboard.
      */
     @NotNull
     public MjpegServer getServer() {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake
  * Toggles whether the subsystem is off or set to a given mode.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ToggleIntaking extends Command {
+public class ToggleIntaking extends InstantCommand {
 
     /**
      * The subsystem to execute this command on.
@@ -58,16 +58,6 @@ public class ToggleIntaking extends Command {
         } else {
             subsystem.setMode(SubsystemIntake.IntakeMode.OFF);
         }
-    }
-
-    /**
-     * Finish immediately because this is a state-change command.
-     *
-     * @return true
-     */
-    @Override
-    protected boolean isFinished() {
-        return true;
     }
 
     /**

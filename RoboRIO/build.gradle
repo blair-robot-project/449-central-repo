@@ -4,7 +4,7 @@ plugins {
     id 'idea'
     id 'maven'
     id 'org.hidetake.ssh' version "2.9.0"
-    id 'jaci.openrio.gradle.GradleRIO' version "2017.11.27"
+    id 'jaci.openrio.gradle.GradleRIO' version "2018.01.20"
 }
 
 repositories {
@@ -18,28 +18,28 @@ repositories {
 }
 
 wpi {
-    wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
-    ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
-    opencvVersion = "3.1.0"         // The OpenCV version to use.
-    cscoreVersion = "1.0.2"         // The CSCore version to use.
-    wpiutilVersion = "1.0.2"
-    ctreVersion = "4.4.1.14"        // The CTRE Toolsuite (Talon SRX) version to use.
-    navxVersion = "3.0.331"         // The NavX-MXP library version to use.
-    smartDashboardVersion = '2.0.4'
-    javaInstallerVersion = '2.0.3'
+    wpilibVersion = "2018.2.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+    ntcoreVersion = "4.0.0"         // The NetworkTables Core version to use.
+    opencvVersion = "3.2.0"         // The OpenCV version to use.
+    cscoreVersion = "1.1.0"         // The CSCore version to use.
+    wpiutilVersion = "3.0.0"
+    ctreVersion = "5.2.1.1"        // The CTRE Toolsuite (Talon SRX) version to use.
+    navxVersion = "3.0.346"         // The NavX-MXP library version to use.
+    smartDashboardVersion = '3.0.0'
+    shuffleboardVersion = '1.1.1'
 }
 
 dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.3'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.3'
     //com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
-    compile 'org.jetbrains:annotations:13.0'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.3'
+    compile 'org.jetbrains:annotations:15.0'
     compile wpilib()
     compile ctre()
     compile navx()

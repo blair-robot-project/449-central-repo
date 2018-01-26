@@ -63,7 +63,7 @@ public class MappedDigitalInput extends DigitalInput implements Loggable {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "DigitalInput" + this.getChannel();
     }
 }

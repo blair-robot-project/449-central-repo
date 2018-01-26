@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
@@ -37,14 +38,21 @@ public abstract class PIDAngleCommand extends PIDCommand {
     private final boolean inverted;
 
     /**
+     * A buffer timer for having the loop be on target before it stops running. Can be null for no buffer.
+     */
+    @Nullable
+    private final BufferTimer onTargetBuffer;
+
+    /**
      * Default constructor.
      *
      * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
      *                          tolerance.
-     * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
-     *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+     * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
+     *                          no buffer.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -55,8 +63,9 @@ public abstract class PIDAngleCommand extends PIDCommand {
      */
     @JsonCreator
     public PIDAngleCommand(@JsonProperty(required = true) double absoluteTolerance,
-                           int toleranceBuffer,
+                           @Nullable BufferTimer onTargetBuffer,
                            double minimumOutput, @Nullable Double maximumOutput,
+                           @Nullable Integer loopTimeMillis,
                            double deadband,
                            boolean inverted,
                            @NotNull @JsonProperty(required = true) SubsystemAHRS subsystem,
@@ -64,7 +73,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
                            double kI,
                            double kD) {
         //Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
-        super(kP, kI, kD);
+        super(kP, kI, kD, loopTimeMillis != null ? loopTimeMillis/1000. : 20./1000.);
         this.subsystem = subsystem;
 
         //Navx reads from -180 to 180.
@@ -77,7 +86,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
         this.getPIDController().setAbsoluteTolerance(absoluteTolerance);
 
         //This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
-        this.getPIDController().setToleranceBuffer(toleranceBuffer);
+        this.onTargetBuffer = onTargetBuffer;
 
         //Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
         // right.
@@ -138,5 +147,19 @@ public abstract class PIDAngleCommand extends PIDCommand {
     @Override
     protected double returnPIDInput() {
         return subsystem.getHeadingCached();
+    }
+
+    /**
+     * Whether or not the loop is on target. Use this instead of {@link edu.wpi.first.wpilibj.PIDController}'s
+     * onTarget.
+     *
+     * @return True if on target, false otherwise.
+     */
+    protected boolean onTarget() {
+        if (onTargetBuffer == null) {
+            return this.getPIDController().onTarget();
+        } else {
+            return onTargetBuffer.get(this.getPIDController().onTarget());
+        }
     }
 }

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.commands.general.WaitForMillis;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 
 /**
@@ -24,7 +24,7 @@ public class SpinUpThenShoot extends CommandGroup {
     public SpinUpThenShoot(@NotNull @JsonProperty(required = true) SubsystemFlywheel subsystem) {
         addSequential(new SpinUpFlywheel(subsystem));
         //Use a wait command here because SpinUpFlywheel is instantaneous.
-        addSequential(new WaitForMillis(subsystem.getSpinUpTimeMillis()));
+        addSequential(new WaitCommand(subsystem.getSpinUpTime()));
         addSequential(new TurnAllOn(subsystem));
     }
 }

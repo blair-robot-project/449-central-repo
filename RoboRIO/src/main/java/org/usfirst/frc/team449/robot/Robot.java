@@ -3,8 +3,8 @@ package org.usfirst.frc.team449.robot;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Clock;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 
     /**
      * The absolute filepath to the resources folder containing the config files.
@@ -208,5 +208,8 @@ public class Robot extends IterativeRobot {
         Clock.updateTime();
         //Read sensors
         this.robotMap.getUpdater().run();
+
+        //Log
+        loggerNotifier.startSingle(0);
     }
 }

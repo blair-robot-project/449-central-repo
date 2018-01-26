@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -18,7 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngle
  * Turns to a specified angle, relative to the angle the AHRS was at when the robot was turned on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
+public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
     /**
      * The drive subsystem to execute this command on and to get the gyro reading from.
@@ -44,12 +45,13 @@ public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & Sub
     /**
      * Default constructor.
      *
-     * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
-     *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+     * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
+     *                          no buffer.
      * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -63,8 +65,9 @@ public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & Sub
      */
     @JsonCreator
     public NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
-                           int toleranceBuffer,
+                           @Nullable BufferTimer onTargetBuffer,
                            double minimumOutput, @Nullable Double maximumOutput,
+                           @Nullable Integer loopTimeMillis,
                            double deadband,
                            boolean inverted,
                            int kP,
@@ -73,7 +76,7 @@ public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & Sub
                            @JsonProperty(required = true) double setpoint,
                            @NotNull @JsonProperty(required = true) T subsystem,
                            @JsonProperty(required = true) double timeout) {
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
         //Convert from seconds to milliseconds

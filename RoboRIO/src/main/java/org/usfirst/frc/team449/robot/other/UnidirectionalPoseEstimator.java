@@ -376,7 +376,7 @@ public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirec
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "PoseEstimator";
     }
 }

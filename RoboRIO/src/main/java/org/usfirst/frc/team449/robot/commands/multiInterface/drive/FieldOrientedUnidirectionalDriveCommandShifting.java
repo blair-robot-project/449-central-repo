@@ -1,14 +1,15 @@
 package org.usfirst.frc.team449.robot.commands.multiInterface.drive;
 
 import com.fasterxml.jackson.annotation.*;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable>
+public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable>
         extends FieldOrientedUnidirectionalDriveCommand {
 
     /**
@@ -42,14 +43,14 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsy
     /**
      * Default constructor
      *
-     * @param toleranceBuffer            How many consecutive loops have to be run while within tolerance to be
-     *                                   considered on target. Multiply by loop period of ~20 milliseconds for time.
-     *                                   Defaults to 0.
+     * @param onTargetBuffer             A buffer timer for having the loop be on target before it stops running. Can be
+     *                                   null for no buffer.
      * @param absoluteTolerance          The maximum number of degrees off from the target at which we can be considered
      *                                   within tolerance.
      * @param minimumOutput              The minimum output of the loop. Defaults to zero.
      * @param maximumOutput              The maximum output of the loop. Can be null, and if it is, no maximum output is
      *                                   used.
+     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                   The deadband around the setpoint, in degrees, within which no output is given
      *                                   to the motors. Defaults to zero.
      * @param inverted                   Whether the loop is inverted. Defaults to false.
@@ -64,8 +65,9 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsy
      */
     @JsonCreator
     public FieldOrientedUnidirectionalDriveCommandShifting(@JsonProperty(required = true) double absoluteTolerance,
-                                                           int toleranceBuffer,
+                                                           @Nullable BufferTimer onTargetBuffer,
                                                            double minimumOutput, @Nullable Double maximumOutput,
+                                                           @Nullable Integer loopTimeMillis,
                                                            double deadband,
                                                            boolean inverted,
                                                            double kP,
@@ -77,7 +79,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsy
                                                            @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                            @Nullable Double highGearAngularCoefficient) {
         //Assign stuff
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
         this.subsystem = subsystem;
         this.autoshiftComponent = autoshiftComponent;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;

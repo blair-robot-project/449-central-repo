@@ -123,7 +123,7 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "OI";
     }
 }

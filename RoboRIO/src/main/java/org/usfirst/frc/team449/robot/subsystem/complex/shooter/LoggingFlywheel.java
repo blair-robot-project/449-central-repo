@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 
 /**
  * A flywheel multiSubsystem with a single flywheel and a single-motor feeder system.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoggingFlywheel extends YamlSubsystem implements Loggable, SubsystemFlywheel {
+public class LoggingFlywheel extends Subsystem implements Loggable, SubsystemFlywheel {
 
     /**
      * The flywheel's Talon
@@ -40,9 +40,9 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
     private final double shooterThrottle;
 
     /**
-     * Time from giving the multiSubsystem voltage to being ready to fire, in milliseconds.
+     * Time from giving the multiSubsystem voltage to being ready to fire, in seconds.
      */
-    private final long spinUpTime;
+    private final double spinUpTime;
 
     /**
      * Whether the flywheel is currently commanded to spin
@@ -71,7 +71,7 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
         this.feederMotor = feederMotor;
         this.feederThrottle = feederThrottle;
         state = FlywheelState.OFF;
-        spinUpTime = (long) (spinUpTimeSecs * 1000.);
+        spinUpTime = spinUpTimeSecs;
     }
 
     /**
@@ -119,7 +119,7 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
      */
     @NotNull
     @Override
-    public String getName() {
+    public String getLogName() {
         return "loggingShooter";
     }
 
@@ -175,10 +175,10 @@ public class LoggingFlywheel extends YamlSubsystem implements Loggable, Subsyste
     }
 
     /**
-     * @return Time from giving the multiSubsystem voltage to being ready to fire, in milliseconds.
+     * @return Time from giving the multiSubsystem voltage to being ready to fire, in seconds.
      */
     @Override
-    public long getSpinUpTimeMillis() {
+    public double getSpinUpTime() {
         return spinUpTime;
     }
 }
