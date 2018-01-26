@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 
+import java.util.function.Supplier;
+
 /**
  * Loads and runs the given profile into the given subsystem.
  */
@@ -28,6 +30,20 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
                       @NotNull @JsonProperty(required = true) MotionProfileData profile,
                       @JsonProperty(required = true) double timeout) {
         addSequential(new LoadProfile(subsystem, profile));
+        addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+    }
+
+    /**
+     * Constructor that takes a lambda, for use in dynamic commandGroups.
+     *
+     * @param subsystem       The subsystem to execute this command on.
+     * @param profileSupplier A supplier to get the profile to load and execute.
+     * @param timeout         The maximum amount of time this command is allowed to take, in seconds.
+     */
+    public RunProfile(@NotNull T subsystem,
+                      @NotNull Supplier<MotionProfileData> profileSupplier,
+                      double timeout) {
+        addSequential(new LoadProfile(subsystem, profileSupplier));
         addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
     }
 }

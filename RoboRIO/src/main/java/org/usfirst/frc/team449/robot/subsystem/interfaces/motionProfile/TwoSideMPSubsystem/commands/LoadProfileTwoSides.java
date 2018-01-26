@@ -6,9 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
+
+import java.util.function.Supplier;
 
 /**
  * Loads the given profiles into the subsystem, but doesn't run it.
@@ -25,8 +28,14 @@ public class LoadProfileTwoSides extends InstantCommand {
     /**
      * The motion profiles for the left and right sides to execute, respectively.
      */
-    @NotNull
+    @Nullable
     private final MotionProfileData left, right;
+
+    /**
+     * Suppliers for motion profiles for the left and right sides to execute, respectively.
+     */
+    @Nullable
+    private final Supplier<MotionProfileData> leftSupplier, rightSupplier;
 
     /**
      * Default constructor
@@ -42,6 +51,25 @@ public class LoadProfileTwoSides extends InstantCommand {
         this.subsystem = subsystem;
         this.left = left;
         this.right = right;
+        this.leftSupplier = null;
+        this.rightSupplier = null;
+    }
+
+    /**
+     * Default constructor
+     *
+     * @param subsystem     The subsystem to execute this command on.
+     * @param leftSupplier  A supplier for the profile for the left side to run.
+     * @param rightSupplier A supplier for the profile for the right side to run.
+     */
+    public LoadProfileTwoSides(@NotNull SubsystemMPTwoSides subsystem,
+                               @NotNull Supplier<MotionProfileData> leftSupplier,
+                               @NotNull Supplier<MotionProfileData> rightSupplier) {
+        this.subsystem = subsystem;
+        this.left = null;
+        this.right = null;
+        this.leftSupplier = leftSupplier;
+        this.rightSupplier = rightSupplier;
     }
 
     /**
@@ -57,7 +85,11 @@ public class LoadProfileTwoSides extends InstantCommand {
      */
     @Override
     protected void execute() {
-        subsystem.loadMotionProfile(left, right);
+        if (left != null) {
+            subsystem.loadMotionProfile(left, right);
+        } else {
+            subsystem.loadMotionProfile(leftSupplier.get(), rightSupplier.get());
+        }
     }
 
     /**
