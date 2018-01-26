@@ -19,7 +19,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
      * @param motor The motor changing the position
      */
     @JsonCreator
-    public SubsystemPositionSimple(@NotNull @JsonProperty(required = true) FPSTalon motor){
+    public SubsystemPositionSimple(@NotNull@JsonProperty(required = true) FPSTalon motor){
         this.motor = motor;
     }
 
@@ -36,7 +36,6 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
      */
     public void setPosition(double value){
         motor.setPositionSetpoint(value);
-
     }
 
     /**

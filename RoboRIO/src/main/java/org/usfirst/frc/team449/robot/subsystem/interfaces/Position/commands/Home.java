@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.Position.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -27,6 +28,7 @@ public class Home extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
+	@JsonCreator
 	public Home(@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, double speed, boolean useForward){
 		this.subsystem = subsystem;
 		this.speed = speed;
