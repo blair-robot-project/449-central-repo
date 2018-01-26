@@ -1,11 +1,14 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.Position;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SubsystemPositionSimple extends Subsystem implements SubsystemPosition{
 
     /**
@@ -34,6 +37,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @param value the position to set the motor to
      */
+    @Override
     public void setPosition(double value){
         motor.setPositionSetpoint(value);
     }
@@ -41,6 +45,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @param value the velocity to set the motor to
      */
+    @Override
     public void setMotorOutput(double value){
         motor.setVelocity(value);
     }
@@ -48,6 +53,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @return the state of the reverse limit switch
      */
+    @Override
     public boolean getReverseLimit(){
         return motor.getRevLimitSwitch();
     }
@@ -55,6 +61,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @return the state of the forward limit switch
      */
+    @Override
     public boolean getForwardLimit(){
         return motor.getFwdLimitSwitch();
     }
@@ -62,6 +69,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * Enables the motor
      */
+    @Override
     public void enableMotor(){
         motor.enable();
     }
@@ -69,6 +77,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * Disables the motor
      */
+    @Override
     public void disableMotor(){
         motor.disable();
     }

@@ -67,6 +67,5 @@ public class EnableMotor extends Command {
 	protected void interrupted(){
 		Logger.addEvent("EnableMotor interrupted!", this.getClass());
 	}
-
 }
 
