@@ -46,7 +46,7 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
-     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
+     * @param loopTimeMillis    The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -91,9 +91,9 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
 
         //Set throttle to the specified stick.
         if (useLeft) {
-            subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getLeftOutputCached() + output);
+            subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
         } else {
-            subsystem.setOutput(oi.getRightOutputCached() - output, oi.getRightOutputCached() + output);
+            subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
         }
     }
 

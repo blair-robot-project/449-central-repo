@@ -28,12 +28,16 @@ public class OIArcadeSimple extends OIArcade {
     /**
      * Default constructor
      *
-     * @param rotThrottle The throttle for rotating the robot.
-     * @param velThrottle The throttle for driving straight.
+     * @param rotThrottle    The throttle for rotating the robot.
+     * @param velThrottle    The throttle for driving straight.
+     * @param rescaleOutputs Whether or not to scale the left and right outputs so the max output is 1. Defaults to
+     *                       false.
      */
     @JsonCreator
     public OIArcadeSimple(@NotNull @JsonProperty(required = true) Throttle rotThrottle,
-                          @NotNull @JsonProperty(required = true) Throttle velThrottle) {
+                          @NotNull @JsonProperty(required = true) Throttle velThrottle,
+                          boolean rescaleOutputs) {
+        super(rescaleOutputs);
         this.rotThrottle = rotThrottle;
         this.velThrottle = velThrottle;
     }

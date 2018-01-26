@@ -52,7 +52,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
      *                          no buffer.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
-     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
+     * @param loopTimeMillis    The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -73,7 +73,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
                            double kI,
                            double kD) {
         //Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
-        super(kP, kI, kD, loopTimeMillis != null ? loopTimeMillis/1000. : 20./1000.);
+        super(kP, kI, kD, loopTimeMillis != null ? loopTimeMillis / 1000. : 20. / 1000.);
         this.subsystem = subsystem;
 
         //Navx reads from -180 to 180.

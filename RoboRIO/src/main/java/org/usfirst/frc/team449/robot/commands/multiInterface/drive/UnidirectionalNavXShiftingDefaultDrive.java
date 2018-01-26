@@ -48,7 +48,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
      * @param minimumOutput               The minimum output of the loop. Defaults to zero.
      * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
      *                                    is used.
-     * @param loopTimeMillis The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
+     * @param loopTimeMillis              The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
      *                                    to the motors. Defaults to zero.
      * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
@@ -93,7 +93,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     public void execute() {
         //Auto-shifting
         if (!subsystem.getOverrideAutoshift()) {
-            autoshiftComponent.autoshift((oi.getLeftOutputCached() + oi.getRightOutputCached()) / 2., subsystem.getLeftVelCached(),
+            autoshiftComponent.autoshift((oi.getLeftRightOutputCached()[0] + oi.getLeftRightOutputCached()[1]) / 2., subsystem.getLeftVelCached(),
                     subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
         }
         super.execute();
