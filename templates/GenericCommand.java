@@ -20,6 +20,17 @@ public class GenericCommand extends YamlCommandWrapper {
     @NotNull
     private final GenericSubsytemInterface subsystem;
 
+<<<<<<< HEAD
+	/**
+	 * Default constructor
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 */
+	@JsonCreator
+	public GenericCommand(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
+		this.subsystem = subsystem;
+	}
+=======
     /**
      * Default constructor
      *
@@ -29,6 +40,7 @@ public class GenericCommand extends YamlCommandWrapper {
     public GenericCommand(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
         this.subsystem = subsystem;
     }
+>>>>>>> b0bfb22c6f5970a4cdea05005026486b3da41c85
 
     /**
      * Log when this command is initialized

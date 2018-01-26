@@ -13,6 +13,8 @@ import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
+import java.util.Arrays;
+
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
  */
@@ -21,33 +23,32 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngle
 public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand implements Loggable {
 
     /**
+     * An array of 2 0s to check if OI output for motors is 0.
+     */
+    private final static double[] ZEROES = {0, 0};
+    /**
      * The drive this command is controlling.
      */
     @NotNull
     protected final T subsystem;
-
     /**
      * The OI giving the input stick values.
      */
     @NotNull
     protected final OIUnidirectional oi;
-
     /**
      * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
      */
     private final double maxAngularVelToEnterLoop;
-
     /**
      * A bufferTimer so we only switch to driving straight when the conditions are met for a certain period of time.
      */
     @NotNull
     private final BufferTimer driveStraightLoopEntryTimer;
-
     /**
      * Whether or not we should be using the NavX to drive straight stably.
      */
     private boolean drivingStraight;
-
     /**
      * Logging variables.
      */
@@ -184,21 +185,21 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
             processedOutput = output;
 
             //Deadband if we're stationary
-            if (oi.getLeftOutputCached() == 0 || oi.getRightOutputCached() == 0) {
+            if (Arrays.equals(oi.getLeftRightOutputCached(), ZEROES)) {
                 output = deadbandOutput(output);
             }
 
             finalOutput = output;
 
             //Adjust the heading according to the PID output, it'll be positive if we want to go right.
-            subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getRightOutputCached() + output);
+            subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
         }
         //If we're free driving...
         else {
             processedOutput = 0;
             finalOutput = 0;
             //Set the throttle to normal arcade throttle.
-            subsystem.setOutput(oi.getLeftOutputCached(), oi.getRightOutputCached());
+            subsystem.setOutput(oi.getLeftRightOutputCached()[0], oi.getLeftRightOutputCached()[1]);
         }
     }
 

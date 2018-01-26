@@ -35,7 +35,7 @@ public class OIOutreach implements OIUnidirectional {
     /**
      * The cached outputs for the left and right sides of the drive.
      */
-    private double cachedLeftOutput, cachedRightOutput;
+    private double[] cachedLeftRightOutput;
 
     /**
      * The data to log. Field to avoid garbage collection.
@@ -52,31 +52,29 @@ public class OIOutreach implements OIUnidirectional {
     }
 
     /**
-     * The output to be given to the left side of the drive.
+     * The output to be given to the left and right sides of the drive.
      *
-     * @return Output to left side from [-1, 1]
+     * @return An array of length 2, where the 1st element is the output for the left and the second for the right, both
+     * from [-1, 1].
      */
     @Override
-    public double getLeftOutput() {
-        if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()) {
-            return overridingOI.getLeftOutput();
+    public double[] getLeftRightOutput() {
+        if (!Arrays.equals(overridingOI.getLeftRightOutput(), new double[]{0, 0}) || button.get()) {
+            return overridingOI.getLeftRightOutput();
         } else {
-            return overridenOI.getLeftOutput();
+            return overridenOI.getLeftRightOutput();
         }
     }
 
     /**
-     * The output to be given to the right side of the drive.
+     * The cached output to be given to the left and right sides of the drive.
      *
-     * @return Output to right side from [-1, 1]
+     * @return An array of length 2, where the 1st element is the output for the left and the second for the right, both
+     * from [-1, 1].
      */
     @Override
-    public double getRightOutput() {
-        if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()) {
-            return overridingOI.getRightOutput();
-        } else {
-            return overridenOI.getRightOutput();
-        }
+    public double[] getLeftRightOutputCached() {
+        return cachedLeftRightOutput;
     }
 
     /**
@@ -86,31 +84,7 @@ public class OIOutreach implements OIUnidirectional {
      */
     @Override
     public boolean commandingStraight() {
-        if (overridingOI.getLeftOutputCached() != 0 || overridingOI.getRightOutputCached() != 0 || button.get()) {
-            return overridingOI.commandingStraight();
-        } else {
-            return overridenOI.commandingStraight();
-        }
-    }
-
-    /**
-     * The cached output to be given to the left side of the drive.
-     *
-     * @return Output to left side from [-1, 1]
-     */
-    @Override
-    public double getLeftOutputCached() {
-        return cachedLeftOutput;
-    }
-
-    /**
-     * The cached output to be given to the right side of the drive.
-     *
-     * @return Output to right side from [-1, 1]
-     */
-    @Override
-    public double getRightOutputCached() {
-        return cachedRightOutput;
+        return getLeftRightOutputCached()[0] == getLeftRightOutputCached()[1];
     }
 
     /**
@@ -118,8 +92,7 @@ public class OIOutreach implements OIUnidirectional {
      */
     @Override
     public void update() {
-        cachedLeftOutput = getLeftOutput();
-        cachedRightOutput = getRightOutput();
+        cachedLeftRightOutput = getLeftRightOutput();
     }
 
     /**

@@ -66,6 +66,8 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
      *                            rotational throttle. Can be null, and if it is, rotational throttle is not scaled by
      *                            forwards throttle.
      * @param turnInPlaceRotScale The scalar that scales the rotational throttle while turning in place.
+     * @param rescaleOutputs      Whether or not to scale the left and right outputs so the max output is 1. Defaults to
+     *                            false.
      */
     @JsonCreator
     public OIArcadeWithDPad(
@@ -75,7 +77,9 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
             boolean invertDPad,
             @Nullable MappedJoystick gamepad,
             @Nullable Polynomial scaleRotByFwdPoly,
-            @JsonProperty(required = true) double turnInPlaceRotScale) {
+            @JsonProperty(required = true) double turnInPlaceRotScale,
+            boolean rescaleOutputs) {
+        super(rescaleOutputs);
         this.dPadShift = (invertDPad ? -1 : 1) * dPadShift;
         this.rotThrottle = rotThrottle;
         this.fwdThrottle = fwdThrottle;
