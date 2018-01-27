@@ -112,7 +112,7 @@ public class SlaveTalon implements Loggable {
         return new Object[]{
                 talonSRX.getOutputCurrent(),
                 talonSRX.getMotorOutputVoltage(),
-                linRegComponent.getSlope()
+                -linRegComponent.getSlope()
         };
     }
 

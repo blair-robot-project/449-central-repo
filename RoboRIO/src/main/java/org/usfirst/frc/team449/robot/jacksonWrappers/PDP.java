@@ -40,7 +40,7 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
      * @return Resistance in ohms.
      */
     public double getResistance() {
-        return voltagePerCurrentLinReg.getSlope();
+        return -voltagePerCurrentLinReg.getSlope();
     }
 
     /**

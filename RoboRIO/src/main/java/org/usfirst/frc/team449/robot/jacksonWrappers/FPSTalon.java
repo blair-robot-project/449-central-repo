@@ -864,7 +864,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 getOutputCurrent(),
                 getControlMode(),
                 getGear(),
-                voltagePerCurrentLinReg.getSlope()
+                -voltagePerCurrentLinReg.getSlope()
         };
     }
 
