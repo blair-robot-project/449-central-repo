@@ -171,8 +171,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable String name,
                     boolean reverseOutput,
                     @JsonProperty(required = true) boolean enableBrakeMode,
-                    @JsonProperty(required = true) RunningLinRegComponent voltagePerCurrentLinReg,
-                    @JsonProperty(required = true) PDP PDP,
+                    @NotNull @JsonProperty(required = true) RunningLinRegComponent voltagePerCurrentLinReg,
+                    @NotNull @JsonProperty(required = true) PDP PDP,
                     @Nullable Boolean fwdLimitSwitchNormallyOpen,
                     @Nullable Boolean revLimitSwitchNormallyOpen,
                     @Nullable Double fwdSoftLimit,
@@ -328,29 +328,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         if (slaves != null) {
             //Set up slaves.
             for (SlaveTalon slave : slaves) {
-                TalonSRX tmp = new TalonSRX(slave.getPort());
-                tmp.setInverted(slave.isInverted());
-
-                //Turn everything off
-                tmp.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
-                tmp.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
-                tmp.configForwardSoftLimitEnable(false, 0);
-                tmp.configReverseSoftLimitEnable(false, 0);
-                tmp.configPeakOutputForward(1, 0);
-
-                //Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
-                tmp.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
-                if (currentLimit != null) {
-                    canTalon.configContinuousCurrentLimit(currentLimit, 0);
-                    canTalon.configPeakCurrentLimit(0, 0); // No duration
-                    canTalon.enableCurrentLimit(true);
-                } else {
-                    //If we don't have a current limit, disable current limiting.
-                    tmp.enableCurrentLimit(false);
-                }
-
-                //Set the slave up to follow this talon.
-                tmp.set(ControlMode.Follower, port);
+                slave.setMaster(port, enableBrakeMode, currentLimit, PDP, voltagePerCurrentLinReg.clone());
+                Logger.addLoggable(slave);
             }
         }
     }
@@ -898,50 +877,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @Override
     public String getLogName() {
         return name;
-    }
-
-    /**
-     * An object representing a slave {@link TalonSRX} for use in the map.
-     */
-    @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-    protected static class SlaveTalon {
-
-        /**
-         * The port number of this Talon.
-         */
-        private final int port;
-
-        /**
-         * Whether this Talon is inverted compared to its master.
-         */
-        private final boolean inverted;
-
-        /**
-         * Default constructor.
-         *
-         * @param port     The port number of this Talon.
-         * @param inverted Whether this Talon is inverted compared to its master.
-         */
-        @JsonCreator
-        public SlaveTalon(@JsonProperty(required = true) int port,
-                          @JsonProperty(required = true) boolean inverted) {
-            this.port = port;
-            this.inverted = inverted;
-        }
-
-        /**
-         * @return The port number of this Talon.
-         */
-        public int getPort() {
-            return port;
-        }
-
-        /**
-         * @return true if this Talon is inverted compared to its master, false otherwise.
-         */
-        public boolean isInverted() {
-            return inverted;
-        }
     }
 
     /**

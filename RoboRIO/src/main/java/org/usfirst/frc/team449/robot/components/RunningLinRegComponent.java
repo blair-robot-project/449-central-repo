@@ -19,7 +19,7 @@ public class RunningLinRegComponent {
     /**
      * The maximum number of points to take the linear regression over.
      */
-    private final double bufferSize;
+    private final int bufferSize;
     /**
      * Running sum of the past bufferSize x's and y's, respectively.
      */
@@ -35,7 +35,7 @@ public class RunningLinRegComponent {
     /**
      * The number of points currently in the buffer.
      */
-    private double numPoints;
+    private int numPoints;
 
     /**
      * The X and Y most recently popped from the buffer. Fields to avoid garbage collection.
@@ -111,5 +111,15 @@ public class RunningLinRegComponent {
         ySum += y;
         xSquaredSum += x * x;
         xySum += x * y;
+    }
+
+    /**
+     * Clone this object.
+     *
+     * @return A RunningLinRegComponent with the same buffer size as this one.
+     */
+    @Override
+    public RunningLinRegComponent clone(){
+        return new RunningLinRegComponent(bufferSize);
     }
 }
