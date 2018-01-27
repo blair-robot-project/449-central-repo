@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
@@ -106,6 +107,18 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     private double setpoint;
 
     /**
+     * The component for doing linear regression to find the resistance.
+     */
+    @NotNull
+    private final RunningLinRegComponent voltagePerCurrentLinReg;
+
+    /**
+     * The PDP this Talon is connected to.
+     */
+    @NotNull
+    protected final PDP PDP;
+
+    /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
     private Double RPS;
@@ -117,6 +130,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
      * @param reverseOutput              Whether to reverse the output.
      * @param enableBrakeMode            Whether to brake or coast when stopped.
+     * @param voltagePerCurrentLinReg    The component for doing linear regression to find the resistance.
+     * @param PDP The PDP this Talon is connected to.
      * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
      *                                   the forward limit switch is disabled.
      * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
@@ -156,6 +171,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable String name,
                     boolean reverseOutput,
                     @JsonProperty(required = true) boolean enableBrakeMode,
+                    @JsonProperty(required = true) RunningLinRegComponent voltagePerCurrentLinReg,
+                    @JsonProperty(required = true) PDP PDP,
                     @Nullable Boolean fwdLimitSwitchNormallyOpen,
                     @Nullable Boolean revLimitSwitchNormallyOpen,
                     @Nullable Double fwdSoftLimit,
@@ -183,6 +200,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         canTalon.setInverted(reverseOutput);
         //Set brake mode
         canTalon.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+
+        this.PDP = PDP;
+        this.voltagePerCurrentLinReg = voltagePerCurrentLinReg;
 
         //Set frame rates
         if (controlFrameRatesMillis != null) {
@@ -841,7 +861,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 "voltage",
                 "current",
                 "control_mode",
-                "gear"
+                "gear",
+                "resistance"
         };
     }
 
@@ -853,6 +874,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @NotNull
     @Override
     public Object[] getData() {
+        voltagePerCurrentLinReg.addPoint(getOutputCurrent(), PDP.getVoltage()-getBatteryVoltage());
         return new Object[]{
                 getVelocity(),
                 getPositionFeet(),
@@ -862,7 +884,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 getOutputVoltage(),
                 getOutputCurrent(),
                 getControlMode(),
-                getGear()
+                getGear(),
+                voltagePerCurrentLinReg.getSlope()
         };
     }
 
