@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,10 +25,12 @@ import java.util.List;
 public class Logger implements Runnable {
 
     /**
-     * A list of all events that subsystems and commands have logged that haven't yet been written to a file.
+     * A list of all events that have been logged that haven't yet been written to a file.
      */
     @NotNull
     private static List<LogEvent> events = new ArrayList<>();
+
+    private static List<Loggable> addedLoggables = new ArrayList<>();
 
     /**
      * The file path for the event log.
@@ -42,10 +45,10 @@ public class Logger implements Runnable {
     private final String telemetryLogFilename;
 
     /**
-     * An array of all the subsystems with telemetry data to log.
+     * An array of all the loggables with telemetry data to log.
      */
     @NotNull
-    private final Loggable[] subsystems;
+    private final Loggable[] loggables;
 
     /**
      * A 2d array of the names of the each datum logged by each subsystem. Organized as
@@ -67,7 +70,7 @@ public class Logger implements Runnable {
     /**
      * Default constructor.
      *
-     * @param subsystems           The subsystems to log telemetry data from.
+     * @param loggables           The loggables to log telemetry data from.
      * @param loopTimeSecs         The period of the loop for collecting telemetry data, in seconds.
      * @param eventLogFilename     The filepath of the log for events. Will have the timestamp and file extension
      *                             appended onto the end.
@@ -76,7 +79,7 @@ public class Logger implements Runnable {
      * @throws IOException If the file names provided from the log can't be written to.
      */
     @JsonCreator
-    public Logger(@NotNull @JsonProperty(required = true) Loggable[] subsystems,
+    public Logger(@NotNull @JsonProperty(required = true) Loggable[] loggables,
                   @JsonProperty(required = true) double loopTimeSecs,
                   @NotNull @JsonProperty(required = true) String eventLogFilename,
                   @NotNull @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
@@ -89,11 +92,16 @@ public class Logger implements Runnable {
         //Set the loop time variable
         this.loopTimeSecs = loopTimeSecs;
 
-        //Set up the list of loggable subsystems.
-        this.subsystems = subsystems;
+        //Set up the list of loggables.
+        this.loggables = Arrays.copyOf(loggables, loggables.length+addedLoggables.size());
+
+        //Add the addedLoggables to the list of loggables
+        for (int i = 0; i < addedLoggables.size(); i++){
+            this.loggables[loggables.length+i] = addedLoggables.get(i);
+        }
 
         //Construct itemNames.
-        itemNames = new String[this.subsystems.length][];
+        itemNames = new String[this.loggables.length][];
 
         FileWriter eventLogWriter = new FileWriter(this.eventLogFilename);
         FileWriter telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
@@ -102,14 +110,14 @@ public class Logger implements Runnable {
         //We use a StringBuilder because it's better for building up a string via concatenation.
         StringBuilder telemetryHeader = new StringBuilder();
         telemetryHeader.append("time,Clock.time,");
-        for (int i = 0; i < this.subsystems.length; i++) {
-            String[] items = this.subsystems[i].getHeader();
+        for (int i = 0; i < this.loggables.length; i++) {
+            String[] items = this.loggables[i].getHeader();
             //Initialize itemNames rows
             itemNames[i] = new String[items.length];
             //For each datum
             for (int j = 0; j < items.length; j++) {
                 //Format name as Subsystem.dataName
-                String itemName = this.subsystems[i].getLogName() + "." + items[j];
+                String itemName = this.loggables[i].getLogName() + "." + items[j];
                 itemNames[i][j] = itemName;
                 telemetryHeader.append(itemName);
                 telemetryHeader.append(",");
@@ -133,6 +141,14 @@ public class Logger implements Runnable {
      */
     public static void addEvent(@NotNull String message, @NotNull Class caller) {
         events.add(new LogEvent(message, caller));
+    }
+
+    /**
+     * Add a loggable to be logged. This must be called before a Logger is constructed, and so should be called in the constructor of a Loggable.
+     * @param loggable The loggable to add.
+     */
+    public static void addLoggable(@NotNull Loggable loggable){
+        addedLoggables.add(loggable);
     }
 
     /**
@@ -173,8 +189,8 @@ public class Logger implements Runnable {
         telemetryData.append(Clock.currentTimeMillis()).append(",");
 
         //Loop through each datum
-        for (int i = 0; i < subsystems.length; i++) {
-            Object[] data = subsystems[i].getData();
+        for (int i = 0; i < loggables.length; i++) {
+            Object[] data = loggables[i].getData();
             for (int j = 0; j < data.length; j++) {
                 Object datum = data[j];
                 //We do this big thing here so we log it to SmartDashboard as the correct data type, so we make each
