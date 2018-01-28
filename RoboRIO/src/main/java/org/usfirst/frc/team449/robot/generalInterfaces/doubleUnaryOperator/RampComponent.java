@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
 /**
  * A component for limiting the rate of change of a value.
  */
-public class RampComponent implements DoubleUnaryOperator {
+public class RampComponent implements DoubleUnaryOperator, Cloneable {
 
     /**
      * The maximum allowed change in the value per second.

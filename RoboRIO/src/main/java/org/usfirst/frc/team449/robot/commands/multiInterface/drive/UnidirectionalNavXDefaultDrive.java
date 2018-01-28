@@ -15,6 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
 import java.util.Arrays;
+import java.util.function.DoubleUnaryOperator;
 
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
@@ -45,7 +46,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      * Acceleration-limiting ramps for the left and right sides of the drive, respectively. Null for no ramp.
      */
     @Nullable
-    private final RampComponent leftRamp, rightRamp;
+    private final DoubleUnaryOperator leftRamp, rightRamp;
     /**
      * Whether or not we should be using the NavX to drive straight stably.
      */

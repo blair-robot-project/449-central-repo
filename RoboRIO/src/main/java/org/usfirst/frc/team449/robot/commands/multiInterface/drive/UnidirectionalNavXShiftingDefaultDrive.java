@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
@@ -60,6 +61,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
      * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
      * @param subsystem                   The drive to execute this command on.
      * @param oi                          The OI controlling the robot.
+     * @param rampComponent The acceleration-limiting ramp for the output to the drive. Defaults to no ramp.
      * @param autoshiftComponent          The helper object for autoshifting.
      * @param highGearAngularCoefficient  The coefficient to multiply the loop output by in high gear. Defaults to 1.
      */
@@ -77,10 +79,11 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
                                                   @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
                                                   @NotNull @JsonProperty(required = true) T subsystem,
                                                   @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+                                                  @Nullable RampComponent rampComponent,
                                                   @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                   @Nullable Double highGearAngularCoefficient) {
         super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, maxAngularVelToEnterLoop,
-                inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
+                inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi, rampComponent);
         this.autoshiftComponent = autoshiftComponent;
         this.subsystem = subsystem;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;
