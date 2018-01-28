@@ -162,4 +162,14 @@ public abstract class PIDAngleCommand extends PIDCommand {
             return onTargetBuffer.get(this.getPIDController().onTarget());
         }
     }
+
+    /**
+     * Do nothing in the usePIDOutput thread to keep code clean.
+     *
+     * @param output The output of the PID loop.
+     */
+    @Override
+    protected void usePIDOutput(double output){
+        //Do nothing
+    }
 }

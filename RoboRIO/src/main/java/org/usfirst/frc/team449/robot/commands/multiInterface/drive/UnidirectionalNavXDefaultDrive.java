@@ -150,6 +150,40 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
             this.getPIDController().setSetpoint(subsystem.getHeadingCached());
             this.getPIDController().enable();
         }
+
+        //Get the outputs
+        rawOutput = this.getPIDController().get();
+        leftOutput = oi.getLeftRightOutputCached()[0];
+        rightOutput = oi.getLeftRightOutputCached()[1];
+
+        //Ramp if it exists
+        if(leftRamp != null){
+            leftOutput = leftRamp.applyAsDouble(leftOutput);
+            rightOutput = rightRamp.applyAsDouble(rightOutput);
+        }
+
+        //If we're driving straight..
+        if (drivingStraight) {
+            //Process the output (minimumOutput, deadband, etc.)
+            processedOutput = processPIDOutput(rawOutput);
+
+            //Deadband if we're stationary
+            if (leftOutput == 0 && rightOutput == 0) {
+                finalOutput = deadbandOutput(processedOutput);
+            } else {
+                finalOutput = processedOutput;
+            }
+
+            //Adjust the heading according to the PID output, it'll be positive if we want to go right.
+            subsystem.setOutput(leftOutput - finalOutput, rightOutput + finalOutput);
+        }
+        //If we're free driving...
+        else {
+            processedOutput = 0;
+            finalOutput = 0;
+            //Set the throttle to normal arcade throttle.
+            subsystem.setOutput(leftOutput, rightOutput);
+        }
     }
 
     /**
@@ -177,50 +211,6 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     protected void interrupted() {
         Logger.addEvent("UnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
         subsystem.fullStop();
-    }
-
-    /**
-     * Give the correct output to the motors based on whether we're in free drive or drive straight.
-     *
-     * @param output The output of the angular PID loop.
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        rawOutput = output;
-
-        leftOutput = oi.getLeftRightOutputCached()[0];
-        rightOutput = oi.getLeftRightOutputCached()[1];
-
-        //Ramp if it exists
-        if(leftRamp != null){
-            leftOutput = leftRamp.applyAsDouble(leftOutput);
-            rightOutput = rightRamp.applyAsDouble(rightOutput);
-        }
-
-        //If we're driving straight..
-        if (drivingStraight) {
-            //Process the output (minimumOutput, deadband, etc.)
-            output = processPIDOutput(output);
-
-            processedOutput = output;
-
-            //Deadband if we're stationary
-            if (leftOutput == 0 && rightOutput == 0) {
-                output = deadbandOutput(output);
-            }
-
-            finalOutput = output;
-
-            //Adjust the heading according to the PID output, it'll be positive if we want to go right.
-            subsystem.setOutput(leftOutput - output, rightOutput + output);
-        }
-        //If we're free driving...
-        else {
-            processedOutput = 0;
-            finalOutput = 0;
-            //Set the throttle to normal arcade throttle.
-            subsystem.setOutput(leftOutput, rightOutput);
-        }
     }
 
     /**

@@ -38,6 +38,11 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
     private final boolean useLeft;
 
     /**
+     * The output of the PID loop. Field to avoid garbage collection.
+     */
+    private double output;
+
+    /**
      * Default constructor.
      *
      * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
@@ -80,14 +85,21 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
     }
 
     /**
-     * Give output to the drive based on the out of the PID loop.
-     *
-     * @param output the value the PID loop calculated
+     * Set the setpoint of the angle PID.
      */
     @Override
-    protected void usePIDOutput(double output) {
+    protected void initialize() {
+        this.getPIDController().setSetpoint(this.returnPIDInput());
+        this.getPIDController().enable();
+    }
+
+    /**
+     * Give output to the drive based on the output of the PID loop.
+     */
+    @Override
+    public void execute() {
         //Process the PID output with deadband, minimum output, etc.
-        output = processPIDOutput(output);
+        output = processPIDOutput(this.getPIDController().get());
 
         //Set throttle to the specified stick.
         if (useLeft) {
@@ -95,15 +107,6 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
         } else {
             subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
         }
-    }
-
-    /**
-     * Set the setpoint of the angle PID.
-     */
-    @Override
-    protected void initialize() {
-        this.getPIDController().setSetpoint(this.returnPIDInput());
-        this.getPIDController().enable();
     }
 
     /**

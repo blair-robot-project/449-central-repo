@@ -46,6 +46,11 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     private Double theta;
 
     /**
+     * The output of the PID loop. Field to avoid garbage collection.
+     */
+    private double output;
+
+    /**
      * Default constructor
      *
      * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
@@ -108,6 +113,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     @Override
     protected void execute() {
         theta = oi.getThetaCached();
+
         if (theta != null) {
             for (AngularSnapPoint snapPoint : snapPoints) {
                 //See if we should snap
@@ -119,6 +125,12 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
             }
             this.getPIDController().setSetpoint(theta);
         }
+
+        //Process or zero the input depending on whether the NavX is being overriden.
+        output = subsystem.getOverrideGyro() ? 0 : processPIDOutput(this.getPIDController().get());
+
+        //Adjust the heading according to the PID output, it'll be positive if we want to go right.
+        subsystem.setOutput(oi.getVelCached() - output, oi.getVelCached() + output);
     }
 
     /**
@@ -145,20 +157,6 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     @Override
     protected void interrupted() {
         Logger.addEvent("FieldOrientedUnidirectionalDriveCommand Interrupted!", this.getClass());
-    }
-
-    /**
-     * Give the correct output to the motors based on the PID output and velocity input.
-     *
-     * @param output The output of the angular PID loop.
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        //Process or zero the input depending on whether the NavX is being overriden.
-        output = subsystem.getOverrideGyro() ? 0 : processPIDOutput(output);
-
-        //Adjust the heading according to the PID output, it'll be positive if we want to go right.
-        subsystem.setOutput(oi.getVelCached() - output, oi.getVelCached() + output);
     }
 
     /**
