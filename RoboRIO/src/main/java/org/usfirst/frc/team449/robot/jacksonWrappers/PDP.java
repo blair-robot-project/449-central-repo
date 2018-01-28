@@ -44,6 +44,15 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
     }
 
     /**
+     * Get the voltage at the PDP when there's no load on the battery.
+     *
+     * @return Voltage in volts when there's 0 amps of current draw
+     */
+    public double getUnloadedVoltage(){
+        return voltagePerCurrentLinReg.getIntercept();
+    }
+
+    /**
      * Get the headers for the data this subsystem logs every loop.
      *
      * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
@@ -55,7 +64,8 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
                 "temperature",
                 "current",
                 "voltage",
-                "resistance"
+                "resistance",
+                "unloaded_voltage"
         };
     }
 
@@ -71,7 +81,8 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
                 getTemperature(),
                 getTotalCurrent(),
                 getVoltage(),
-                getResistance()
+                getResistance(),
+                getUnloadedVoltage()
         };
     }
 
