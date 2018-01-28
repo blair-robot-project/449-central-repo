@@ -22,7 +22,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
      * @param motor The motor changing the position
      */
     @JsonCreator
-    public SubsystemPositionSimple(@NotNull @JsonProperty(required = true) FPSTalon motor){
+    public SubsystemPositionSimple(@NotNull@JsonProperty(required = true) FPSTalon motor){
         this.motor = motor;
     }
 
@@ -37,14 +37,15 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @param value the position to set the motor to
      */
+    @Override
     public void setPosition(double value){
         motor.setPositionSetpoint(value);
-
     }
 
     /**
      * @param value the velocity to set the motor to
      */
+    @Override
     public void setMotorOutput(double value){
         motor.setVelocity(value);
     }
@@ -52,6 +53,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @return the state of the reverse limit switch
      */
+    @Override
     public boolean getReverseLimit(){
         return motor.getRevLimitSwitch();
     }
@@ -59,6 +61,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * @return the state of the forward limit switch
      */
+    @Override
     public boolean getForwardLimit(){
         return motor.getFwdLimitSwitch();
     }
@@ -66,6 +69,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * Enables the motor
      */
+    @Override
     public void enableMotor(){
         motor.enable();
     }
@@ -73,6 +77,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * Disables the motor
      */
+    @Override
     public void disableMotor(){
         motor.disable();
     }

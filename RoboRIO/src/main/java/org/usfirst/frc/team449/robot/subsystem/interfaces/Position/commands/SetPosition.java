@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.Position.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,7 +25,12 @@ public class SetPosition extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
+<<<<<<< HEAD
 	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, double point){
+=======
+	@JsonCreator
+	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, int value){
+>>>>>>> 4ad4049dd336a62624a07061968808cd425187c6
 		this.subsystem = subsystem;
 		this.point = point;
 	}

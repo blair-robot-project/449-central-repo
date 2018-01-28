@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.Position.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -22,6 +23,7 @@ public class EnableMotor extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
+	@JsonCreator
 	public EnableMotor(@NotNull@JsonProperty(required = true) SubsystemPosition subsystem){
 		this.subsystem = subsystem;
 	}
@@ -65,6 +67,5 @@ public class EnableMotor extends Command {
 	protected void interrupted(){
 		Logger.addEvent("EnableMotor interrupted!", this.getClass());
 	}
-
 }
 
