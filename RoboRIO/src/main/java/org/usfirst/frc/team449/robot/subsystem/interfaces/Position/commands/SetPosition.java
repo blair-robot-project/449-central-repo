@@ -25,12 +25,8 @@ public class SetPosition extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-<<<<<<< HEAD
-	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, double point){
-=======
 	@JsonCreator
-	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, int value){
->>>>>>> 4ad4049dd336a62624a07061968808cd425187c6
+	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, double point){
 		this.subsystem = subsystem;
 		this.point = point;
 	}
