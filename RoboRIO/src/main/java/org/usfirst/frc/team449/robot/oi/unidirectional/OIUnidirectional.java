@@ -27,6 +27,20 @@ public interface OIUnidirectional extends OI {
     double[] getLeftRightOutputCached();
 
     /**
+     * The forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     */
+    double[] getFwdRotOutput();
+
+    /**
+     * The cached forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     */
+    double[] getFwdRotOutputCached();
+
+    /**
      * Whether the driver is trying to drive straight.
      *
      * @return True if the driver is trying to drive straight, false otherwise.

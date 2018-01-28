@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
             mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
             //Add mix-ins
             mapper.registerModule(new WPIModule());
+            mapper.registerModule(new JavaModule());
             //Deserialize the map into an object.
             robotMap = mapper.readValue(fixed, RobotMap.class);
         } catch (IOException e) {

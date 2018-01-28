@@ -11,9 +11,14 @@ import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 public abstract class OITank implements OIUnidirectional {
 
     /**
-     * Cached left and right throttle values.
+     * Cached left and right output.
      */
-    private double[] leftRightThrottleCached;
+    private double[] leftRightOutputCached;
+
+    /**
+     * Cached forwards and rotational output.
+     */
+    private double[] fwdRotOutputCached;
 
     /**
      * Get the throttle for the left side of the drive.
@@ -48,7 +53,27 @@ public abstract class OITank implements OIUnidirectional {
      */
     @Override
     public double[] getLeftRightOutputCached() {
-        return leftRightThrottleCached;
+        return leftRightOutputCached;
+    }
+
+    /**
+     * The forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     */
+    @Override
+    public double[] getFwdRotOutput(){
+        return new double[]{(getLeftThrottle()+getRightThrottle())/2., (getLeftThrottle()-getRightThrottle())/2.};
+    }
+
+    /**
+     * The cached forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     */
+    @Override
+    public double[] getFwdRotOutputCached(){
+        return fwdRotOutputCached;
     }
 
     /**
@@ -56,7 +81,8 @@ public abstract class OITank implements OIUnidirectional {
      */
     @Override
     public void update() {
-        leftRightThrottleCached = getLeftRightOutput();
+        leftRightOutputCached = getLeftRightOutput();
+        fwdRotOutputCached = getFwdRotOutput();
     }
 
     /**

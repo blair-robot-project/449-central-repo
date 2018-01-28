@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
@@ -106,6 +107,18 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     private double setpoint;
 
     /**
+     * The component for doing linear regression to find the resistance.
+     */
+    @NotNull
+    private final RunningLinRegComponent voltagePerCurrentLinReg;
+
+    /**
+     * The PDP this Talon is connected to.
+     */
+    @NotNull
+    protected final PDP PDP;
+
+    /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
     private Double RPS;
@@ -117,6 +130,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
      * @param reverseOutput              Whether to reverse the output.
      * @param enableBrakeMode            Whether to brake or coast when stopped.
+     * @param voltagePerCurrentLinReg    The component for doing linear regression to find the resistance.
+     * @param PDP The PDP this Talon is connected to.
      * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
      *                                   the forward limit switch is disabled.
      * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
@@ -149,13 +164,15 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   seconds. Defaults to 0.005.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
      * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
-     * @param slaves                     The other {@link TalonSRX}s that are slaved to this one.
+     * @param slaveTalons                     The other {@link TalonSRX}s that are slaved to this one.
      */
     @JsonCreator
     public FPSTalon(@JsonProperty(required = true) int port,
                     @Nullable String name,
                     boolean reverseOutput,
                     @JsonProperty(required = true) boolean enableBrakeMode,
+                    @NotNull @JsonProperty(required = true) RunningLinRegComponent voltagePerCurrentLinReg,
+                    @NotNull @JsonProperty(required = true) PDP PDP,
                     @Nullable Boolean fwdLimitSwitchNormallyOpen,
                     @Nullable Boolean revLimitSwitchNormallyOpen,
                     @Nullable Double fwdSoftLimit,
@@ -174,7 +191,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable Double updaterProcessPeriodSecs,
                     @Nullable Map<StatusFrameEnhanced, Integer> statusFrameRatesMillis,
                     @Nullable Map<ControlFrame, Integer> controlFrameRatesMillis,
-                    @Nullable List<SlaveTalon> slaves) {
+                    @Nullable List<SlaveTalon> slaveTalons,
+                    @Nullable List<SlaveVictor> slaveVictors) {
         //Instantiate the base CANTalon this is a wrapper on.
         canTalon = new TalonSRX(port);
         //Set the name to the given one or to talon_portnum
@@ -183,6 +201,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         canTalon.setInverted(reverseOutput);
         //Set brake mode
         canTalon.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+
+        this.PDP = PDP;
+        this.voltagePerCurrentLinReg = voltagePerCurrentLinReg;
 
         //Set frame rates
         if (controlFrameRatesMillis != null) {
@@ -305,32 +326,18 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Use slot 0
         canTalon.selectProfileSlot(0, 0);
 
-        if (slaves != null) {
+        if (slaveTalons != null) {
             //Set up slaves.
-            for (SlaveTalon slave : slaves) {
-                TalonSRX tmp = new TalonSRX(slave.getPort());
-                tmp.setInverted(slave.isInverted());
+            for (SlaveTalon slave : slaveTalons) {
+                slave.setMaster(port, enableBrakeMode, currentLimit, PDP, voltagePerCurrentLinReg.clone());
+                Logger.addLoggable(slave);
+            }
+        }
 
-                //Turn everything off
-                tmp.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
-                tmp.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
-                tmp.configForwardSoftLimitEnable(false, 0);
-                tmp.configReverseSoftLimitEnable(false, 0);
-                tmp.configPeakOutputForward(1, 0);
-
-                //Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
-                tmp.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
-                if (currentLimit != null) {
-                    canTalon.configContinuousCurrentLimit(currentLimit, 0);
-                    canTalon.configPeakCurrentLimit(0, 0); // No duration
-                    canTalon.enableCurrentLimit(true);
-                } else {
-                    //If we don't have a current limit, disable current limiting.
-                    tmp.enableCurrentLimit(false);
-                }
-
-                //Set the slave up to follow this talon.
-                tmp.set(ControlMode.Follower, port);
+        if (slaveVictors != null){
+            //Set up slaves.
+            for (SlaveVictor slave : slaveVictors) {
+                slave.setMaster(port, enableBrakeMode);
             }
         }
     }
@@ -841,7 +848,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 "voltage",
                 "current",
                 "control_mode",
-                "gear"
+                "gear",
+                "resistance"
         };
     }
 
@@ -853,6 +861,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @NotNull
     @Override
     public Object[] getData() {
+        voltagePerCurrentLinReg.addPoint(getOutputCurrent(), PDP.getVoltage()-getBatteryVoltage());
         return new Object[]{
                 getVelocity(),
                 getPositionFeet(),
@@ -862,7 +871,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 getOutputVoltage(),
                 getOutputCurrent(),
                 getControlMode(),
-                getGear()
+                getGear(),
+                -voltagePerCurrentLinReg.getSlope()
         };
     }
 
@@ -875,50 +885,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @Override
     public String getLogName() {
         return name;
-    }
-
-    /**
-     * An object representing a slave {@link TalonSRX} for use in the map.
-     */
-    @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-    protected static class SlaveTalon {
-
-        /**
-         * The port number of this Talon.
-         */
-        private final int port;
-
-        /**
-         * Whether this Talon is inverted compared to its master.
-         */
-        private final boolean inverted;
-
-        /**
-         * Default constructor.
-         *
-         * @param port     The port number of this Talon.
-         * @param inverted Whether this Talon is inverted compared to its master.
-         */
-        @JsonCreator
-        public SlaveTalon(@JsonProperty(required = true) int port,
-                          @JsonProperty(required = true) boolean inverted) {
-            this.port = port;
-            this.inverted = inverted;
-        }
-
-        /**
-         * @return The port number of this Talon.
-         */
-        public int getPort() {
-            return port;
-        }
-
-        /**
-         * @return true if this Talon is inverted compared to its master, false otherwise.
-         */
-        public boolean isInverted() {
-            return inverted;
-        }
     }
 
     /**

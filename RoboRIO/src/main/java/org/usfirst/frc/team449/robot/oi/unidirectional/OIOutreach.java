@@ -38,6 +38,11 @@ public class OIOutreach implements OIUnidirectional {
     private double[] cachedLeftRightOutput;
 
     /**
+     * The cached forwards and rotational outputs.
+     */
+    private double[] cachedFwdRotOutput;
+
+    /**
      * The data to log. Field to avoid garbage collection.
      */
     private Object[] loggingData, overridenData, overridingData;
@@ -78,6 +83,32 @@ public class OIOutreach implements OIUnidirectional {
     }
 
     /**
+     * The forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
+     */
+    @Override
+    public double[] getFwdRotOutput() {
+        if (!Arrays.equals(overridingOI.getLeftRightOutput(), new double[]{0, 0}) || button.get()) {
+            return overridingOI.getFwdRotOutput();
+        } else {
+            return overridenOI.getFwdRotOutput();
+        }
+    }
+
+    /**
+     * The cached forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
+     */
+    @Override
+    public double[] getFwdRotOutputCached() {
+        return cachedFwdRotOutput;
+    }
+
+    /**
      * Whether the driver is trying to drive straight.
      *
      * @return True if the driver is trying to drive straight, false otherwise.
@@ -93,6 +124,7 @@ public class OIOutreach implements OIUnidirectional {
     @Override
     public void update() {
         cachedLeftRightOutput = getLeftRightOutput();
+        cachedFwdRotOutput = getFwdRotOutput();
     }
 
     /**

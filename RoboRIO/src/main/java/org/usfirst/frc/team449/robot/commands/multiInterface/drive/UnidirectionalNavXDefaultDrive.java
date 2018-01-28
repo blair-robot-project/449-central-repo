@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
@@ -14,6 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
 import java.util.Arrays;
+import java.util.function.DoubleUnaryOperator;
 
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
@@ -21,11 +23,6 @@ import java.util.Arrays;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand implements Loggable {
-
-    /**
-     * An array of 2 0s to check if OI output for motors is 0.
-     */
-    private final static double[] ZEROES = {0, 0};
     /**
      * The drive this command is controlling.
      */
@@ -46,6 +43,11 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     @NotNull
     private final BufferTimer driveStraightLoopEntryTimer;
     /**
+     * Acceleration-limiting ramps for the left and right sides of the drive, respectively. Null for no ramp.
+     */
+    @Nullable
+    private final DoubleUnaryOperator leftRamp, rightRamp;
+    /**
      * Whether or not we should be using the NavX to drive straight stably.
      */
     private boolean drivingStraight;
@@ -53,6 +55,10 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      * Logging variables.
      */
     private double rawOutput, processedOutput, finalOutput;
+    /**
+     * Output to the left and right sides of the drive. Field to avoid garbage collection.
+     */
+    private double leftOutput, rightOutput;
 
     /**
      * Default constructor
@@ -76,6 +82,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
      * @param subsystem                   The drive to execute this command on.
      * @param oi                          The OI controlling the robot.
+     * @param rampComponent The acceleration-limiting ramp for the output to the drive. Defaults to no ramp.
      */
     @JsonCreator
     public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -90,11 +97,14 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
                                           double kD,
                                           @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
                                           @NotNull @JsonProperty(required = true) T subsystem,
-                                          @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
+                                          @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+                                          @Nullable RampComponent rampComponent) {
         //Assign stuff
         super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
+        this.leftRamp = rampComponent;
+        this.rightRamp = rampComponent != null ? rampComponent.clone() : null; //We want the same settings but different objects, so we clone
 
         this.driveStraightLoopEntryTimer = driveStraightLoopEntryTimer;
         this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop != null ? maxAngularVelToEnterLoop : 180;
@@ -177,6 +187,16 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
     @Override
     protected void usePIDOutput(double output) {
         rawOutput = output;
+
+        leftOutput = oi.getLeftRightOutputCached()[0];
+        rightOutput = oi.getLeftRightOutputCached()[1];
+
+        //Ramp if it exists
+        if(leftRamp != null){
+            leftOutput = leftRamp.applyAsDouble(leftOutput);
+            rightOutput = rightRamp.applyAsDouble(rightOutput);
+        }
+
         //If we're driving straight..
         if (drivingStraight) {
             //Process the output (minimumOutput, deadband, etc.)
@@ -185,21 +205,21 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
             processedOutput = output;
 
             //Deadband if we're stationary
-            if (Arrays.equals(oi.getLeftRightOutputCached(), ZEROES)) {
+            if (leftOutput == 0 && rightOutput == 0) {
                 output = deadbandOutput(output);
             }
 
             finalOutput = output;
 
             //Adjust the heading according to the PID output, it'll be positive if we want to go right.
-            subsystem.setOutput(oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);
+            subsystem.setOutput(leftOutput - output, rightOutput + output);
         }
         //If we're free driving...
         else {
             processedOutput = 0;
             finalOutput = 0;
             //Set the throttle to normal arcade throttle.
-            subsystem.setOutput(oi.getLeftRightOutputCached()[0], oi.getLeftRightOutputCached()[1]);
+            subsystem.setOutput(leftOutput, rightOutput);
         }
     }
 
