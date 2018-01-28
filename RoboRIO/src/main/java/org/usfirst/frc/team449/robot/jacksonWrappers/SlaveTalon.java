@@ -37,7 +37,7 @@ public class SlaveTalon implements Loggable {
      * Default constructor.
      *
      * @param port     The CAN ID of this Talon SRX.
-     * @param inverted Whether or not to invert this Talon. Note this is not relative to the master.
+     * @param inverted Whether or not to invert this Talon. Note this is not relative to the master. Defaults to false.
      */
     @JsonCreator
     public SlaveTalon(@JsonProperty(required = true) int port,

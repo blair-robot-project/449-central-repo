@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.jacksonWrappers;
+package org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;

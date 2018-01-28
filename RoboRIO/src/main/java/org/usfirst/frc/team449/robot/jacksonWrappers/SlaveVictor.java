@@ -22,11 +22,12 @@ public class SlaveVictor {
      * Default constructor.
      *
      * @param port     The CAN ID of this Victor SPX.
-     * @param inverted Whether or not to invert this Victor. Note this is not relative to the master.
+     * @param inverted Whether or not to invert this Victor. Note this is not relative to the master. Defaults to
+     *                 false.
      */
     @JsonCreator
     public SlaveVictor(@JsonProperty(required = true) int port,
-                       boolean inverted){
+                       boolean inverted) {
         victorSPX = new VictorSPX(port);
         victorSPX.setInverted(inverted);
     }
@@ -34,10 +35,10 @@ public class SlaveVictor {
     /**
      * Set this Victor to follow another CAN device.
      *
-     * @param port            The CAN ID of the device to follow.
-     * @param brakeMode       Whether this Talon should be in brake mode or coast mode.
+     * @param port      The CAN ID of the device to follow.
+     * @param brakeMode Whether this Talon should be in brake mode or coast mode.
      */
-    public void setMaster(int port, boolean brakeMode){
+    public void setMaster(int port, boolean brakeMode) {
         //Brake mode doesn't automatically follow master
         victorSPX.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
 
