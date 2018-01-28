@@ -104,6 +104,10 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     private double setpoint;
     /**
+     * Whether the forwards or reverse limit switches are normally open or closed, respectively.
+     */
+    private final boolean fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen;
+    /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
     private Double RPS;
@@ -247,14 +251,18 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         if (fwdLimitSwitchNormallyOpen != null) {
             canTalon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
                     fwdLimitSwitchNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed, 0);
+            this.fwdLimitSwitchNormallyOpen = fwdLimitSwitchNormallyOpen;
         } else {
             canTalon.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+            this.fwdLimitSwitchNormallyOpen = true;
         }
         if (revLimitSwitchNormallyOpen != null) {
             canTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
                     revLimitSwitchNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed, 0);
+            this.revLimitSwitchNormallyOpen = revLimitSwitchNormallyOpen;
         } else {
             canTalon.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+            this.revLimitSwitchNormallyOpen = true;
         }
 
         //Set up the feedback device if it exists.
@@ -662,7 +670,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @return True if the forwards limit switch is closed, false if it's open or doesn't exist.
      */
     public boolean getFwdLimitSwitch() {
-        return canTalon.getSensorCollection().isFwdLimitSwitchClosed();
+        return fwdLimitSwitchNormallyOpen == canTalon.getSensorCollection().isFwdLimitSwitchClosed();
     }
 
     /**
@@ -671,7 +679,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @return True if the reverse limit switch is closed, false if it's open or doesn't exist.
      */
     public boolean getRevLimitSwitch() {
-        return canTalon.getSensorCollection().isRevLimitSwitchClosed();
+        return revLimitSwitchNormallyOpen == canTalon.getSensorCollection().isRevLimitSwitchClosed();
     }
 
     /**
