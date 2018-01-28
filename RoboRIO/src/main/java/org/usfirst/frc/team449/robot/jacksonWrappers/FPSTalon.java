@@ -38,86 +38,71 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @NotNull
     protected final TalonSRX canTalon;
-
-    /**
-     * The counts per rotation of the encoder being used, or null if there is no encoder.
-     */
-    @Nullable
-    private final Integer encoderCPR;
-
-    /**
-     * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if there was a
-     * 70:1 gearing between the encoder and the final output.
-     */
-    private final double postEncoderGearing;
-
-    /**
-     * The number of feet travelled per rotation of the motor this is attached to, or null if there is no encoder.
-     */
-    private final double feetPerRotation;
-
-    /**
-     * The minimum number of points that must be in the bottom-level MP buffer before starting a profile.
-     */
-    private final int minNumPointsInBottomBuffer;
-
-    /**
-     * The motion profile motionProfileStatus of the Talon.
-     */
-    @NotNull
-    private final MotionProfileStatus motionProfileStatus;
-
-    /**
-     * A notifier that moves points from the API-level buffer to the talon-level one.
-     */
-    private final Notifier bottomBufferLoader;
-
-    /**
-     * The period for bottomBufferLoader, in seconds.
-     */
-    private final double updaterProcessPeriodSecs;
-
-    /**
-     * A list of all the gears this robot has and their settings.
-     */
-    @NotNull
-    private final Map<Integer, PerGearSettings> perGearSettings;
-
-    /**
-     * The talon's name, used for logging purposes.
-     */
-    @NotNull
-    private final String name;
-
-    /**
-     * The settings currently being used by this Talon.
-     */
-    @NotNull
-    protected PerGearSettings currentGearSettings;
-
-    /**
-     * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
-     * traffic.
-     */
-    private long timeMPStatusLastRead;
-
-    /**
-     * The most recently set setpoint.
-     */
-    private double setpoint;
-
-    /**
-     * The component for doing linear regression to find the resistance.
-     */
-    @NotNull
-    private final RunningLinRegComponent voltagePerCurrentLinReg;
-
     /**
      * The PDP this Talon is connected to.
      */
     @NotNull
     protected final PDP PDP;
-
+    /**
+     * The counts per rotation of the encoder being used, or null if there is no encoder.
+     */
+    @Nullable
+    private final Integer encoderCPR;
+    /**
+     * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if there was a
+     * 70:1 gearing between the encoder and the final output.
+     */
+    private final double postEncoderGearing;
+    /**
+     * The number of feet travelled per rotation of the motor this is attached to, or null if there is no encoder.
+     */
+    private final double feetPerRotation;
+    /**
+     * The minimum number of points that must be in the bottom-level MP buffer before starting a profile.
+     */
+    private final int minNumPointsInBottomBuffer;
+    /**
+     * The motion profile motionProfileStatus of the Talon.
+     */
+    @NotNull
+    private final MotionProfileStatus motionProfileStatus;
+    /**
+     * A notifier that moves points from the API-level buffer to the talon-level one.
+     */
+    private final Notifier bottomBufferLoader;
+    /**
+     * The period for bottomBufferLoader, in seconds.
+     */
+    private final double updaterProcessPeriodSecs;
+    /**
+     * A list of all the gears this robot has and their settings.
+     */
+    @NotNull
+    private final Map<Integer, PerGearSettings> perGearSettings;
+    /**
+     * The talon's name, used for logging purposes.
+     */
+    @NotNull
+    private final String name;
+    /**
+     * The component for doing linear regression to find the resistance.
+     */
+    @NotNull
+    private final RunningLinRegComponent voltagePerCurrentLinReg;
+    /**
+     * The settings currently being used by this Talon.
+     */
+    @NotNull
+    protected PerGearSettings currentGearSettings;
+    /**
+     * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
+     * traffic.
+     */
+    private long timeMPStatusLastRead;
+    /**
+     * The most recently set setpoint.
+     */
+    private double setpoint;
     /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
@@ -131,7 +116,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param reverseOutput              Whether to reverse the output.
      * @param enableBrakeMode            Whether to brake or coast when stopped.
      * @param voltagePerCurrentLinReg    The component for doing linear regression to find the resistance.
-     * @param PDP The PDP this Talon is connected to.
+     * @param PDP                        The PDP this Talon is connected to.
      * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
      *                                   the forward limit switch is disabled.
      * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
@@ -164,7 +149,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   seconds. Defaults to 0.005.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
      * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
-     * @param slaveTalons                     The other {@link TalonSRX}s that are slaved to this one.
+     * @param slaveTalons                The other {@link TalonSRX}s that are slaved to this one.
+     * @param slaveVictors               The {@link com.ctre.phoenix.motorcontrol.can.VictorSPX}s that are slaved to
+     *                                   this Talon.
      */
     @JsonCreator
     public FPSTalon(@JsonProperty(required = true) int port,
@@ -334,7 +321,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             }
         }
 
-        if (slaveVictors != null){
+        if (slaveVictors != null) {
             //Set up slaves.
             for (SlaveVictor slave : slaveVictors) {
                 slave.setMaster(port, enableBrakeMode);
@@ -861,7 +848,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @NotNull
     @Override
     public Object[] getData() {
-        voltagePerCurrentLinReg.addPoint(getOutputCurrent(), PDP.getVoltage()-getBatteryVoltage());
+        voltagePerCurrentLinReg.addPoint(getOutputCurrent(), PDP.getVoltage() - getBatteryVoltage());
         return new Object[]{
                 getVelocity(),
                 getPositionFeet(),
