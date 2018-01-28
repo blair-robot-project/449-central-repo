@@ -164,7 +164,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   seconds. Defaults to 0.005.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
      * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
-     * @param slaves                     The other {@link TalonSRX}s that are slaved to this one.
+     * @param slaveTalons                     The other {@link TalonSRX}s that are slaved to this one.
      */
     @JsonCreator
     public FPSTalon(@JsonProperty(required = true) int port,
@@ -191,7 +191,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable Double updaterProcessPeriodSecs,
                     @Nullable Map<StatusFrameEnhanced, Integer> statusFrameRatesMillis,
                     @Nullable Map<ControlFrame, Integer> controlFrameRatesMillis,
-                    @Nullable List<SlaveTalon> slaves) {
+                    @Nullable List<SlaveTalon> slaveTalons,
+                    @Nullable List<SlaveVictor> slaveVictors) {
         //Instantiate the base CANTalon this is a wrapper on.
         canTalon = new TalonSRX(port);
         //Set the name to the given one or to talon_portnum
@@ -325,11 +326,18 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Use slot 0
         canTalon.selectProfileSlot(0, 0);
 
-        if (slaves != null) {
+        if (slaveTalons != null) {
             //Set up slaves.
-            for (SlaveTalon slave : slaves) {
+            for (SlaveTalon slave : slaveTalons) {
                 slave.setMaster(port, enableBrakeMode, currentLimit, PDP, voltagePerCurrentLinReg.clone());
                 Logger.addLoggable(slave);
+            }
+        }
+
+        if (slaveVictors != null){
+            //Set up slaves.
+            for (SlaveVictor slave : slaveVictors) {
+                slave.setMaster(port, enableBrakeMode);
             }
         }
     }
