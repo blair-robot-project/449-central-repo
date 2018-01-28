@@ -21,13 +21,17 @@ public class RunningLinRegComponent {
      */
     private final int bufferSize;
     /**
+     * The minimum R^2 value considered significant enough to return the regression slope instead of NaN.
+     */
+    private final double rSquaredThreshhold;
+    /**
      * Running sum of the past bufferSize x's and y's, respectively.
      */
     private double xSum, ySum;
     /**
-     * Running sum of the past bufferSize x^2's.
+     * Running sum of the past bufferSize x^2's and y^2, respectively.
      */
-    private double xSquaredSum;
+    private double xSquaredSum, ySquaredSum;
     /**
      * Running sum of the past bufferSize x*y's.
      */
@@ -43,19 +47,22 @@ public class RunningLinRegComponent {
     private double backX, backY;
 
     /**
-     * The denominator of the slope calculation equation. Field to avoid garbage collection
+     * The variances. Field to avoid garbage collection
      */
-    private double denominator;
+    private double xVariance, yVariance, covariance;
 
     /**
      * Default constructor.
      *
      * @param bufferSize The maximum number of points to take the linear regression over.
+     * @param rSquaredThreshhold The minimum R^2 value considered significant enough to return the regression slope instead of NaN. Defaults to 0.
      */
     @JsonCreator
-    public RunningLinRegComponent(@JsonProperty(required = true) int bufferSize) {
+    public RunningLinRegComponent(@JsonProperty(required = true) int bufferSize,
+                                  double rSquaredThreshhold) {
         xBuffer = new CircularBuffer(bufferSize);
         yBuffer = new CircularBuffer(bufferSize);
+        this.rSquaredThreshhold = rSquaredThreshhold;
         numPoints = 0;
         xSum = 0;
         ySum = 0;
@@ -65,25 +72,26 @@ public class RunningLinRegComponent {
     /**
      * @return The current slope of the linear regression line.
      */
-    public double getSlope() {
-        //Avoid div by 0
-        if(numPoints < 2){
-            return 0;
-        }
-        denominator = (xSquaredSum / numPoints) - Math.pow(xSum / numPoints, 2);
-        if (denominator == 0){
-            return 0;
+    public Double getSlope() {
+        if (numPoints < 2){
+            return Double.NaN;
         }
 
-        //Covariance over variance gets the slope
-        return (xySum - xSum * ySum / numPoints) / (numPoints - 1) / //Covariance
-                denominator; //Variance
+        xVariance = (xSquaredSum / numPoints) - Math.pow(xSum / numPoints, 2);
+        yVariance = (ySquaredSum / numPoints) - Math.pow(ySum / numPoints, 2);
+        covariance = (xySum - xSum * ySum / numPoints) / (numPoints - 1);
+
+        if (covariance * covariance/(xVariance * yVariance) > rSquaredThreshhold){
+            return covariance/xVariance;
+        } else {
+            return Double.NaN;
+        }
     }
 
     /**
      * @return The current y-intercept of the linear regression line.
      */
-    public double getIntercept() {
+    public Double getIntercept() {
         return ySum / numPoints - getSlope() * xSum / numPoints;
     }
 
@@ -101,6 +109,7 @@ public class RunningLinRegComponent {
             xSum -= backX;
             ySum -= backY;
             xSquaredSum -= backX * backX;
+            ySquaredSum -= backY * backY;
             xySum -= backX * backY;
         } else {
             numPoints++;
@@ -110,6 +119,7 @@ public class RunningLinRegComponent {
         xSum += x;
         ySum += y;
         xSquaredSum += x * x;
+        ySquaredSum += y * y;
         xySum += x * y;
     }
 
@@ -120,6 +130,6 @@ public class RunningLinRegComponent {
      */
     @Override
     public RunningLinRegComponent clone(){
-        return new RunningLinRegComponent(bufferSize);
+        return new RunningLinRegComponent(bufferSize, rSquaredThreshhold);
     }
 }
