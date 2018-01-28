@@ -36,7 +36,7 @@ public class Home extends Command {
 	@Override
 	protected void execute(){
 		if(useForward){ subsystem.setMotorOutput(speed); }
-		else { subsystem.setMotorOutput(-speed); }
+		else { subsystem.setMotorOutput(speed); }
 	}
 
 	@Override

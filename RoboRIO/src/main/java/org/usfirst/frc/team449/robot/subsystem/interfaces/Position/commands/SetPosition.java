@@ -17,16 +17,16 @@ public class SetPosition extends Command {
 	@NotNull
 	private final SubsystemPosition subsystem;
 
-	private int value;
+	private double point;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, int value){
+	public SetPosition (@NotNull@JsonProperty(required = true) SubsystemPosition subsystem, double point){
 		this.subsystem = subsystem;
-		this.value = value;
+		this.point = point;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class SetPosition extends Command {
 	 */
 	@Override
 	protected void execute(){
-		subsystem.setPosition(value);
+		subsystem.setPosition(point);
 	}
 
 	/**
