@@ -96,7 +96,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     public void execute() {
         //Auto-shifting
         if (!subsystem.getOverrideAutoshift()) {
-            autoshiftComponent.autoshift((oi.getLeftRightOutputCached()[0] + oi.getLeftRightOutputCached()[1]) / 2., subsystem.getLeftVelCached(),
+            autoshiftComponent.autoshift(oi.getFwdRotOutputCached()[0], subsystem.getLeftVelCached(),
                     subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
         }
         super.execute();

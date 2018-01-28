@@ -16,13 +16,13 @@ public abstract class OIArcade implements OIUnidirectional {
      */
     private final boolean rescaleOutputs;
     /**
-     * Cached output values.
+     * Cached forwards and rotational output.
      */
-    private double rotCached, fwdCached;
+    private double[] fwdRotOutputCached;
     /**
      * Cached left-right output values
      */
-    private double[] leftRightCached;
+    private double[] leftRightOutputCached;
     /**
      * Unscaled, unclipped values for left and right output. Fields to avoid garbage collection.
      */
@@ -40,45 +40,13 @@ public abstract class OIArcade implements OIUnidirectional {
     }
 
     /**
-     * Get the rotational input.
-     *
-     * @return rotational velocity component from [-1, 1], where 1 is right and -1 is left.
-     */
-    public abstract double getRot();
-
-    /**
-     * Get the velocity input.
-     *
-     * @return forward velocity component from [-1, 1], where 1 is forwards and -1 is backwards
-     */
-    public abstract double getFwd();
-
-    /**
-     * Get the cached rotational input.
-     *
-     * @return rotational velocity component from [-1, 1], where 1 is right and -1 is left.
-     */
-    public double getRotCached() {
-        return rotCached;
-    }
-
-    /**
-     * Get the cached velocity input.
-     *
-     * @return forward velocity component from [-1, 1], where 1 is forwards and -1 is backwards
-     */
-    public double getFwdCached() {
-        return fwdCached;
-    }
-
-    /**
      * Whether the driver is trying to drive straight.
      *
      * @return True if the driver is trying to drive straight, false otherwise.
      */
     @Override
     public boolean commandingStraight() {
-        return rotCached == 0;
+        return getFwdRotOutputCached()[1] == 0;
     }
 
     /**
@@ -88,8 +56,9 @@ public abstract class OIArcade implements OIUnidirectional {
      * from [-1, 1].
      */
     public double[] getLeftRightOutput() {
-        tmpLeft = getFwd() + getRot();
-        tmpRight = getFwd() - getRot();
+        fwdRotOutputCached = getFwdRotOutput();
+        tmpLeft = fwdRotOutputCached[0] + fwdRotOutputCached[1];
+        tmpRight = fwdRotOutputCached[0] - fwdRotOutputCached[0];
         //If left is too large
         if (Math.abs(tmpLeft) > 1) {
             if (rescaleOutputs) {
@@ -120,7 +89,17 @@ public abstract class OIArcade implements OIUnidirectional {
      * from [-1, 1].
      */
     public double[] getLeftRightOutputCached() {
-        return leftRightCached;
+        return leftRightOutputCached;
+    }
+
+    /**
+     * The cached forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     */
+    @Override
+    public double[] getFwdRotOutputCached(){
+        return fwdRotOutputCached;
     }
 
     /**
@@ -128,9 +107,8 @@ public abstract class OIArcade implements OIUnidirectional {
      */
     @Override
     public void update() {
-        rotCached = getRot();
-        fwdCached = getFwd();
-        leftRightCached = getLeftRightOutput();
+        fwdRotOutputCached = getFwdRotOutput();
+        leftRightOutputCached = getLeftRightOutput();
     }
 
     /**
@@ -145,8 +123,8 @@ public abstract class OIArcade implements OIUnidirectional {
                 "left",
                 "right",
                 "commandingStraight",
-                "rot",
-                "fwd"
+                "fwd",
+                "rot"
         };
     }
 
@@ -162,8 +140,8 @@ public abstract class OIArcade implements OIUnidirectional {
                 getLeftRightOutputCached()[0],
                 getLeftRightOutputCached()[1],
                 commandingStraight(),
-                getRotCached(),
-                getFwdCached()
+                getFwdRotOutputCached()[0],
+                getFwdRotOutputCached()[1]
         };
     }
 }

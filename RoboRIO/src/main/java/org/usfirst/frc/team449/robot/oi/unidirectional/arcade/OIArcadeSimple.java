@@ -43,19 +43,13 @@ public class OIArcadeSimple extends OIArcade {
     }
 
     /**
-     * @return rotational velocity component
+     * The forwards and rotational movement given to the drive.
+     *
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
      */
     @Override
-    public double getRot() {
-        return rotThrottle.getValue();
-    }
-
-    /**
-     * @return forward velocity component
-     */
-    @Override
-    public double getFwd() {
-        return velThrottle.getValue();
+    public double[] getFwdRotOutput() {
+        return new double[]{velThrottle.getValue(), rotThrottle.getValue()};
     }
 
     /**
