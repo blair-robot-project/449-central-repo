@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
-import org.usfirst.frc.team449.robot.other.Polynomial;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 
 /**
  * A polynomially scaled throttle.

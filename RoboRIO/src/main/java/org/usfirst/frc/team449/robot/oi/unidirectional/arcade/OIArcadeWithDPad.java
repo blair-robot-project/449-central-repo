@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
-import org.usfirst.frc.team449.robot.other.Polynomial;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 
 /**
  * An arcade OI with an option to use the D-pad for turning.
