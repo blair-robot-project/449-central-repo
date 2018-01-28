@@ -7,8 +7,9 @@ import org.usfirst.frc.team449.robot.other.Clock;
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * A component for limiting the second and first derivatives of a value.
+ * A component for limiting the second and first derivatives of a value. UNFINISHED DOESN'T ACTUALLY WORK
  */
+@Deprecated
 public class SecondDerivativeLimit implements DoubleUnaryOperator{
 
     /**
