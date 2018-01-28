@@ -59,6 +59,20 @@ public interface SubsystemAHRS {
     double getAngularDisplacementCached();
 
     /**
+     * Get the pitch value.
+     *
+     * @return The pitch, in degrees from [-180, 180]
+     */
+    double getPitch();
+
+    /**
+     * Get the cached pitch value.
+     *
+     * @return The pitch, in degrees from [-180, 180]
+     */
+    double getCachedPitch();
+
+    /**
      * @return true if the gyroscope is currently overriden, false otherwise.
      */
     boolean getOverrideGyro();

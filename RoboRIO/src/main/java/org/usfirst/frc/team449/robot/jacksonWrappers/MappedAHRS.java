@@ -35,7 +35,7 @@ public class MappedAHRS implements Loggable, Updatable {
     /**
      * Cached values.
      */
-    private double cachedHeading, cachedAngularDisplacement, cachedAngularVel, cachedXAccel, cachedYAccel;
+    private double cachedHeading, cachedAngularDisplacement, cachedAngularVel, cachedXAccel, cachedYAccel, cachedPitch;
 
     /**
      * Default constructor.
@@ -126,16 +126,21 @@ public class MappedAHRS implements Loggable, Updatable {
     }
 
     /**
+     * Get the pitch value.
+     *
+     * @return The pitch, in degrees from [-180, 180]
+     */
+    public double getPitch(){
+        return ahrs.getPitch();
+    }
+
+    /**
      * Get the cached yaw value.
      *
      * @return The heading, in degrees from [-180, 180]
      */
     public double getCachedHeading() {
-        toRet = ahrs.getFusedHeading();
-        if (toRet > 180) {
-            toRet -= 360;
-        }
-        return toRet * invertYaw;
+        return cachedHeading;
     }
 
     /**
@@ -175,6 +180,15 @@ public class MappedAHRS implements Loggable, Updatable {
     }
 
     /**
+     * Get the cached pitch value.
+     *
+     * @return The pitch, in degrees from [-180, 180]
+     */
+    public double getCachedPitch(){
+        return cachedPitch;
+    }
+
+    /**
      * Get the headers for the data this subsystem logs every loop.
      *
      * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
@@ -187,7 +201,8 @@ public class MappedAHRS implements Loggable, Updatable {
                 "angular_displacement",
                 "angular_vel",
                 "x_accel",
-                "y_accel"
+                "y_accel",
+                "pitch"
         };
     }
 
@@ -200,11 +215,12 @@ public class MappedAHRS implements Loggable, Updatable {
     @Override
     public Object[] getData() {
         return new Object[]{
-                getHeading(),
-                getAngularDisplacement(),
-                getAngularVelocity(),
-                getXAccel(),
-                getYAccel()
+                getCachedHeading(),
+                getCachedAngularDisplacement(),
+                getCachedAngularVelocity(),
+                getCachedXAccel(),
+                getCachedYAccel(),
+                getCachedPitch()
         };
     }
 
@@ -229,5 +245,6 @@ public class MappedAHRS implements Loggable, Updatable {
         cachedAngularVel = getAngularVelocity();
         cachedXAccel = getXAccel();
         cachedYAccel = getYAccel();
+        cachedPitch = getPitch();
     }
 }
