@@ -308,7 +308,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         canTalon.enableVoltageCompensation(enableVoltageComp);
 
         //Set up MP notifier
-        bottomBufferLoader = new Notifier(canTalon::processMotionProfileBuffer);
+        bottomBufferLoader = new Notifier(this::processMotionProfileBuffer);
 
         //Use slot 0
         canTalon.selectProfileSlot(0, 0);
@@ -812,10 +812,13 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     }
 
     /**
-     * Stops all MP-related threads to save on CPU power. Run at the beginning of teleop.
+     * Process the motion profile buffer and stop when the top buffer is empty.
      */
-    public void stopMPProcesses() {
-        bottomBufferLoader.stop();
+    protected void processMotionProfileBuffer(){
+        canTalon.processMotionProfileBuffer();
+        if (canTalon.getMotionProfileTopLevelBufferCount() == 0){
+            bottomBufferLoader.stop();
+        }
     }
 
     /**

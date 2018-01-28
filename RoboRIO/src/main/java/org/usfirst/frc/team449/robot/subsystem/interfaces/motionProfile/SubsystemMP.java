@@ -45,9 +45,4 @@ public interface SubsystemMP {
      * @return true if a profile is loaded and ready to run, false otherwise.
      */
     boolean readyToRunProfile();
-
-    /**
-     * Stops any MP-related threads currently running. Normally called at the start of teleop.
-     */
-    void stopMPProcesses();
 }

@@ -390,15 +390,6 @@ public class DriveUnidirectionalWithGyro extends Subsystem implements SubsystemA
     }
 
     /**
-     * Stops any MP-related threads currently running. Normally called at the start of teleop.
-     */
-    @Override
-    public void stopMPProcesses() {
-        leftMaster.stopMPProcesses();
-        rightMaster.stopMPProcesses();
-    }
-
-    /**
      * Reset the position of the drive if it has encoders.
      */
     @Override
