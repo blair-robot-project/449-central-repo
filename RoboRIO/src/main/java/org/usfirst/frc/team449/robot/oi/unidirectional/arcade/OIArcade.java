@@ -58,7 +58,7 @@ public abstract class OIArcade implements OIUnidirectional {
     public double[] getLeftRightOutput() {
         fwdRotOutputCached = getFwdRotOutput();
         tmpLeft = fwdRotOutputCached[0] + fwdRotOutputCached[1];
-        tmpRight = fwdRotOutputCached[0] - fwdRotOutputCached[0];
+        tmpRight = fwdRotOutputCached[0] - fwdRotOutputCached[1];
         //If left is too large
         if (Math.abs(tmpLeft) > 1) {
             if (rescaleOutputs) {
