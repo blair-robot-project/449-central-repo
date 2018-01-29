@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polyn
 public class ThrottlePolynomial extends ThrottleDeadbanded {
 
     /**
-     * The polynomially that scales the throttle.
+     * The polynomial that scales the throttle.
      */
     @NotNull
     protected final Polynomial polynomial;

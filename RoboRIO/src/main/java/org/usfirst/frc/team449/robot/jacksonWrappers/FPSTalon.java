@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.FeedForwardComponent.FeedForwardComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
@@ -90,6 +91,10 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @NotNull
     private final RunningLinRegComponent voltagePerCurrentLinReg;
     /**
+     * Whether the forwards or reverse limit switches are normally open or closed, respectively.
+     */
+    private final boolean fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen;
+    /**
      * The settings currently being used by this Talon.
      */
     @NotNull
@@ -103,10 +108,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * The most recently set setpoint.
      */
     private double setpoint;
-    /**
-     * Whether the forwards or reverse limit switches are normally open or closed, respectively.
-     */
-    private final boolean fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen;
     /**
      * RPS as used in a unit conversion method. Field to avoid garbage collection.
      */
@@ -221,10 +222,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //If given no gear settings, use the default values.
         if (perGearSettings == null || perGearSettings.size() == 0) {
             this.perGearSettings.put(0, new PerGearSettings());
+            this.perGearSettings.get(0).getFeedForwardComponent().setTalon(this);
         }
         //Otherwise, map the settings to the gear they are.
         else {
             for (PerGearSettings settings : perGearSettings) {
+                settings.getFeedForwardComponent().setTalon(this);
                 this.perGearSettings.put(settings.getGear(), settings);
             }
         }
@@ -397,7 +400,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         }
 
         //Set PID stuff
-        if (currentGearSettings.getkVFwd() != null) {
+        if (currentGearSettings.getMaxSpeed() != null) {
             //Slot 0 velocity gains. We don't set F yet because that changes based on setpoint.
             canTalon.config_kP(0, currentGearSettings.getkP(), 0);
             canTalon.config_kI(0, currentGearSettings.getkI(), 0);
@@ -529,7 +532,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @Override
     public void setVelocity(double velocity) {
-        if (currentGearSettings.getkVFwd() != null) {
+        if (currentGearSettings.getMaxSpeed() != null) {
             setVelocityFPS(velocity * currentGearSettings.getMaxSpeed());
         } else {
             setPercentVoltage(velocity);
@@ -543,13 +546,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     protected void setVelocityFPS(double velocity) {
         double nativeVelocity = FPSToEncoder(velocity);
-        if (velocity > 0) {
-            canTalon.config_kF(0, (1023. / 12.) * //Convert from voltage to natives
-                    (currentGearSettings.getkVFwd() * velocity + currentGearSettings.getInterceptVoltageFwd()) / nativeVelocity, 0);
-        } else if (velocity < 0) {
-            canTalon.config_kF(0, (1023. / 12.) * //Convert from voltage to natives
-                    (currentGearSettings.getkVRev() * velocity - currentGearSettings.getInterceptVoltageRev()) / nativeVelocity, 0);
-        }
+        canTalon.config_kF(0, currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity), 0);
         setpoint = velocity;
         canTalon.set(ControlMode.Velocity, nativeVelocity);
     }
@@ -633,7 +630,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param gear     The number of the gear to use the max speed from to scale the velocity.
      */
     public void setGearScaledVelocity(double velocity, int gear) {
-        if (currentGearSettings.getkVFwd() == null) {
+        if (currentGearSettings.getMaxSpeed() == null) {
             setPercentVoltage(velocity);
         } else {
             setVelocityFPS(perGearSettings.get(gear).getMaxSpeed() * velocity);
@@ -792,16 +789,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             // Set all the fields of the profile point
             point.position = feetToEncoder(startPosition + (data.getData()[i][0] * (data.isInverted() ? -1 : 1)));
 
-            //Calculate vel based off inversion
-            if (data.isInverted()) {
-                feedforward = -data.getData()[i][1] * currentGearSettings.getkVRev()
-                        - data.getData()[i][2] * currentGearSettings.getkARev()
-                        - currentGearSettings.getInterceptVoltageRev();
-            } else {
-                feedforward = data.getData()[i][1] * currentGearSettings.getkVFwd()
-                        + data.getData()[i][2] * currentGearSettings.getkAFwd()
-                        + currentGearSettings.getInterceptVoltageFwd();
-            }
+            feedforward = currentGearSettings.getFeedForwardComponent().calcMPVoltage(data.getData()[i][0],
+                    data.getData()[i][1], data.getData()[i][2]);
             Logger.addEvent("VelPlusAccel: " + feedforward, this.getClass());
             point.velocity = feedforward;
 
@@ -822,9 +811,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     /**
      * Process the motion profile buffer and stop when the top buffer is empty.
      */
-    protected void processMotionProfileBuffer(){
+    protected void processMotionProfileBuffer() {
         canTalon.processMotionProfileBuffer();
-        if (canTalon.getMotionProfileTopLevelBufferCount() == 0){
+        if (canTalon.getMotionProfileTopLevelBufferCount() == 0) {
             bottomBufferLoader.stop();
         }
     }
@@ -912,41 +901,31 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         private final Double rampRate;
 
         /**
-         * The maximum speed of the motor in this gear, in FPS. Used for throttle scaling. Ignored if kVFwd is null.
+         * The maximum speed of the motor in this gear, in FPS. Used for throttle scaling.
          */
-        private final double maxSpeed;
+        @Nullable
+        private final Double maxSpeed;
 
         /**
-         * The PID constants for the motor in this gear. Ignored if kVFwd is null.
+         * The PID constants for the motor in this gear. Ignored if maxSpeed is null.
          */
         private final double kP, kI, kD;
 
         /**
-         * The forwards PID constants for motion profiles in this gear. Ignored if kVFwd is null.
+         * The forwards PID constants for motion profiles in this gear. Ignored if maxSpeed is null.
          */
         private final double motionProfilePFwd, motionProfileIFwd, motionProfileDFwd;
 
         /**
-         * The reverse PID constants for motion profiles in this gear. Ignored if kVFwd is null.
+         * The reverse PID constants for motion profiles in this gear. Ignored if maxSpeed is null.
          */
         private final double motionProfilePRev, motionProfileIRev, motionProfileDRev;
 
         /**
-         * The voltage required to accelerate the robot at one foot per second^2. Ka in the drive characterization
-         * paper.
+         * The component for calculating feedforwards in closed-loop control modes. Ignored if maxSpeed is null.
          */
-        private final double kAFwd, kARev;
-
-        /**
-         * The voltage required to run at a steady-state velocity of 1 foot per second. Kv in the drive characterization
-         * paper. Can be null to not use PID.
-         */
-        private final Double kVFwd, kVRev;
-
-        /**
-         * The voltage required to overcome static friction. Vintercept in the drive characterization paper.
-         */
-        private final double interceptVoltageFwd, interceptVoltageRev;
+        @NotNull
+        private final FeedForwardComponent feedForwardComponent;
 
         /**
          * The maximum velocity for motion magic mode, in FPS. Can be null to not use motion magic.
@@ -996,20 +975,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          *                                kVFwd is null. Defaults to motionProfileIFwd.
          * @param motionProfileDRev       The derivative PID constant for reverse motion profiles in this gear. Ignored
          *                                if kVFwd is null. Defaults to motionProfileDFwd.
-         * @param kAFwd                   The voltage required to accelerate the robot at one foot per second^2 while
-         *                                going forwards. Ka in the drive characterization paper. Defaults to zero,
-         *                                meaning we don't use acceleration feed-forward.
-         * @param kARev                   The voltage required to accelerate the robot at one foot per second^2 while
-         *                                going in reverse. Ka in the drive characterization paper. Defaults to kAFwd.
-         * @param kVFwd                   The voltage required to run forwards at a steady-state velocity of 1 foot per
-         *                                second. Kv in the drive characterization paper. Can be null to not use PID.
-         * @param kVRev                   The voltage required to run backwards at a steady-state velocity of 1 foot per
-         *                                second. Kv in the drive characterization paper.Defaults to kVFwd.
-         * @param interceptVoltageFwd     The voltage required to overcome static friction in the forwards direction.
-         *                                Vintercept in the drive characterization paper. Defaults to 0.
-         * @param interceptVoltageRev     The voltage required to overcome static friction in the reverse direction.
-         *                                Vintercept in the drive characterization paper. Defaults to
-         *                                interceptVoltageFwd.
+         * @param feedForwardComponent    The component for calculating feedforwards in closed-loop control modes.
+         *                                Ignored if maxSpeed is null. Defaults to no feedforward.
          * @param motionMagicMaxVel       The maximum velocity for motion magic mode, in FPS. Can be null to not use
          *                                motion magic.
          * @param motionMagicMaxAccel     The maximum acceleration for motion magic mode, in FPS per second.
@@ -1032,12 +999,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                                @Nullable Double motionProfilePRev,
                                @Nullable Double motionProfileIRev,
                                @Nullable Double motionProfileDRev,
-                               double kAFwd,
-                               @Nullable Double kARev,
-                               @Nullable Double kVFwd,
-                               double interceptVoltageFwd,
-                               @Nullable Double kVRev,
-                               @Nullable Double interceptVoltageRev,
+                               @Nullable FeedForwardComponent feedForwardComponent,
                                @Nullable Double motionMagicMaxVel,
                                double motionMagicMaxAccel) {
             this.gear = gear != null ? gear.getNumVal() : gearNum;
@@ -1055,21 +1017,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             this.motionProfilePRev = motionProfilePRev != null ? motionProfilePRev : this.motionProfilePFwd;
             this.motionProfileIRev = motionProfileIRev != null ? motionProfileIRev : this.motionProfileIFwd;
             this.motionProfileDRev = motionProfileDRev != null ? motionProfileDRev : this.motionProfileDFwd;
-            this.kAFwd = kAFwd;
-            this.kARev = kARev != null ? kARev : this.kAFwd;
-            this.kVFwd = kVFwd;
-            this.kVRev = kVRev != null ? kVRev : this.kVFwd;
-            this.interceptVoltageFwd = interceptVoltageFwd;
-            this.interceptVoltageRev = interceptVoltageRev != null ? interceptVoltageRev : this.interceptVoltageFwd;
-            if (maxSpeed != null) {
-                this.maxSpeed = maxSpeed;
-            } else if (this.kVFwd != null) {
-                //Calculate max speed using other parameters. This doesn't account for voltage sag and is therefore kinda wrong.
-                this.maxSpeed = (this.fwdPeakOutputVoltage - this.interceptVoltageFwd) * (1 / this.kVFwd);
-            } else {
-                //Basically just setting it to null, but 0 instead so it can be a double instead of a Double.
-                this.maxSpeed = 0;
-            }
+            this.feedForwardComponent = feedForwardComponent != null ? feedForwardComponent : FeedForwardComponent.getZeroFeedForward();
+            this.maxSpeed = maxSpeed;
             this.motionMagicMaxVel = motionMagicMaxVel;
             this.motionMagicMaxAccel = motionMagicMaxAccel;
         }
@@ -1078,7 +1027,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
          * Empty constructor that uses all default options.
          */
         public PerGearSettings() {
-            this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, null, 0, null, null, 0, null, null, null, 0);
+            this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, null, null, null, 0);
         }
 
         /**
@@ -1121,6 +1070,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         /**
          * @return The ramp rate, in volts/sec.
          */
+        @Nullable
         public Double getRampRate() {
             return rampRate;
         }
@@ -1197,51 +1147,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         }
 
         /**
-         * @return The voltage required to accelerate the robot at one foot per second^2 while going forwards. Ka in the
-         * drive characterization paper.
+         * @return The component for calculating feedforwards in closed-loop control modes.
          */
-        public double getkAFwd() {
-            return kAFwd;
-        }
-
-        /**
-         * @return The voltage required to accelerate the robot at one foot per second^2 while going backwards. Ka in
-         * the drive characterization paper.
-         */
-        public double getkARev() {
-            return kARev;
-        }
-
-        /**
-         * @return The voltage required to run forwards at a steady-state velocity of 1 foot per second. Kv in the drive
-         * characterization paper.
-         */
-        public Double getkVFwd() {
-            return kVFwd;
-        }
-
-        /**
-         * @return The voltage required to run backwards at a steady-state velocity of 1 foot per second. Kv in the
-         * drive characterization paper.
-         */
-        public Double getkVRev() {
-            return kVRev;
-        }
-
-        /**
-         * @return The voltage required to overcome static friction in the forwards direction. Vintercept in the drive
-         * characterization paper.
-         */
-        public double getInterceptVoltageFwd() {
-            return interceptVoltageFwd;
-        }
-
-        /**
-         * @return The voltage required to overcome static friction in the reverse direction. Vintercept in the drive
-         * characterization paper.
-         */
-        public double getInterceptVoltageRev() {
-            return interceptVoltageRev;
+        @NotNull
+        public FeedForwardComponent getFeedForwardComponent() {
+            return feedForwardComponent;
         }
 
         /**
