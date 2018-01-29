@@ -35,6 +35,7 @@ public class Updater implements MappedRunnable {
      */
     @Override
     public void run() {
+        Clock.updateTime();
         for (Updatable updatable : updatables) {
             updatable.update();
         }

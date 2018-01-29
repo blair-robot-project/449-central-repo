@@ -183,9 +183,12 @@ public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirec
             fudgedWheelbaseDiameter = (deltaLeft - deltaRight) / deltaTheta;
         }
 
+        //The vector for how much the robot moves, element 0 is x and element 1 is y.
         vector = calcVector(deltaLeft, deltaRight, deltaTheta, lastTheta);
 
-        //The vector for how much the robot moves, element 0 is x and element 1 is y.
+        //Only include horizontal movement
+        vector[0] = vector[0] * Math.abs(Math.cos(subsystem.getPitch()));
+        vector[1] = vector[1] * Math.abs(Math.cos(subsystem.getPitch()));
 
         //If we received an absolute position between the last run and this one, scale the vector so it only includes
         //the change since the absolute position was given

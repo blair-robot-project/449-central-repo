@@ -30,6 +30,9 @@ public class Logger implements Runnable {
     @NotNull
     private static List<LogEvent> events = new ArrayList<>();
 
+    /**
+     * All loggables added to the Logger outside of the constructor.
+     */
     private static List<Loggable> addedLoggables = new ArrayList<>();
 
     /**
@@ -58,11 +61,6 @@ public class Logger implements Runnable {
     private final String[][] itemNames;
 
     /**
-     * The period of the loop running this logger, in seconds.
-     */
-    private final double loopTimeSecs;
-
-    /**
      * The time this that logging started. We don't use {@link Clock} because this is a separate thread.
      */
     private final long startTime;
@@ -70,8 +68,7 @@ public class Logger implements Runnable {
     /**
      * Default constructor.
      *
-     * @param loggables           The loggables to log telemetry data from.
-     * @param loopTimeSecs         The period of the loop for collecting telemetry data, in seconds.
+     * @param loggables            The loggables to log telemetry data from.
      * @param eventLogFilename     The filepath of the log for events. Will have the timestamp and file extension
      *                             appended onto the end.
      * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file
@@ -80,7 +77,6 @@ public class Logger implements Runnable {
      */
     @JsonCreator
     public Logger(@NotNull @JsonProperty(required = true) Loggable[] loggables,
-                  @JsonProperty(required = true) double loopTimeSecs,
                   @NotNull @JsonProperty(required = true) String eventLogFilename,
                   @NotNull @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
         //Set up the file names, using a time stamp to avoid overwriting old log files.
@@ -89,15 +85,12 @@ public class Logger implements Runnable {
         this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
         this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
 
-        //Set the loop time variable
-        this.loopTimeSecs = loopTimeSecs;
-
         //Set up the list of loggables.
-        this.loggables = Arrays.copyOf(loggables, loggables.length+addedLoggables.size());
+        this.loggables = Arrays.copyOf(loggables, loggables.length + addedLoggables.size());
 
         //Add the addedLoggables to the list of loggables
-        for (int i = 0; i < addedLoggables.size(); i++){
-            this.loggables[loggables.length+i] = addedLoggables.get(i);
+        for (int i = 0; i < addedLoggables.size(); i++) {
+            this.loggables[loggables.length + i] = addedLoggables.get(i);
         }
 
         //Construct itemNames.
@@ -144,10 +137,12 @@ public class Logger implements Runnable {
     }
 
     /**
-     * Add a loggable to be logged. This must be called before a Logger is constructed, and so should be called in the constructor of a Loggable.
+     * Add a loggable to be logged. This must be called before a Logger is constructed, and so should be called in the
+     * constructor of a Loggable.
+     *
      * @param loggable The loggable to add.
      */
-    public static void addLoggable(@NotNull Loggable loggable){
+    public static void addLoggable(@NotNull Loggable loggable) {
         addedLoggables.add(loggable);
     }
 
@@ -247,12 +242,5 @@ public class Logger implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * @return The map-specified loop period of this logger, in seconds.
-     */
-    public double getLoopTimeSecs() {
-        return loopTimeSecs;
     }
 }

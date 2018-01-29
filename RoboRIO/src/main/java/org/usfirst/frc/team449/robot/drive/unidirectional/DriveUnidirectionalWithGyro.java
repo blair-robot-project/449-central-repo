@@ -267,6 +267,26 @@ public class DriveUnidirectionalWithGyro extends Subsystem implements SubsystemA
     }
 
     /**
+     * Get the pitch value.
+     *
+     * @return The pitch, in degrees from [-180, 180]
+     */
+    @Override
+    public double getPitch() {
+        return ahrs.getPitch();
+    }
+
+    /**
+     * Get the cached pitch value.
+     *
+     * @return The pitch, in degrees from [-180, 180]
+     */
+    @Override
+    public double getCachedPitch() {
+        return ahrs.getCachedPitch();
+    }
+
+    /**
      * @return true if the NavX is currently overriden, false otherwise.
      */
     @Override
@@ -387,15 +407,6 @@ public class DriveUnidirectionalWithGyro extends Subsystem implements SubsystemA
     @Override
     public boolean readyToRunProfile() {
         return leftMaster.readyForMP() && rightMaster.readyForMP();
-    }
-
-    /**
-     * Stops any MP-related threads currently running. Normally called at the start of teleop.
-     */
-    @Override
-    public void stopMPProcesses() {
-        leftMaster.stopMPProcesses();
-        rightMaster.stopMPProcesses();
     }
 
     /**

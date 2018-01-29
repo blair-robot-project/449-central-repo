@@ -60,7 +60,7 @@ public class RampComponent implements DoubleUnaryOperator, Cloneable {
      */
     @Override
     @NotNull
-    public RampComponent clone(){
-        return new RampComponent(maxChangePerMillis*1000.);
+    public RampComponent clone() {
+        return new RampComponent(maxChangePerMillis * 1000.);
     }
 }

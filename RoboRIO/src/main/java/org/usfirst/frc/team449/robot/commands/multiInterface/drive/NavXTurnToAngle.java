@@ -43,6 +43,11 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     protected long startTime;
 
     /**
+     * The output of the PID loop. Field to avoid garbage collection.
+     */
+    private double output;
+
+    /**
      * Default constructor.
      *
      * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
@@ -96,29 +101,27 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     }
 
     /**
-     * Give output to the motors based on the output of the PID loop
-     *
-     * @param output The output of the angle PID loop
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        //Process the output with deadband, minimum output, etc.
-        output = processPIDOutput(output);
-
-        //spin to the right angle
-        subsystem.setOutput(-output, output);
-    }
-
-    /**
      * Set up the start time and setpoint.
      */
     @Override
     protected void initialize() {
         //Set up start time
         this.startTime = Clock.currentTimeMillis();
-        this.setSetpoint(setpoint);
+        this.setSetpoint(clipTo180(setpoint));
         //Make sure to enable the controller!
         this.getPIDController().enable();
+    }
+
+    /**
+     * Give output to the motors based on the output of the PID loop.
+     */
+    @Override
+    public void execute() {
+        //Process the output with deadband, minimum output, etc.
+        output = processPIDOutput(this.getPIDController().get());
+
+        //spin to the right angle
+        subsystem.setOutput(-output, output);
     }
 
     /**
@@ -129,7 +132,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     @Override
     protected boolean isFinished() {
         //The PIDController onTarget() is crap and sometimes never returns true because of floating point errors, so we need a timeout
-        return this.getPIDController().onTarget() || Clock.currentTimeMillis() - startTime > timeout;
+        return onTarget() || Clock.currentTimeMillis() - startTime > timeout;
     }
 
     /**

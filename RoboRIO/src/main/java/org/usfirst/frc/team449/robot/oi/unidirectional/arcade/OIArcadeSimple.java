@@ -45,7 +45,8 @@ public class OIArcadeSimple extends OIArcade {
     /**
      * The forwards and rotational movement given to the drive.
      *
-     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
     @Override
     public double[] getFwdRotOutput() {

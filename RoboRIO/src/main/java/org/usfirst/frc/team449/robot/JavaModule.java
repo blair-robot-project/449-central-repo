@@ -8,7 +8,7 @@ import java.util.function.DoubleUnaryOperator;
 /**
  * A module that adds mix-ins for various Java interfaces, classes, etc.
  */
-public class JavaModule extends SimpleModule{
+public class JavaModule extends SimpleModule {
 
     /**
      * Default constructor

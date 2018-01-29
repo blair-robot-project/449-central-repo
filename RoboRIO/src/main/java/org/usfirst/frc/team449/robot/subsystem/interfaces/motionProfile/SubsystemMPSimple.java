@@ -85,14 +85,6 @@ public class SubsystemMPSimple extends Subsystem implements SubsystemMP {
     }
 
     /**
-     * Stops any MP-related threads currently running. Normally called at the start of teleop.
-     */
-    @Override
-    public void stopMPProcesses() {
-        motor.stopMPProcesses();
-    }
-
-    /**
      * Initialize the default command for a subsystem By default subsystems have no default command, but if they do, the
      * default command is set with this method. It is called on all Subsystems by CommandBase in the users program after
      * all the Subsystems are created.

@@ -40,6 +40,16 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     private final double highGearAngularCoefficient;
 
     /**
+     * PID loop coefficients.
+     */
+    private final double kP, kI, kD;
+
+    /**
+     * The gear the subsystem was in the last time execute() ran.
+     */
+    private int lastGear;
+
+    /**
      * Default constructor
      *
      * @param onTargetBuffer              A buffer timer for having the loop be on target before it stops running. Can
@@ -61,7 +71,8 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
      * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
      * @param subsystem                   The drive to execute this command on.
      * @param oi                          The OI controlling the robot.
-     * @param rampComponent The acceleration-limiting ramp for the output to the drive. Defaults to no ramp.
+     * @param rampComponent               The acceleration-limiting ramp for the output to the drive. Defaults to no
+     *                                    ramp.
      * @param autoshiftComponent          The helper object for autoshifting.
      * @param highGearAngularCoefficient  The coefficient to multiply the loop output by in high gear. Defaults to 1.
      */
@@ -84,9 +95,13 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
                                                   @Nullable Double highGearAngularCoefficient) {
         super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, maxAngularVelToEnterLoop,
                 inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi, rampComponent);
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
         this.autoshiftComponent = autoshiftComponent;
         this.subsystem = subsystem;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;
+        this.lastGear = this.subsystem.getGear();
     }
 
     /**
@@ -99,6 +114,22 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
             autoshiftComponent.autoshift(oi.getFwdRotOutputCached()[0], subsystem.getLeftVelCached(),
                     subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
         }
+
+        //Gain schedule the loop if we shifted
+        if (lastGear != subsystem.getGear()) {
+            if (subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
+                this.getPIDController().setP(kP);
+                this.getPIDController().setI(kI);
+                this.getPIDController().setD(kD);
+            } else {
+                this.getPIDController().setP(kP * highGearAngularCoefficient);
+                this.getPIDController().setI(kI * highGearAngularCoefficient);
+                this.getPIDController().setD(kD * highGearAngularCoefficient);
+            }
+            lastGear = subsystem.getGear();
+        }
+
+        //Actually do stuff
         super.execute();
     }
 
@@ -117,15 +148,5 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     protected void interrupted() {
         Logger.addEvent("ShiftingUnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
         subsystem.fullStop();
-    }
-
-    /**
-     * Give the correct output to the motors based on whether we're in free drive or drive straight.
-     *
-     * @param output The output of the angular PID loop.
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        super.usePIDOutput(output * (subsystem.getGear() == Shiftable.gear.HIGH.getNumVal() ? highGearAngularCoefficient : 1));
     }
 }
