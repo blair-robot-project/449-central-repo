@@ -507,10 +507,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     public void setPositionSetpoint(double feet) {
         setpoint = feet;
-        canTalon.config_kF(0, currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
         if (currentGearSettings.getMotionMagicMaxVel() != null) {
+            //We don't know the setpoint for motion magic so we can't do fancy F stuff
+            canTalon.config_kF(0, 0, 0);
             canTalon.set(ControlMode.MotionMagic, feetToEncoder(feet));
         } else {
+            canTalon.config_kF(0, currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
             canTalon.set(ControlMode.Position, feetToEncoder(feet));
         }
     }
