@@ -11,6 +11,8 @@ org.usfirst.frc.team449.robot.drive.shifting
 org.usfirst.frc.team449.robot.drive.shifting.commands
 org.usfirst.frc.team449.robot.drive.unidirectional
 org.usfirst.frc.team449.robot.drive.unidirectional.commands
+org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator
+org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.FeedForwardComponent
 org.usfirst.frc.team449.robot.generalInterfaces.loggable
 org.usfirst.frc.team449.robot.generalInterfaces.poseEstimator
 org.usfirst.frc.team449.robot.generalInterfaces.rumbleable

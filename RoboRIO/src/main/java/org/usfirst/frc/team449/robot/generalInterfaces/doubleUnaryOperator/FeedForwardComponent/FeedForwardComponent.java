@@ -10,7 +10,7 @@ import java.util.function.DoubleUnaryOperator;
  * A component for calculating feedforwards for a Talon. Takes the setpoint and returns the correct F value.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public abstract class FeedForwardComponent implements DoubleUnaryOperator{
+public abstract class FeedForwardComponent implements DoubleUnaryOperator {
 
     /**
      * The talon this controls the feedforward for.
@@ -18,18 +18,31 @@ public abstract class FeedForwardComponent implements DoubleUnaryOperator{
     protected FPSTalon talon;
 
     /**
-     * Set the talon to get information from. This is a setter instead of being in the constructor to avoid circular referencing.
+     * Get a FeedForwardComponent that gives no feedforward.
+     *
+     * @return A FeedForwardComponent whose methods all return 0.
+     */
+    @NotNull
+    public static FeedForwardComponent getZeroFeedForward() {
+        return new FeedForwardZeroComponent();
+    }
+
+    /**
+     * Set the talon to get information from. This is a setter instead of being in the constructor to avoid circular
+     * referencing.
+     *
      * @param talon The talon this controls the feedforward for.
      */
-    public void setTalon(@NotNull FPSTalon talon){
+    public void setTalon(@NotNull FPSTalon talon) {
         this.talon = talon;
     }
 
     /**
      * Calculate the voltage for a setpoint in MP mode with a position, velocity, and acceleration setpoint.
+     *
      * @param positionSetpoint The desired position, in feet.
-     * @param velSetpoint The desired velocity, in feet/sec.
-     * @param accelSetpoint The desired acceleration, in feet/sec^2.
+     * @param velSetpoint      The desired velocity, in feet/sec.
+     * @param accelSetpoint    The desired acceleration, in feet/sec^2.
      * @return The voltage, from [-12, 12] needed to achieve that velocity and acceleration.
      */
     public abstract double calcMPVoltage(double positionSetpoint, double velSetpoint, double accelSetpoint);
@@ -42,14 +55,4 @@ public abstract class FeedForwardComponent implements DoubleUnaryOperator{
      */
     @Override
     public abstract double applyAsDouble(double operand);
-
-    /**
-     * Get a FeedForwardComponent that gives no feedforward.
-     *
-     * @return A FeedForwardComponent whose methods all return 0.
-     */
-    @NotNull
-    public static FeedForwardComponent getZeroFeedForward(){
-        return new FeedForwardZeroComponent();
-    }
 }

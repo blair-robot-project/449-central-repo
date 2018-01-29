@@ -71,7 +71,8 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
      * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
      * @param subsystem                   The drive to execute this command on.
      * @param oi                          The OI controlling the robot.
-     * @param rampComponent The acceleration-limiting ramp for the output to the drive. Defaults to no ramp.
+     * @param rampComponent               The acceleration-limiting ramp for the output to the drive. Defaults to no
+     *                                    ramp.
      * @param autoshiftComponent          The helper object for autoshifting.
      * @param highGearAngularCoefficient  The coefficient to multiply the loop output by in high gear. Defaults to 1.
      */
@@ -115,15 +116,15 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
         }
 
         //Gain schedule the loop if we shifted
-        if(lastGear != subsystem.getGear()){
-            if(subsystem.getGear() == Shiftable.gear.LOW.getNumVal()){
+        if (lastGear != subsystem.getGear()) {
+            if (subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
                 this.getPIDController().setP(kP);
                 this.getPIDController().setI(kI);
                 this.getPIDController().setD(kD);
             } else {
-                this.getPIDController().setP(kP*highGearAngularCoefficient);
-                this.getPIDController().setI(kI*highGearAngularCoefficient);
-                this.getPIDController().setD(kD*highGearAngularCoefficient);
+                this.getPIDController().setP(kP * highGearAngularCoefficient);
+                this.getPIDController().setI(kI * highGearAngularCoefficient);
+                this.getPIDController().setD(kD * highGearAngularCoefficient);
             }
             lastGear = subsystem.getGear();
         }

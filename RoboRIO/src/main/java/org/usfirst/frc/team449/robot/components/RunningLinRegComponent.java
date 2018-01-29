@@ -12,7 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class RunningLinRegComponent {
 
     /**
-     * Buffers holding the x and y values that will eventually need to be subtracted from the sum when they leave the window.
+     * Buffers holding the x and y values that will eventually need to be subtracted from the sum when they leave the
+     * window.
      */
     @NotNull
     private final CircularBuffer xBuffer, yBuffer;
@@ -54,8 +55,9 @@ public class RunningLinRegComponent {
     /**
      * Default constructor.
      *
-     * @param bufferSize The maximum number of points to take the linear regression over.
-     * @param rSquaredThreshhold The minimum R^2 value considered significant enough to return the regression slope instead of NaN. Defaults to 0.
+     * @param bufferSize         The maximum number of points to take the linear regression over.
+     * @param rSquaredThreshhold The minimum R^2 value considered significant enough to return the regression slope
+     *                           instead of NaN. Defaults to 0.
      */
     @JsonCreator
     public RunningLinRegComponent(@JsonProperty(required = true) int bufferSize,
@@ -73,7 +75,7 @@ public class RunningLinRegComponent {
      * @return The current slope of the linear regression line.
      */
     public Double getSlope() {
-        if (numPoints < 2){
+        if (numPoints < 2) {
             return Double.NaN;
         }
 
@@ -81,8 +83,8 @@ public class RunningLinRegComponent {
         yVariance = (ySquaredSum / numPoints) - Math.pow(ySum / numPoints, 2);
         covariance = (xySum - xSum * ySum / numPoints) / (numPoints - 1);
 
-        if (covariance * covariance/(xVariance * yVariance) > rSquaredThreshhold){
-            return covariance/xVariance;
+        if (covariance * covariance / (xVariance * yVariance) > rSquaredThreshhold) {
+            return covariance / xVariance;
         } else {
             return Double.NaN;
         }
@@ -129,7 +131,7 @@ public class RunningLinRegComponent {
      * @return A RunningLinRegComponent with the same buffer size as this one.
      */
     @Override
-    public RunningLinRegComponent clone(){
+    public RunningLinRegComponent clone() {
         return new RunningLinRegComponent(bufferSize, rSquaredThreshhold);
     }
 }

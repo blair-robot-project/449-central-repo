@@ -59,20 +59,22 @@ public abstract class OITank implements OIUnidirectional {
     /**
      * The forwards and rotational movement given to the drive.
      *
-     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
     @Override
-    public double[] getFwdRotOutput(){
-        return new double[]{(getLeftThrottle()+getRightThrottle())/2., (getLeftThrottle()-getRightThrottle())/2.};
+    public double[] getFwdRotOutput() {
+        return new double[]{(getLeftThrottle() + getRightThrottle()) / 2., (getLeftThrottle() - getRightThrottle()) / 2.};
     }
 
     /**
      * The cached forwards and rotational movement given to the drive.
      *
-     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
     @Override
-    public double[] getFwdRotOutputCached(){
+    public double[] getFwdRotOutputCached() {
         return fwdRotOutputCached;
     }
 

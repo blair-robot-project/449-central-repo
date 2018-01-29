@@ -130,7 +130,7 @@ public class MappedAHRS implements Loggable, Updatable {
      *
      * @return The pitch, in degrees from [-180, 180]
      */
-    public double getPitch(){
+    public double getPitch() {
         return ahrs.getPitch();
     }
 
@@ -184,7 +184,7 @@ public class MappedAHRS implements Loggable, Updatable {
      *
      * @return The pitch, in degrees from [-180, 180]
      */
-    public double getCachedPitch(){
+    public double getCachedPitch() {
         return cachedPitch;
     }
 

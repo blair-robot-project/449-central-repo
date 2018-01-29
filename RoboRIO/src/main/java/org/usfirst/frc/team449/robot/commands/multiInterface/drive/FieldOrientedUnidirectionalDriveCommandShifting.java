@@ -109,15 +109,15 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
         }
 
         //Gain schedule the loop if we shifted
-        if(lastGear != subsystem.getGear()){
-            if(subsystem.getGear() == Shiftable.gear.LOW.getNumVal()){
+        if (lastGear != subsystem.getGear()) {
+            if (subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
                 this.getPIDController().setP(kP);
                 this.getPIDController().setI(kI);
                 this.getPIDController().setD(kD);
             } else {
-                this.getPIDController().setP(kP*highGearAngularCoefficient);
-                this.getPIDController().setI(kI*highGearAngularCoefficient);
-                this.getPIDController().setD(kD*highGearAngularCoefficient);
+                this.getPIDController().setP(kP * highGearAngularCoefficient);
+                this.getPIDController().setI(kI * highGearAngularCoefficient);
+                this.getPIDController().setD(kD * highGearAngularCoefficient);
             }
             lastGear = subsystem.getGear();
         }

@@ -48,7 +48,7 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
      *
      * @return Voltage in volts when there's 0 amps of current draw
      */
-    public double getUnloadedVoltage(){
+    public double getUnloadedVoltage() {
         return voltagePerCurrentLinReg.getIntercept();
     }
 

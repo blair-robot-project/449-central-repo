@@ -169,7 +169,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
      * @param output The output of the PID loop.
      */
     @Override
-    protected void usePIDOutput(double output){
+    protected void usePIDOutput(double output) {
         //Do nothing
     }
 }

@@ -68,7 +68,7 @@ public class Logger implements Runnable {
     /**
      * Default constructor.
      *
-     * @param loggables           The loggables to log telemetry data from.
+     * @param loggables            The loggables to log telemetry data from.
      * @param eventLogFilename     The filepath of the log for events. Will have the timestamp and file extension
      *                             appended onto the end.
      * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file
@@ -86,11 +86,11 @@ public class Logger implements Runnable {
         this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
 
         //Set up the list of loggables.
-        this.loggables = Arrays.copyOf(loggables, loggables.length+addedLoggables.size());
+        this.loggables = Arrays.copyOf(loggables, loggables.length + addedLoggables.size());
 
         //Add the addedLoggables to the list of loggables
-        for (int i = 0; i < addedLoggables.size(); i++){
-            this.loggables[loggables.length+i] = addedLoggables.get(i);
+        for (int i = 0; i < addedLoggables.size(); i++) {
+            this.loggables[loggables.length + i] = addedLoggables.get(i);
         }
 
         //Construct itemNames.
@@ -137,10 +137,12 @@ public class Logger implements Runnable {
     }
 
     /**
-     * Add a loggable to be logged. This must be called before a Logger is constructed, and so should be called in the constructor of a Loggable.
+     * Add a loggable to be logged. This must be called before a Logger is constructed, and so should be called in the
+     * constructor of a Loggable.
+     *
      * @param loggable The loggable to add.
      */
-    public static void addLoggable(@NotNull Loggable loggable){
+    public static void addLoggable(@NotNull Loggable loggable) {
         addedLoggables.add(loggable);
     }
 

@@ -3,12 +3,13 @@ package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Feed
 /**
  * A {@link FeedForwardComponent} that gives no output.
  */
-class FeedForwardZeroComponent extends FeedForwardComponent{
+class FeedForwardZeroComponent extends FeedForwardComponent {
 
     /**
-     * Default constructor. Not public and not annotated with @JsonCreator because it should only be constructed via {@link FeedForwardComponent}'s getZeroFeedForward().
+     * Default constructor. Not public and not annotated with @JsonCreator because it should only be constructed via
+     * {@link FeedForwardComponent}'s getZeroFeedForward().
      */
-    FeedForwardZeroComponent(){
+    FeedForwardZeroComponent() {
         //Do nothing
     }
 

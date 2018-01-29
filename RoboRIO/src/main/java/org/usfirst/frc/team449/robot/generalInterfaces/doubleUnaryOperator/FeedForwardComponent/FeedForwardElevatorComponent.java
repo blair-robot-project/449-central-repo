@@ -8,9 +8,10 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * A {@link FeedForwardComponent} for an elevator, where the feed-forward needed changes based on how many stages are lifted.
+ * A {@link FeedForwardComponent} for an elevator, where the feed-forward needed changes based on how many stages are
+ * lifted.
  */
-public class FeedForwardElevatorComponent extends FeedForwardComponent{
+public class FeedForwardElevatorComponent extends FeedForwardComponent {
 
     /**
      * The upper positions of each elevator stage, in ascending order.
@@ -31,15 +32,17 @@ public class FeedForwardElevatorComponent extends FeedForwardComponent{
 
     /**
      * Default constructor.
-     * @param feetToVoltageMap A map of the upper heights of each elevator stage to the voltage required to counter gravity at that stage.
+     *
+     * @param feetToVoltageMap A map of the upper heights of each elevator stage to the voltage required to counter
+     *                         gravity at that stage.
      */
     @JsonCreator
-    public FeedForwardElevatorComponent(@NotNull @JsonProperty(required = true) Map<Double, Double> feetToVoltageMap){
+    public FeedForwardElevatorComponent(@NotNull @JsonProperty(required = true) Map<Double, Double> feetToVoltageMap) {
         //Sort the positions and voltages so we can find the correct voltage to use faster.
         positions = feetToVoltageMap.keySet().toArray(new Double[0]);
         Arrays.sort(positions);
         voltages = new double[positions.length];
-        for (int i = 0; i < positions.length; i++){
+        for (int i = 0; i < positions.length; i++) {
             voltages[i] = feetToVoltageMap.get(voltages[i]);
         }
     }
@@ -67,11 +70,11 @@ public class FeedForwardElevatorComponent extends FeedForwardComponent{
     public double applyAsDouble(double operand) {
         pos = talon.getPositionFeet();
         //Find the appropriate FF to counteract gravity
-        for (int i = 0; i < positions.length; i++){
-            if (pos <= positions[i]){
+        for (int i = 0; i < positions.length; i++) {
+            if (pos <= positions[i]) {
                 //1023/12 converts from voltage to native, and divide by operand because FF gets multiplied by setpoint
                 // even in position mode.
-                return (1023./12.*voltages[i]/operand);
+                return (1023. / 12. * voltages[i] / operand);
             }
         }
         return 0;

@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
-import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 
 /**
  * An arcade OI with an option to use the D-pad for turning.
@@ -96,7 +96,8 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
     /**
      * The forwards and rotational movement given to the drive.
      *
-     * @return An array of length 2, where the first element is the forwards output and the second is the rotational, both from [-1, 1]
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
     @Override
     public double[] getFwdRotOutput() {

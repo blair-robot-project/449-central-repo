@@ -14,7 +14,6 @@ import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
-import java.util.Arrays;
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -82,7 +81,8 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
      * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
      * @param subsystem                   The drive to execute this command on.
      * @param oi                          The OI controlling the robot.
-     * @param rampComponent The acceleration-limiting ramp for the output to the drive. Defaults to no ramp.
+     * @param rampComponent               The acceleration-limiting ramp for the output to the drive. Defaults to no
+     *                                    ramp.
      */
     @JsonCreator
     public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -157,7 +157,7 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
         rightOutput = oi.getLeftRightOutputCached()[1];
 
         //Ramp if it exists
-        if(leftRamp != null){
+        if (leftRamp != null) {
             leftOutput = leftRamp.applyAsDouble(leftOutput);
             rightOutput = rightRamp.applyAsDouble(rightOutput);
         }
