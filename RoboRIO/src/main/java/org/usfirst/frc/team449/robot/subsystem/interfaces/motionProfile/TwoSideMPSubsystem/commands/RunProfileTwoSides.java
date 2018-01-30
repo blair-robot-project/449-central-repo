@@ -11,6 +11,8 @@ import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 
+import java.util.function.Supplier;
+
 /**
  * Loads and runs the given profiles into the given subsystem.
  */
@@ -31,6 +33,22 @@ public class RunProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exten
                               @NotNull @JsonProperty(required = true) MotionProfileData right,
                               @JsonProperty(required = true) double timeout) {
         addSequential(new LoadProfileTwoSides(subsystem, left, right));
+        addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param subsystem     The subsystem to execute this command on.
+     * @param leftSupplier  A supplier for the motion profile for the left side to load and execute.
+     * @param rightSupplier A supplier for the motion profile for the right side to load and execute.
+     * @param timeout       The maximum amount of time this command is allowed to take, in seconds.
+     */
+    public RunProfileTwoSides(@NotNull T subsystem,
+                              @NotNull Supplier<MotionProfileData> leftSupplier,
+                              @NotNull Supplier<MotionProfileData> rightSupplier,
+                              double timeout) {
+        addSequential(new LoadProfileTwoSides(subsystem, leftSupplier, rightSupplier));
         addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
     }
 }

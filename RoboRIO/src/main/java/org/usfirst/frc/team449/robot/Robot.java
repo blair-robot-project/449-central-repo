@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
             mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
             //Add mix-ins
             mapper.registerModule(new WPIModule());
+            mapper.registerModule(new JavaModule());
             //Deserialize the map into an object.
             robotMap = mapper.readValue(fixed, RobotMap.class);
         } catch (IOException e) {
@@ -85,7 +86,6 @@ public class Robot extends TimedRobot {
 
         //Run the logger to write all the events that happened during initialization to a file.
         robotMap.getLogger().run();
-        Clock.updateTime();
     }
 
     /**
@@ -93,9 +93,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopInit() {
-        //Refresh the current time.
-        Clock.updateTime();
-
         //Read sensors
         this.robotMap.getUpdater().run();
 
@@ -121,9 +118,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        //Refresh the current time.
-        Clock.updateTime();
-
         //Read sensors
         this.robotMap.getUpdater().run();
 
@@ -139,9 +133,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        //Refresh the current time.
-        Clock.updateTime();
-
         //Read sensors
         this.robotMap.getUpdater().run();
 
@@ -167,8 +158,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        //Update the current time
-        Clock.updateTime();
         //Read sensors
         this.robotMap.getUpdater().run();
         //Run all commands. This is a WPILib thing you don't really have to worry about.
@@ -205,7 +194,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledPeriodic() {
-        Clock.updateTime();
         //Read sensors
         this.robotMap.getUpdater().run();
 

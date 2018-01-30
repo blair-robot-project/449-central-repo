@@ -11,9 +11,14 @@ import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 public abstract class OITank implements OIUnidirectional {
 
     /**
-     * Cached left and right throttle values.
+     * Cached left and right output.
      */
-    private double leftThrottleCached, rightThrottleCached;
+    private double[] leftRightOutputCached;
+
+    /**
+     * Cached forwards and rotational output.
+     */
+    private double[] fwdRotOutputCached;
 
     /**
      * Get the throttle for the left side of the drive.
@@ -30,57 +35,47 @@ public abstract class OITank implements OIUnidirectional {
     public abstract double getRightThrottle();
 
     /**
-     * Get the cached throttle for the left side of the drive.
+     * The output to be given to the left and right sides of the drive.
      *
-     * @return percent of max speed for left motor cluster from [-1.0, 1.0]
+     * @return An array of length 2, where the 1st element is the output for the left and the second for the right, both
+     * from [-1, 1].
      */
-    public double getLeftThrottleCached() {
-        return leftThrottleCached;
+    @Override
+    public double[] getLeftRightOutput() {
+        return new double[]{getLeftThrottle(), getRightThrottle()};
     }
 
     /**
-     * Get the cached throttle for the right side of the drive.
+     * The cached output to be given to the left and right sides of the drive.
      *
-     * @return percent of max speed for right motor cluster from [-1.0, 1.0]
+     * @return An array of length 2, where the 1st element is the output for the left and the second for the right, both
+     * from [-1, 1].
      */
-    public double getRightThrottleCached() {
-        return rightThrottleCached;
+    @Override
+    public double[] getLeftRightOutputCached() {
+        return leftRightOutputCached;
     }
 
     /**
-     * The output to be given to the left side of the drive.
+     * The forwards and rotational movement given to the drive.
      *
-     * @return Output to left side from [-1, 1]
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
-    public double getLeftOutput() {
-        return getLeftThrottle();
+    @Override
+    public double[] getFwdRotOutput() {
+        return new double[]{(getLeftThrottle() + getRightThrottle()) / 2., (getLeftThrottle() - getRightThrottle()) / 2.};
     }
 
     /**
-     * The output to be given to the right side of the drive.
+     * The cached forwards and rotational movement given to the drive.
      *
-     * @return Output to right side from [-1, 1]
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
-    public double getRightOutput() {
-        return getRightThrottle();
-    }
-
-    /**
-     * The cached output to be given to the left side of the drive.
-     *
-     * @return Output to left side from [-1, 1]
-     */
-    public double getLeftOutputCached() {
-        return leftThrottleCached;
-    }
-
-    /**
-     * The cached output to be given to the right side of the drive.
-     *
-     * @return Output to right side from [-1, 1]
-     */
-    public double getRightOutputCached() {
-        return rightThrottleCached;
+    @Override
+    public double[] getFwdRotOutputCached() {
+        return fwdRotOutputCached;
     }
 
     /**
@@ -88,8 +83,8 @@ public abstract class OITank implements OIUnidirectional {
      */
     @Override
     public void update() {
-        leftThrottleCached = getLeftThrottle();
-        rightThrottleCached = getRightThrottle();
+        leftRightOutputCached = getLeftRightOutput();
+        fwdRotOutputCached = getFwdRotOutput();
     }
 
     /**
@@ -116,8 +111,8 @@ public abstract class OITank implements OIUnidirectional {
     @Override
     public Object[] getData() {
         return new Object[]{
-                getLeftOutputCached(),
-                getRightOutputCached(),
+                getLeftRightOutputCached()[0],
+                getLeftRightOutputCached()[1],
                 commandingStraight()
         };
     }

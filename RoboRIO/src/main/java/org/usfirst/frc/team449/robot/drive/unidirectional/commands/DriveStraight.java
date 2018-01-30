@@ -66,9 +66,9 @@ public class DriveStraight<T extends Subsystem & DriveUnidirectional> extends Co
     @Override
     protected void execute() {
         if (useLeft) {
-            subsystem.setOutput(oi.getLeftOutputCached(), oi.getLeftOutputCached());
+            subsystem.setOutput(oi.getLeftRightOutputCached()[0], oi.getLeftRightOutputCached()[0]);
         } else {
-            subsystem.setOutput(oi.getRightOutputCached(), oi.getRightOutputCached());
+            subsystem.setOutput(oi.getLeftRightOutputCached()[1], oi.getLeftRightOutputCached()[1]);
         }
     }
 

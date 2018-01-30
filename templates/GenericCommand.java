@@ -20,15 +20,27 @@ public class GenericCommand extends YamlCommandWrapper {
     @NotNull
     private final GenericSubsytemInterface subsystem;
 
+<<<<<<< HEAD
+	/**
+	 * Default constructor
+	 *
+	 * @param subsystem The subsystem to execute this command on.
+	 */
+	@JsonCreator
+	public GenericCommand(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
+		this.subsystem = subsystem;
+	}
+=======
     /**
      * Default constructor
      *
      * @param subsystem The subsystem to execute this command on.
      */
     @JsonCreator
-    public RunMotorWhileConditonMet(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
+    public GenericCommand(@NotNull @JsonProperty(required = true) GenericSubsytemInterface subsystem) {
         this.subsystem = subsystem;
     }
+>>>>>>> b0bfb22c6f5970a4cdea05005026486b3da41c85
 
     /**
      * Log when this command is initialized
@@ -56,6 +68,25 @@ public class GenericCommand extends YamlCommandWrapper {
         //Return whether something is true or not
     }
 
+<<<<<<<HEAD
+
+    /**
+     * Log that the command has ended.
+     */
+    @Override
+    protected void end() {
+        Logger.addEvent("GenericCommand end", this.getClass());
+    }
+
+    /**
+     * Log that the command has been interrupted.
+     */
+    @Override
+    protected void interrupted() {
+        Logger.addEvent("GenericCommand interrupted!", this.getClass());
+    }
+=======
+
     /**
      * Log that the command has ended.
      */
@@ -71,5 +102,6 @@ public class GenericCommand extends YamlCommandWrapper {
     protected void interrupted() {
         Logger.addEvent("GenericSubsytemInterface interrupted!", this.getClass());
     }
+>>>>>>>b0bfb22c6f5970a4cdea05005026486b3da41c85
 
 }

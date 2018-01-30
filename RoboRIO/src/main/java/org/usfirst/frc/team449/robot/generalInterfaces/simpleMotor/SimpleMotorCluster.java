@@ -1,9 +1,8 @@
-package org.usfirst.frc.team449.robot.jacksonWrappers;
+package org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 
 import java.util.List;
 

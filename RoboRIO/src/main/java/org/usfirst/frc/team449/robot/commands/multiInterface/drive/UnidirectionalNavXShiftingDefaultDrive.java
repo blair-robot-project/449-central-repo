@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
@@ -39,16 +40,26 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     private final double highGearAngularCoefficient;
 
     /**
+     * PID loop coefficients.
+     */
+    private final double kP, kI, kD;
+
+    /**
+     * The gear the subsystem was in the last time execute() ran.
+     */
+    private int lastGear;
+
+    /**
      * Default constructor
      *
-     * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
-     *                                    considered on target. Multiply by loop period of ~20 milliseconds for time.
-     *                                    Defaults to  0.
+     * @param onTargetBuffer              A buffer timer for having the loop be on target before it stops running. Can
+     *                                    be null for no buffer.
      * @param absoluteTolerance           The maximum number of degrees off from the target at which we can be
      *                                    considered within tolerance.
      * @param minimumOutput               The minimum output of the loop. Defaults to zero.
      * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
      *                                    is used.
+     * @param loopTimeMillis              The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
      *                                    to the motors. Defaults to zero.
      * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
@@ -60,13 +71,16 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
      * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
      * @param subsystem                   The drive to execute this command on.
      * @param oi                          The OI controlling the robot.
+     * @param rampComponent               The acceleration-limiting ramp for the output to the drive. Defaults to no
+     *                                    ramp.
      * @param autoshiftComponent          The helper object for autoshifting.
      * @param highGearAngularCoefficient  The coefficient to multiply the loop output by in high gear. Defaults to 1.
      */
     @JsonCreator
     public UnidirectionalNavXShiftingDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
-                                                  int toleranceBuffer,
+                                                  @Nullable BufferTimer onTargetBuffer,
                                                   double minimumOutput, @Nullable Double maximumOutput,
+                                                  @Nullable Integer loopTimeMillis,
                                                   double deadband,
                                                   @Nullable Double maxAngularVelToEnterLoop,
                                                   boolean inverted,
@@ -76,13 +90,18 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
                                                   @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
                                                   @NotNull @JsonProperty(required = true) T subsystem,
                                                   @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+                                                  @Nullable RampComponent rampComponent,
                                                   @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                   @Nullable Double highGearAngularCoefficient) {
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
-                inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, maxAngularVelToEnterLoop,
+                inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi, rampComponent);
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
         this.autoshiftComponent = autoshiftComponent;
         this.subsystem = subsystem;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;
+        this.lastGear = this.subsystem.getGear();
     }
 
     /**
@@ -92,9 +111,25 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     public void execute() {
         //Auto-shifting
         if (!subsystem.getOverrideAutoshift()) {
-            autoshiftComponent.autoshift((oi.getLeftOutputCached() + oi.getRightOutputCached()) / 2., subsystem.getLeftVelCached(),
+            autoshiftComponent.autoshift(oi.getFwdRotOutputCached()[0], subsystem.getLeftVelCached(),
                     subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
         }
+
+        //Gain schedule the loop if we shifted
+        if (lastGear != subsystem.getGear()) {
+            if (subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
+                this.getPIDController().setP(kP);
+                this.getPIDController().setI(kI);
+                this.getPIDController().setD(kD);
+            } else {
+                this.getPIDController().setP(kP * highGearAngularCoefficient);
+                this.getPIDController().setI(kI * highGearAngularCoefficient);
+                this.getPIDController().setD(kD * highGearAngularCoefficient);
+            }
+            lastGear = subsystem.getGear();
+        }
+
+        //Actually do stuff
         super.execute();
     }
 
@@ -113,15 +148,5 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
     protected void interrupted() {
         Logger.addEvent("ShiftingUnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
         subsystem.fullStop();
-    }
-
-    /**
-     * Give the correct output to the motors based on whether we're in free drive or drive straight.
-     *
-     * @param output The output of the angular PID loop.
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        super.usePIDOutput(output * (subsystem.getGear() == Shiftable.gear.HIGH.getNumVal() ? highGearAngularCoefficient : 1));
     }
 }

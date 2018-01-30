@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.other;
+package org.usfirst.frc.team449.robot.generalInterfaces.poseEstimator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
-import org.usfirst.frc.team449.robot.generalInterfaces.poseEstimator.PoseEstimator;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ import java.util.List;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirectional> implements PoseEstimator, Loggable {
-
     /**
      * The subsystem to get gyro and encoder data from.
      */
@@ -184,9 +183,12 @@ public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirec
             fudgedWheelbaseDiameter = (deltaLeft - deltaRight) / deltaTheta;
         }
 
+        //The vector for how much the robot moves, element 0 is x and element 1 is y.
         vector = calcVector(deltaLeft, deltaRight, deltaTheta, lastTheta);
 
-        //The vector for how much the robot moves, element 0 is x and element 1 is y.
+        //Only include horizontal movement
+        vector[0] = vector[0] * Math.abs(Math.cos(subsystem.getPitch()));
+        vector[1] = vector[1] * Math.abs(Math.cos(subsystem.getPitch()));
 
         //If we received an absolute position between the last run and this one, scale the vector so it only includes
         //the change since the absolute position was given

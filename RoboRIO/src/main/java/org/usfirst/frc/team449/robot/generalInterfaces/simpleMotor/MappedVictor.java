@@ -1,11 +1,10 @@
-package org.usfirst.frc.team449.robot.jacksonWrappers;
+package org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 
 /**
  * A wrapper for a {@link VictorSP} allowing it to be easily constructed from a map object.

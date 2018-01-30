@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
-import org.usfirst.frc.team449.robot.other.Polynomial;
 
 /**
  * An arcade OI with an option to use the D-pad for turning.
@@ -55,6 +55,11 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
     private final double turnInPlaceRotScale;
 
     /**
+     * Forwards output. Field to avoid garbage collection.
+     */
+    private double fwd;
+
+    /**
      * Default constructor
      *
      * @param gamepad             The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
@@ -66,6 +71,8 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
      *                            rotational throttle. Can be null, and if it is, rotational throttle is not scaled by
      *                            forwards throttle.
      * @param turnInPlaceRotScale The scalar that scales the rotational throttle while turning in place.
+     * @param rescaleOutputs      Whether or not to scale the left and right outputs so the max output is 1. Defaults to
+     *                            false.
      */
     @JsonCreator
     public OIArcadeWithDPad(
@@ -75,7 +82,9 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
             boolean invertDPad,
             @Nullable MappedJoystick gamepad,
             @Nullable Polynomial scaleRotByFwdPoly,
-            @JsonProperty(required = true) double turnInPlaceRotScale) {
+            @JsonProperty(required = true) double turnInPlaceRotScale,
+            boolean rescaleOutputs) {
+        super(rescaleOutputs);
         this.dPadShift = (invertDPad ? -1 : 1) * dPadShift;
         this.rotThrottle = rotThrottle;
         this.fwdThrottle = fwdThrottle;
@@ -85,34 +94,25 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
     }
 
     /**
-     * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick
-     * it is.
+     * The forwards and rotational movement given to the drive.
      *
-     * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
+     * @return An array of length 2, where the first element is the forwards output and the second is the rotational,
+     * both from [-1, 1]
      */
     @Override
-    public double getFwd() {
-        return fwdThrottle.getValue();
-    }
+    public double[] getFwdRotOutput() {
+        fwd = fwdThrottle.getValue();
 
-    /**
-     * Get the output of the D-pad or turning joystick, whichever is in use. If both are in use, the D-pad takes
-     * preference.
-     *
-     * @return The processed stick or D-pad output, sign-adjusted so 1 is right and -1 is left.
-     */
-    @Override
-    public double getRot() {
         //If the gamepad is being pushed to the left or right
         if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
             //Output the shift value
-            return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
-        } else if (getFwd() == 0) { //Turning in place
-            return rotThrottle.getValue() * turnInPlaceRotScale;
+            return new double[]{fwd, gamepad.getPOV() < 180 ? dPadShift : -dPadShift};
+        } else if (fwd == 0) { //Turning in place
+            return new double[]{fwd, rotThrottle.getValue() * turnInPlaceRotScale};
         } else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
-            return rotThrottle.getValue() * scaleRotByFwdPoly.applyAsDouble(Math.abs(getFwd()));
+            return new double[]{fwd, rotThrottle.getValue() * scaleRotByFwdPoly.applyAsDouble(Math.abs(fwd))};
         } else { //Plain and simple
-            return rotThrottle.getValue();
+            return new double[]{fwd, rotThrottle.getValue()};
         }
     }
 

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
@@ -42,14 +43,20 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     protected long startTime;
 
     /**
+     * The output of the PID loop. Field to avoid garbage collection.
+     */
+    private double output;
+
+    /**
      * Default constructor.
      *
-     * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
-     *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+     * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
+     *                          no buffer.
      * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis    The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -63,8 +70,9 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
      */
     @JsonCreator
     public NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
-                           int toleranceBuffer,
+                           @Nullable BufferTimer onTargetBuffer,
                            double minimumOutput, @Nullable Double maximumOutput,
+                           @Nullable Integer loopTimeMillis,
                            double deadband,
                            boolean inverted,
                            int kP,
@@ -73,7 +81,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
                            @JsonProperty(required = true) double setpoint,
                            @NotNull @JsonProperty(required = true) T subsystem,
                            @JsonProperty(required = true) double timeout) {
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
         //Convert from seconds to milliseconds
@@ -93,29 +101,27 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     }
 
     /**
-     * Give output to the motors based on the output of the PID loop
-     *
-     * @param output The output of the angle PID loop
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        //Process the output with deadband, minimum output, etc.
-        output = processPIDOutput(output);
-
-        //spin to the right angle
-        subsystem.setOutput(-output, output);
-    }
-
-    /**
      * Set up the start time and setpoint.
      */
     @Override
     protected void initialize() {
         //Set up start time
         this.startTime = Clock.currentTimeMillis();
-        this.setSetpoint(setpoint);
+        this.setSetpoint(clipTo180(setpoint));
         //Make sure to enable the controller!
         this.getPIDController().enable();
+    }
+
+    /**
+     * Give output to the motors based on the output of the PID loop.
+     */
+    @Override
+    public void execute() {
+        //Process the output with deadband, minimum output, etc.
+        output = processPIDOutput(this.getPIDController().get());
+
+        //spin to the right angle
+        subsystem.setOutput(-output, output);
     }
 
     /**
@@ -126,7 +132,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
     @Override
     protected boolean isFinished() {
         //The PIDController onTarget() is crap and sometimes never returns true because of floating point errors, so we need a timeout
-        return this.getPIDController().onTarget() || Clock.currentTimeMillis() - startTime > timeout;
+        return onTarget() || Clock.currentTimeMillis() - startTime > timeout;
     }
 
     /**

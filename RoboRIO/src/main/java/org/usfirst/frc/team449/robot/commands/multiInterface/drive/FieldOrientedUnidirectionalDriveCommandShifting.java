@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
@@ -40,16 +41,26 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
     private final double highGearAngularCoefficient;
 
     /**
+     * PID loop coefficients.
+     */
+    private final double kP, kI, kD;
+
+    /**
+     * The gear the subsystem was in the last time execute() ran.
+     */
+    private int lastGear;
+
+    /**
      * Default constructor
      *
-     * @param toleranceBuffer            How many consecutive loops have to be run while within tolerance to be
-     *                                   considered on target. Multiply by loop period of ~20 milliseconds for time.
-     *                                   Defaults to 0.
+     * @param onTargetBuffer             A buffer timer for having the loop be on target before it stops running. Can be
+     *                                   null for no buffer.
      * @param absoluteTolerance          The maximum number of degrees off from the target at which we can be considered
      *                                   within tolerance.
      * @param minimumOutput              The minimum output of the loop. Defaults to zero.
      * @param maximumOutput              The maximum output of the loop. Can be null, and if it is, no maximum output is
      *                                   used.
+     * @param loopTimeMillis             The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband                   The deadband around the setpoint, in degrees, within which no output is given
      *                                   to the motors. Defaults to zero.
      * @param inverted                   Whether the loop is inverted. Defaults to false.
@@ -64,8 +75,9 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
      */
     @JsonCreator
     public FieldOrientedUnidirectionalDriveCommandShifting(@JsonProperty(required = true) double absoluteTolerance,
-                                                           int toleranceBuffer,
+                                                           @Nullable BufferTimer onTargetBuffer,
                                                            double minimumOutput, @Nullable Double maximumOutput,
+                                                           @Nullable Integer loopTimeMillis,
                                                            double deadband,
                                                            boolean inverted,
                                                            double kP,
@@ -77,10 +89,14 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
                                                            @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                            @Nullable Double highGearAngularCoefficient) {
         //Assign stuff
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, subsystem, oi, snapPoints);
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
         this.subsystem = subsystem;
         this.autoshiftComponent = autoshiftComponent;
         this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;
+        this.lastGear = this.subsystem.getGear();
     }
 
     /**
@@ -91,17 +107,22 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem
         if (!subsystem.getOverrideAutoshift()) {
             autoshiftComponent.autoshift(oi.getVelCached(), subsystem.getLeftVelCached(), subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
         }
-        super.execute();
-    }
 
-    /**
-     * Give the correct output to the motors based on the PID output and velocity input.
-     *
-     * @param output The output of the angular PID loop.
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        super.usePIDOutput(output * (subsystem.getGear() == Shiftable.gear.HIGH.getNumVal() ? highGearAngularCoefficient : 1));
+        //Gain schedule the loop if we shifted
+        if (lastGear != subsystem.getGear()) {
+            if (subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
+                this.getPIDController().setP(kP);
+                this.getPIDController().setI(kI);
+                this.getPIDController().setD(kD);
+            } else {
+                this.getPIDController().setP(kP * highGearAngularCoefficient);
+                this.getPIDController().setI(kI * highGearAngularCoefficient);
+                this.getPIDController().setD(kD * highGearAngularCoefficient);
+            }
+            lastGear = subsystem.getGear();
+        }
+
+        super.execute();
     }
 
     /**

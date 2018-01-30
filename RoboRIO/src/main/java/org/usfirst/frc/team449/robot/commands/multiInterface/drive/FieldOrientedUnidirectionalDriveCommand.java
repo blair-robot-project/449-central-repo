@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
@@ -45,14 +46,20 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     private Double theta;
 
     /**
+     * The output of the PID loop. Field to avoid garbage collection.
+     */
+    private double output;
+
+    /**
      * Default constructor
      *
-     * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
-     *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+     * @param onTargetBuffer    A buffer timer for having the loop be on target before it stops running. Can be null for
+     *                          no buffer.
      * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
      *                          tolerance.
      * @param minimumOutput     The minimum output of the loop. Defaults to zero.
      * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+     * @param loopTimeMillis    The time, in milliseconds, between each loop iteration. Defaults to 20 ms.
      * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
      *                          motors. Defaults to zero.
      * @param inverted          Whether the loop is inverted. Defaults to false.
@@ -65,8 +72,9 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
      */
     @JsonCreator
     public FieldOrientedUnidirectionalDriveCommand(@JsonProperty(required = true) double absoluteTolerance,
-                                                   int toleranceBuffer,
+                                                   @Nullable BufferTimer onTargetBuffer,
                                                    double minimumOutput, @Nullable Double maximumOutput,
+                                                   @Nullable Integer loopTimeMillis,
                                                    double deadband,
                                                    boolean inverted,
                                                    double kP,
@@ -76,7 +84,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
                                                    @NotNull @JsonProperty(required = true) OIFieldOriented oi,
                                                    @Nullable List<AngularSnapPoint> snapPoints) {
         //Assign stuff
-        super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
         this.snapPoints = snapPoints != null ? snapPoints : new ArrayList<>();
@@ -105,6 +113,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     @Override
     protected void execute() {
         theta = oi.getThetaCached();
+
         if (theta != null) {
             for (AngularSnapPoint snapPoint : snapPoints) {
                 //See if we should snap
@@ -116,6 +125,12 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
             }
             this.getPIDController().setSetpoint(theta);
         }
+
+        //Process or zero the input depending on whether the NavX is being overriden.
+        output = subsystem.getOverrideGyro() ? 0 : processPIDOutput(this.getPIDController().get());
+
+        //Adjust the heading according to the PID output, it'll be positive if we want to go right.
+        subsystem.setOutput(oi.getVelCached() - output, oi.getVelCached() + output);
     }
 
     /**
@@ -142,20 +157,6 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
     @Override
     protected void interrupted() {
         Logger.addEvent("FieldOrientedUnidirectionalDriveCommand Interrupted!", this.getClass());
-    }
-
-    /**
-     * Give the correct output to the motors based on the PID output and velocity input.
-     *
-     * @param output The output of the angular PID loop.
-     */
-    @Override
-    protected void usePIDOutput(double output) {
-        //Process or zero the input depending on whether the NavX is being overriden.
-        output = subsystem.getOverrideGyro() ? 0 : processPIDOutput(output);
-
-        //Adjust the heading according to the PID output, it'll be positive if we want to go right.
-        subsystem.setOutput(oi.getVelCached() - output, oi.getVelCached() + output);
     }
 
     /**
