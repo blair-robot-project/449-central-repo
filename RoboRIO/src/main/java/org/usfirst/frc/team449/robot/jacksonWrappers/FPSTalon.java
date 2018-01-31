@@ -137,6 +137,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   Defaults to 1.
      * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
      * @param enableVoltageComp          Whether or not to use voltage compensation. Defaults to false.
+     * @param voltageCompSamples         The number of 1-millisecond samples to use for voltage compensation. Defaults
+     *                                   to 32.
      * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
      *                                   null if there is no encoder attached to this Talon.
      * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
@@ -173,6 +175,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable Double feetPerRotation,
                     @Nullable Integer currentLimit,
                     boolean enableVoltageComp,
+                    @Nullable Integer voltageCompSamples,
                     @Nullable FeedbackDevice feedbackDevice,
                     @Nullable Integer encoderCPR,
                     boolean reverseSensor,
@@ -317,6 +320,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
 
         //Enable or disable voltage comp
         canTalon.enableVoltageCompensation(enableVoltageComp);
+        canTalon.configVoltageCompSaturation(12, 0);
+        canTalon.configVoltageMeasurementFilter(voltageCompSamples != null ? voltageCompSamples : 32, 0);
 
         //Set up MP notifier
         bottomBufferLoader = new Notifier(this::processMotionProfileBuffer);
