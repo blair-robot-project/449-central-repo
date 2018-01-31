@@ -21,13 +21,21 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     private final FPSTalon motor;
 
     /**
+     * How close the motor has to be to the setpoint to be considered on target, in feet.
+     */
+    private final double onTargetTolerance;
+
+    /**
      * Default constructor.
      *
      * @param motor The motor changing the position
+     * @param onTargetTolerance How close the motor has to be to the setpoint to be considered on target, in feet.
      */
     @JsonCreator
-    public SubsystemPositionSimple(@NotNull @JsonProperty(required = true) FPSTalon motor) {
+    public SubsystemPositionSimple(@NotNull @JsonProperty(required = true) FPSTalon motor,
+                                   @JsonProperty(required = true) double onTargetTolerance) {
         this.motor = motor;
+        this.onTargetTolerance = onTargetTolerance;
     }
 
     /**
@@ -84,6 +92,16 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     @Override
     public void resetPosition() {
         motor.resetPosition();
+    }
+
+    /**
+     * Check if the mechanism has reached the setpoint.
+     *
+     * @return True if the setpoint has been reached, false otherwise.
+     */
+    @Override
+    public boolean onTarget() {
+        return Math.abs(motor.getError()) < onTargetTolerance;
     }
 
     /**

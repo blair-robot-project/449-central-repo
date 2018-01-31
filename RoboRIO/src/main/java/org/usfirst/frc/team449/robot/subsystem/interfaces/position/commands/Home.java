@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosition;
@@ -13,13 +14,13 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosi
  * Move the motor until it hits a limit switch in order to "zero" it.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Home extends Command {
+public class Home<T extends Subsystem & SubsystemPosition> extends Command {
 
     /**
      * The subsystem to execute this command on.
      */
     @NotNull
-    private final SubsystemPosition subsystem;
+    private final T subsystem;
 
     /**
      * The speed to go at, on [0, 1].
@@ -39,9 +40,10 @@ public class Home extends Command {
      * @param useForward Whether to use the forward or reverse limit switch. Defaults to using reverse.
      */
     @JsonCreator
-    public Home(@NotNull @JsonProperty(required = true) SubsystemPosition subsystem,
+    public Home(@NotNull @JsonProperty(required = true) T subsystem,
                 @JsonProperty(required = true) double speed,
                 boolean useForward) {
+        requires(subsystem);
         this.subsystem = subsystem;
         this.speed = speed;
         this.useForward = useForward;

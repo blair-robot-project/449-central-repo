@@ -42,6 +42,13 @@ public interface SubsystemPosition {
     void resetPosition();
 
     /**
+     * Check if the mechanism has reached the setpoint.
+     *
+     * @return True if the setpoint has been reached, false otherwise.
+     */
+    boolean onTarget();
+
+    /**
      * Enable the motors of this subsystem.
      */
     void enableMotor();

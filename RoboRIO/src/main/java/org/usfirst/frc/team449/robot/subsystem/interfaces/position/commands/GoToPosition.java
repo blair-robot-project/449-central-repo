@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosition;
@@ -13,13 +14,13 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosi
  * Go to a given position
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class GoToPosition extends Command {
+public class GoToPosition<T extends Subsystem & SubsystemPosition> extends Command {
 
     /**
      * The subsystem to execute this command on.
      */
     @NotNull
-    private final SubsystemPosition subsystem;
+    private final T subsystem;
 
     /**
      * The position to go to, in feet.
@@ -33,36 +34,38 @@ public class GoToPosition extends Command {
      * @param setpoint  The position to go to, in feet.
      */
     @JsonCreator
-    public GoToPosition(@NotNull @JsonProperty(required = true) SubsystemPosition subsystem,
+    public GoToPosition(@NotNull @JsonProperty(required = true) T subsystem,
                         @JsonProperty(required = true) double setpoint) {
+        requires(subsystem);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
     }
 
     /**
-     * Log when this command is initialized
+     * Log and set setpoint when this command is initialized
      */
     @Override
     protected void initialize() {
         Logger.addEvent("GoToPosition init.", this.getClass());
-    }
-
-    /**
-     * Sets position.
-     */
-    @Override
-    protected void execute() {
         subsystem.setPositionSetpoint(setpoint);
     }
 
     /**
-     * Finish immediately because this is a state-change command.
+     * Does nothing, don't want to spam position setpoints.
+     */
+    @Override
+    protected void execute() {
+        // Do nothing
+    }
+
+    /**
+     * Exit when the setpoint has been reached
      *
-     * @return true
+     * @return true if the setpoint is reached, false otherwise.
      */
     @Override
     protected boolean isFinished() {
-        return true;
+        return subsystem.onTarget();
     }
 
     /**
@@ -70,7 +73,7 @@ public class GoToPosition extends Command {
      */
     @Override
     protected void end() {
-        Logger.addEvent("GoToPosition ends.", this.getClass());
+        Logger.addEvent("GoToPosition end.", this.getClass());
     }
 
     /**
