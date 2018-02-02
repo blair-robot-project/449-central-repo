@@ -114,6 +114,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     private Double RPS;
 
     /**
+     * The setpoint in native units. Field to avoid garbage collection.
+     */
+    private double nativeSetpoint;
+
+    /**
      * Default constructor.
      *
      * @param port                       CAN port of this Talon.
@@ -512,13 +517,14 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     public void setPositionSetpoint(double feet) {
         setpoint = feet;
+        nativeSetpoint = feetToEncoder(feet);
         if (currentGearSettings.getMotionMagicMaxVel() != null) {
             //We don't know the setpoint for motion magic so we can't do fancy F stuff
             canTalon.config_kF(0, 0, 0);
-            canTalon.set(ControlMode.MotionMagic, feetToEncoder(feet));
+            canTalon.set(ControlMode.MotionMagic, nativeSetpoint);
         } else {
-            canTalon.config_kF(0, currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
-            canTalon.set(ControlMode.Position, feetToEncoder(feet));
+            canTalon.config_kF(0, 1023./12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
+            canTalon.set(ControlMode.Position, nativeSetpoint);
         }
     }
 
@@ -552,10 +558,10 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param velocity velocity setpoint in FPS.
      */
     protected void setVelocityFPS(double velocity) {
-        double nativeVelocity = FPSToEncoder(velocity);
-        canTalon.config_kF(0, currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity), 0);
+        nativeSetpoint = FPSToEncoder(velocity);
+        canTalon.config_kF(0, 1023./12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity), 0);
         setpoint = velocity;
-        canTalon.set(ControlMode.Velocity, nativeVelocity);
+        canTalon.set(ControlMode.Velocity, nativeSetpoint);
     }
 
     /**

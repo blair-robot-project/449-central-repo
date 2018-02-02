@@ -61,10 +61,10 @@ public class FeedForwardElevatorComponent extends FeedForwardComponent {
     }
 
     /**
-     * Calculate the feedforward for the given input.
+     * Calculate the voltage for the given input.
      *
      * @param operand the setpoint, in feet, feet/sec, feet/sec^2, etc.
-     * @return the feedforward (kF gain) to use for that input.
+     * @return the feedforward voltage to use for that input.
      */
     @Override
     public double applyAsDouble(double operand) {
@@ -74,7 +74,7 @@ public class FeedForwardElevatorComponent extends FeedForwardComponent {
             if (pos <= positions[i]) {
                 //1023/12 converts from voltage to native, and divide by operand because FF gets multiplied by setpoint
                 // even in position mode.
-                return (1023. / 12. * voltages[i] / operand);
+                return (voltages[i] / operand);
             }
         }
         return 0;

@@ -72,19 +72,19 @@ public class FeedForwardKaKvComponent extends FeedForwardComponent {
     }
 
     /**
-     * Calculate the feedforward for the given input.
+     * Calculate the voltage for the given input.
      *
      * @param operand the setpoint, in feet, feet/sec, feet/sec^2, etc.
-     * @return the feedforward (kF gain) to use for that input.
+     * @return the feedforward voltage to use for that input.
      */
     @Override
     public double applyAsDouble(double operand) {
         if (operand == 0) {
             return 0;
         } else if (operand > 0) {
-            return (1023. / 12. * (kVFwd + interceptVoltageFwd / operand));
+            return (kVFwd*operand + interceptVoltageFwd);
         } else {
-            return (1023. / 12. * (kVRev - interceptVoltageRev / operand));
+            return (kVRev*operand - interceptVoltageRev);
         }
     }
 }
