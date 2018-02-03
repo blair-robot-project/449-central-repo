@@ -770,7 +770,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 canTalon.config_kI(1, currentGearSettings.getMotionProfileIRev(), 0);
                 canTalon.config_kD(1, currentGearSettings.getMotionProfileDRev(), 0);
             }
-            canTalon.config_kF(1, 1023. / currentGearSettings.getRevPeakOutputVoltage(), 0);
         } else {
             if (data.isVelocityOnly()) {
                 canTalon.config_kP(1, 0, 0);
@@ -781,8 +780,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 canTalon.config_kI(1, currentGearSettings.getMotionProfileIFwd(), 0);
                 canTalon.config_kD(1, currentGearSettings.getMotionProfileDFwd(), 0);
             }
-            canTalon.config_kF(1, 1023. / currentGearSettings.getFwdPeakOutputVoltage(), 0);
         }
+
+        canTalon.config_kF(1, 1023. / 12., 0);
 
         //Only call position getter once
         double startPosition = data.resetPosition() ? 0 : getPositionFeet();

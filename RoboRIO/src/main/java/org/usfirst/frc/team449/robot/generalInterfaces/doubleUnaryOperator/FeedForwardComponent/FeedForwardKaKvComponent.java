@@ -65,9 +65,9 @@ public class FeedForwardKaKvComponent extends FeedForwardComponent {
     @Override
     public double calcMPVoltage(double positionSetpoint, double velSetpoint, double accelSetpoint) {
         if (velSetpoint > 0) {
-            return velSetpoint * kAFwd + accelSetpoint * kVFwd + interceptVoltageFwd;
+            return velSetpoint * kVFwd + accelSetpoint * kAFwd + interceptVoltageFwd;
         } else {
-            return velSetpoint * kARev + accelSetpoint * kVRev - interceptVoltageRev;
+            return velSetpoint * kVRev + accelSetpoint * kARev - interceptVoltageRev;
         }
     }
 
