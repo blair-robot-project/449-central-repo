@@ -523,7 +523,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             canTalon.config_kF(0, 0, 0);
             canTalon.set(ControlMode.MotionMagic, nativeSetpoint);
         } else {
-            canTalon.config_kF(0, 1023./12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
+            canTalon.config_kF(0, 1023. / 12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
             canTalon.set(ControlMode.Position, nativeSetpoint);
         }
     }
@@ -559,7 +559,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     protected void setVelocityFPS(double velocity) {
         nativeSetpoint = FPSToEncoder(velocity);
-        canTalon.config_kF(0, 1023./12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity), 0);
+        canTalon.config_kF(0, 1023. / 12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity), 0);
         setpoint = velocity;
         canTalon.set(ControlMode.Velocity, nativeSetpoint);
     }

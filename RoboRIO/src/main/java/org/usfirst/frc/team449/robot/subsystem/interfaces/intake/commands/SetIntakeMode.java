@@ -57,12 +57,15 @@ public class SetIntakeMode extends InstantCommand {
     }
 
     /**
-	 * Finish immediately because this is a state-change command.
-	 *
-	 * @return true
-	 */
-	@Override
-	protected boolean isFinished() { return true; }
+     * Finish immediately because this is a state-change command.
+     *
+     * @return true
+     */
+    @Override
+    protected boolean isFinished() {
+        return true;
+    }
+
     /**
      * Log when this command ends
      */
@@ -70,6 +73,7 @@ public class SetIntakeMode extends InstantCommand {
     protected void end() {
         Logger.addEvent("SetIntakeMode end.", this.getClass());
     }
+
     /**
      * Log when this command is interrupted.
      */

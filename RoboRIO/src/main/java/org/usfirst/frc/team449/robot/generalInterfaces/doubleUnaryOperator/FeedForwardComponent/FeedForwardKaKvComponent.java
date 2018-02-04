@@ -82,9 +82,9 @@ public class FeedForwardKaKvComponent extends FeedForwardComponent {
         if (operand == 0) {
             return 0;
         } else if (operand > 0) {
-            return (kVFwd*operand + interceptVoltageFwd);
+            return (kVFwd * operand + interceptVoltageFwd);
         } else {
-            return (kVRev*operand - interceptVoltageRev);
+            return (kVRev * operand - interceptVoltageRev);
         }
     }
 }

@@ -28,7 +28,7 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * Default constructor.
      *
-     * @param motor The motor changing the position
+     * @param motor             The motor changing the position
      * @param onTargetTolerance How close the motor has to be to the setpoint to be considered on target, in feet.
      */
     @JsonCreator
