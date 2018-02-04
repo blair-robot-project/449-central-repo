@@ -87,7 +87,7 @@ public class MotionProfileData {
         this.inverted = inverted;
         this.velocityOnly = velocityOnly;
         this.resetPosition = resetPosition;
-        this.pointTimeMillis = (int) (deltaTime / 1000.);
+        this.pointTimeMillis = (int) (deltaTime * 1000.);
         data = new double[pos.length][3];
         for (int i = 0; i < pos.length; i++) {
             data[i][0] = pos[i];
@@ -113,7 +113,7 @@ public class MotionProfileData {
         this.inverted = inverted;
         this.velocityOnly = velocityOnly;
         this.resetPosition = resetPosition;
-        this.pointTimeMillis = (int) (deltaTime / 1000.);
+        this.pointTimeMillis = (int) (deltaTime * 1000.);
         data = new double[pos.size()][3];
         for (int i = 0; i < pos.size(); i++) {
             data[i][0] = pos.get(i);
