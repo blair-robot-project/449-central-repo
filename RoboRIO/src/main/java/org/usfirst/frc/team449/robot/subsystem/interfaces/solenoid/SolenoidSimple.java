@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 
 /**
- * A simple SubsystemSolenoid.
+ * A simple SubsystemSolenoid.java.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SolenoidSimple extends Subsystem implements SubsystemSolenoid {

@@ -7,7 +7,8 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * A component for calculating feedforwards for a Talon. Takes the setpoint and returns the correct F value.
+ * A component for calculating feedforwards for a Talon. Takes the setpoint and returns the correct feedforward
+ * voltage.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class FeedForwardComponent implements DoubleUnaryOperator {
@@ -48,10 +49,10 @@ public abstract class FeedForwardComponent implements DoubleUnaryOperator {
     public abstract double calcMPVoltage(double positionSetpoint, double velSetpoint, double accelSetpoint);
 
     /**
-     * Calculate the feedforward for the given input.
+     * Calculate the voltage for the given input.
      *
      * @param operand the setpoint, in feet, feet/sec, feet/sec^2, etc.
-     * @return the feedforward (kF gain) to use for that input.
+     * @return the feedforward voltage to use for that input.
      */
     @Override
     public abstract double applyAsDouble(double operand);

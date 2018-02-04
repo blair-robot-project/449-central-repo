@@ -1,12 +1,9 @@
 [![Build Status](https://travis-ci.org/blair-robot-project/449-central-repo.svg?branch=master)](https://travis-ci.org/blair-robot-project/449-central-repo/)
 [![CodeFactor](https://www.codefactor.io/repository/github/blair-robot-project/449-central-repo/badge)](https://www.codefactor.io/repository/github/blair-robot-project/449-central-repo)
 # 449-central-repo
-FRC Team 449 Blair Robot Project's reusable code
+The Blair Robot Project (FRC team 449)'s reusable code
 
 JavaDocs: https://blair-robot-project.github.io/449-central-repo/
-
-In order for this code to work on your RoboRIO, you have to install
-java using our custom installer, found [here](https://github.com/blair-robot-project/java-installer).
 
 For info on how to set up your computer for Gradle and Java, see [here](
 http://team449.shoutwiki.com/wiki/Software_Guide).
