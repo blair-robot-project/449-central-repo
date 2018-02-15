@@ -345,7 +345,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         if (slaveVictors != null) {
             //Set up slaves.
             for (SlaveVictor slave : slaveVictors) {
-                slave.setMaster(port, enableBrakeMode);
+                slave.setMaster(canTalon, enableBrakeMode);
             }
         }
     }

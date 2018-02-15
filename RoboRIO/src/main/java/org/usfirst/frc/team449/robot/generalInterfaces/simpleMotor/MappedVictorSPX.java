@@ -49,7 +49,7 @@ public class MappedVictorSPX implements SimpleMotor, Loggable {
         if (slaveVictors != null) {
             //Set up slaves.
             for (SlaveVictor slave : slaveVictors) {
-                slave.setMaster(port, brakeMode);
+                slave.setMaster(victorSPX, brakeMode);
             }
         }
     }

@@ -40,7 +40,7 @@ public class Pathgen {
 
         Waypoint[] points = new Waypoint[]{ //Units are feet and radians.
                 new Waypoint(0, 0, 0),
-                new Waypoint(100. / 12., 0, 0)
+                new Waypoint(25., 0, 0)
         };
 
         Waypoint[] blueLeft = new Waypoint[]{
@@ -128,21 +128,21 @@ public class Pathgen {
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
-        profiles.put("RedLeft", redLeft);
-        profiles.put("RedRight", redRight);
-        profiles.put("RedMid", redCenter);
-        profiles.put("BlueLeft", blueLeft);
-        profiles.put("BlueRight", blueRight);
-        profiles.put("BlueMid", blueCenter);
-        profiles.put("RedShoot", redPegToKey);
-        profiles.put("BlueShoot", bluePegToKey);
-        profiles.put("RedBackup", backupRed);
-        profiles.put("BlueBackup", backupBlue);
-        profiles.put("forward100In", points);
-        profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
-        profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
-        profiles.put("RedLoadingToLoading", redLoadingToLoading);
-        profiles.put("RedBoilerToLoading", redBoilerToLoading);
+//        profiles.put("RedLeft", redLeft);
+//        profiles.put("RedRight", redRight);
+//        profiles.put("RedMid", redCenter);
+//        profiles.put("BlueLeft", blueLeft);
+//        profiles.put("BlueRight", blueRight);
+//        profiles.put("BlueMid", blueCenter);
+//        profiles.put("RedShoot", redPegToKey);
+//        profiles.put("BlueShoot", bluePegToKey);
+//        profiles.put("RedBackup", backupRed);
+//        profiles.put("BlueBackup", backupBlue);
+        profiles.put("test", points);
+//        profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
+//        profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
+//        profiles.put("RedLoadingToLoading", redLoadingToLoading);
+//        profiles.put("RedBoilerToLoading", redBoilerToLoading);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "calcifer";
