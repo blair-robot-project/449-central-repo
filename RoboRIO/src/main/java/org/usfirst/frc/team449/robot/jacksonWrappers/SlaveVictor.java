@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -35,14 +36,13 @@ public class SlaveVictor {
     /**
      * Set this Victor to follow another CAN device.
      *
-     * @param port      The CAN ID of the device to follow.
      * @param brakeMode Whether this Talon should be in brake mode or coast mode.
      */
-    public void setMaster(int port, boolean brakeMode) {
+    public void setMaster(IMotorController toFollow, boolean brakeMode) {
         //Brake mode doesn't automatically follow master
         victorSPX.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
 
         //Follow the leader
-        victorSPX.set(ControlMode.Follower, port);
+        victorSPX.follow(toFollow);
     }
 }
