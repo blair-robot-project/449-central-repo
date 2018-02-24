@@ -127,6 +127,18 @@ public class Pathgen {
                 new Waypoint(22, 15, 0)
         };
 
+        Waypoint[] leftXLeft = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(26.-39.5/12.,-2,-Math.PI/6)
+        };
+
+        Waypoint[] leftXRight = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint((17.417+21.786)/2.-39.5/12./2.+0.5,-9,-Math.PI/2),
+                new Waypoint(26.-39.5/12., 34.5/12.-7.535-11.092-1, 0)
+        };
+
+
         Map<String, Waypoint[]> profiles = new HashMap<>();
 //        profiles.put("RedLeft", redLeft);
 //        profiles.put("RedRight", redRight);
@@ -138,29 +150,28 @@ public class Pathgen {
 //        profiles.put("BlueShoot", bluePegToKey);
 //        profiles.put("RedBackup", backupRed);
 //        profiles.put("BlueBackup", backupBlue);
-        profiles.put("test", points);
+        profiles.put("SameScale", leftXRight);
 //        profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
 //        profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
 //        profiles.put("RedLoadingToLoading", redLoadingToLoading);
 //        profiles.put("RedBoilerToLoading", redBoilerToLoading);
 //		profiles.put("forward100In", points);
 
-        final String ROBOT_NAME = "calcifer";
+        final String ROBOT_NAME = "navi";
 
         //Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
         // the circumference of a circle moved by the robot via C = 360 * n / θ
         //You then find the diameter via C / π.
-        double balbasaurWheelbase = 30. / 12.;
 
-        double calciferWheelbase = 26.6536 / 12.;
+        double naviWheelbase = 25.5/12.;
 
-        Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 5., 4.5, 9.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+        Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
+                0.05, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
 
-            TankModifier tm = new TankModifier(trajectory).modify(calciferWheelbase); //Units are feet
+            TankModifier tm = new TankModifier(trajectory).modify(naviWheelbase); //Units are feet
 
             FileWriter lfw = new FileWriter(ROBOT_NAME + "Left" + profile + "Profile.csv", false);
             FileWriter rfw = new FileWriter(ROBOT_NAME + "Right" + profile + "Profile.csv", false);

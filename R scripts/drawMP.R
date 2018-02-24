@@ -1,4 +1,4 @@
-plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startY = 0, startPos = c(-1,-1,-1,-1,-1,-1), usePosition = TRUE){
+plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, centerToBack, startY = 0, startPos = c(-1,-1,-1,-1,-1,-1), usePosition = TRUE){
   left <- read.csv(paste("../calciferLeft",profileName,"Profile.csv",sep=""), header=FALSE)
   right <- read.csv(paste("../calciferRight",profileName,"Profile.csv",sep=""), header=FALSE)
   startingCenter <- c(startY, centerToBack)
@@ -83,20 +83,14 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
   return(out)
 }
 
-drawProfile <- function (coords, centerToFront, centerToBack, wheelbaseDiameter, clear=TRUE, linePlot = TRUE){
-  
+drawProfile <- function (coords, centerToBack, wheelbaseDiameter, clear=TRUE, linePlot = TRUE){
   if (clear){
     if (linePlot){
       plot(coords[,2],coords[,3], type="l", col="Green", ylim=c(-16, 16),xlim = c(0,54), xlab = "X Position (feet)", ylab="Y Position (feet)", asp=1)
     } else {
       plot(coords[,2],coords[,3], col="Green", ylim=c(-16, 16), xlim = c(0,54), xlab = "X Position (feet)", ylab="Y Position (feet)", asp=1)
     }
-    field <- read.csv("field.csv")
-    #Strings are read as factors by default, so we need to do this to make it read them as strings
-    field$col <- as.character(field$col)
-    for (i in 1:length(field$x1)){
-      lines(c(field$x1[i], field$x2[i]), c(field$y1[i], field$y2[i]), col=field$col[i])
-    }
+    plotField("powerUpField.csv")
   } else {
     if (linePlot){
       lines(coords[,2],coords[,3],col="Green")
@@ -111,12 +105,10 @@ drawProfile <- function (coords, centerToFront, centerToBack, wheelbaseDiameter,
   }
 }
 
-drawRobot <- function(robotFile, robotPos){
-  theta <- atan2(robotPos[5] - robotPos[3], robotPos[4] - robotPos[2])
-  perp <- theta + pi/2
-  robotCenter <- c((robotPos[2]+robotPos[4])/2.,(robotPos[3]+robotPos[5])/2.)
+drawRobot <- function(robotFile, x, y, theta, robotCircleFile=NA){
+  robotCenter <- c(x,y)
   robot <- read.csv(robotFile)
-  rotMatrix <- matrix(c(cos(perp), -sin(perp), sin(perp), cos(perp)), nrow=2, ncol=2, byrow=TRUE)
+  rotMatrix <- matrix(c(cos(theta), -sin(theta), sin(theta), cos(theta)), nrow=2, ncol=2, byrow=TRUE)
   
   point1s <- rotMatrix %*% matrix(c(robot$x1, robot$y1), nrow = 2, ncol = length(robot$x1), byrow = TRUE) 
   point1s <- point1s + c(robotCenter[1], robotCenter[2])
@@ -129,33 +121,27 @@ drawRobot <- function(robotFile, robotPos){
   ys <- c(rbind(point1s[2,], point2s[2,]))
   
   lines(x=xs, y=ys, col="Blue")
+  
+  if(!is.na(robotCircleFile)){
+    library("plotrix")
+    circles <- read.csv(robotCircleFile)
+    centers <- rotMatrix %*% matrix(c(circles$x, circles$y), nrow = 2, ncol = length(circles$x), byrow = TRUE)
+    centers <- centers + c(robotCenter[1], robotCenter[2])
+    for (i in 1:length(circles$x)) {
+      draw.circle(x=centers[1,i], y=centers[2, i], radius = circles$radius[i], col="Green")
+    }
+  }
 }
 
-wheelbaseDiameter <- 26./12.
-centerToFront <- (27./2.)/12.
-centerToBack <- (27./2.+3.25)/12.
-centerToSide <- (29./2.+3.25)/12.
-#                                                                                                                                                                                         Time, Left X, Left Y, Right X, Right Y
-out <- plotProfile(profileName = "RedRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos=c(0, 54 - centerToBack, 10.3449-wheelbaseDiameter,54-centerToBack,10.3449, pi), usePosition = TRUE)
-drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
-tmp <- out[length(out[,1]),]
-drawRobot("robot.csv", tmp)
-out2 <- plotProfile(profileName = "RedBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-tmp2 <- out2[length(out2[,1]),]
-drawRobot("robot.csv", out2[length(out2[,1]),])
-out3 <- plotProfile(profileName = "RedBoilerToLoading",inverted = FALSE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp2)
-drawProfile(coords = out3, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-drawRobot("robot.csv", out3[length(out3[,1]),])
+plotField <- function(filename, xOffset=0, yOffset=0){
+  field <- read.csv(filename)
+  #Strings are read as factors by default, so we need to do this to make it read them as strings
+  field$col <- as.character(field$col)
+  for (i in 1:length(field$x1)){
+    lines(c(field$x1[i]+xOffset, field$x2[i]+xOffset), c(field$y1[i]+yOffset, field$y2[i]+yOffset), col=field$col[i])
+  }
+}
 
-#out <- plotProfile(profileName = "BlueLeft", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= 10.3449-centerToSide, usePosition = TRUE)
-#drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
-#tmp <- out[length(out[,1]),]
-#drawRobot("robot.csv", tmp)
-#out2 <- plotProfile(profileName = "RedBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-#drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-#tmp2 <- out2[length(out2[,1]),]
-#drawRobot("robot.csv", out2[length(out2[,1]),])
-#out3 <- plotProfile(profileName = "BoilerToLoading",inverted = FALSE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp2)
-#drawProfile(coords = out3, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-#drawRobot("robot.csv", out3[length(out3[,1]),])
+wheelbaseDiameter <- 25.5/12.
+centerToBack <- (39.5/2.)/12.
+centerToSide <- (24.5)/12.
