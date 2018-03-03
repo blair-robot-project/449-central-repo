@@ -17,153 +17,84 @@ public class Pathgen {
 
     public static void main(String[] args) throws IOException {
 
-        final double CENTER_TO_FRONT = 27. / 2.;
-        final double CENTER_TO_BACK = 27. / 2. + 3.25;
-        final double CENTER_TO_SIDE = 29. / 2. + 3.25;
-        final double BACK_FROM_PEG = -5;
-        //DO NOT TOUCH THE ONES BELOW
-        final double CARRIAGE_LEN = 3.63;
-        final double BLUE_WALL_TO_CENTER_PEG = 114.;
-        final double BLUE_WALL_TO_SIDE_PEG = 130.5;
-        final double BLUE_BACK_CORNER_TO_SIDE_PEG = 89.;
-        final double BLUE_HALF_KEY_LENGTH = 152. / 2.;
-        final double BLUE_KEY_CORNER_TO_SIDE_PEG = 16.;
-        final double RED_WALL_TO_CENTER_PEG = 113.5;
-        final double RED_WALL_TO_SIDE_PEG = 131.;
-        final double RED_BACK_CORNER_TO_SIDE_PEG = 97.;
-        final double RED_HALF_KEY_LENGTH = 152. / 2.;
-        final double RED_KEY_CORNER_TO_SIDE_PEG = 21.;
-        final double AIRSHIP_PARALLEL_OFFSET_BLUE = 1.;
-        final double AIRSHIP_PARALLEL_OFFSET_RED = 2.;
-
-        final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
-
-        Waypoint[] points = new Waypoint[]{ //Units are feet and radians.
-                new Waypoint(0, 0, 0),
-                new Waypoint(25., 0, 0)
-        };
-
-        Waypoint[] blueLeft = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((BLUE_WALL_TO_SIDE_PEG - CENTER_TO_BACK - 0.5 * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE * Math.cos(5. * Math.PI / 6.)) / 12.
-                        , -(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.) / 2.) * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE * Math.sin(5. * Math.PI / 6.)) / 12., -Math.PI / 3.)
-        };
-
-        Waypoint[] blueRight = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((BLUE_WALL_TO_SIDE_PEG - CENTER_TO_BACK - 0.5 * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE * Math.cos(5. * Math.PI / 6.)) / 12.
-                        , (BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.) / 2.) * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE * Math.sin(5. * Math.PI / 6.)) / 12., Math.PI / 3.)
-        };
-
-        Waypoint[] blueCenter = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((BLUE_WALL_TO_CENTER_PEG - CENTER_TO_BACK - PEG_BASE_TO_CENTER) / 12., 0, 0)
-        };
-
-        Waypoint[] redLeft = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((RED_WALL_TO_SIDE_PEG - CENTER_TO_BACK - 0.5 * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED * Math.cos(5. * Math.PI / 6.)) / 12.
-                        , -(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.) / 2.) * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED * Math.sin(5. * Math.PI / 6.)) / 12., -Math.PI / 3.)
-        };
-
-        Waypoint[] redRight = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((RED_WALL_TO_SIDE_PEG - CENTER_TO_BACK - 0.5 * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED * Math.cos(5. * Math.PI / 6.)) / 12.
-                        , (RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.) / 2.) * PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED * Math.sin(5. * Math.PI / 6.)) / 12., Math.PI / 3.)
-        };
-
-        Waypoint[] redCenter = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((RED_WALL_TO_CENTER_PEG - CENTER_TO_BACK - PEG_BASE_TO_CENTER) / 12., 0, 0)
-        };
-
-        Waypoint[] redPegToKey = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((PEG_BASE_TO_CENTER * Math.cos(Math.toRadians(180)) + RED_WALL_TO_SIDE_PEG * Math.cos(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG * Math.cos(Math.toRadians(30))
-                        + RED_HALF_KEY_LENGTH * Math.cos(Math.toRadians(75)) + CENTER_TO_BACK * Math.cos(Math.toRadians(165))) / 12.,
-                        (RED_WALL_TO_SIDE_PEG * Math.sin(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG * Math.sin(Math.toRadians(30))
-                                + RED_HALF_KEY_LENGTH * Math.sin(Math.toRadians(75)) + CENTER_TO_BACK * Math.sin(Math.toRadians(165))) / 12.,
-                        -Math.toRadians(16))
-        };
-
-        Waypoint[] bluePegToKey = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((PEG_BASE_TO_CENTER * Math.cos(Math.toRadians(180)) + BLUE_WALL_TO_SIDE_PEG * Math.cos(Math.toRadians(60)) + BLUE_KEY_CORNER_TO_SIDE_PEG * Math.cos(Math.toRadians(-30))
-                        + BLUE_HALF_KEY_LENGTH * Math.cos(Math.toRadians(-75)) + CENTER_TO_BACK * Math.cos(Math.toRadians(-165))) / 12.,
-                        (BLUE_WALL_TO_SIDE_PEG * Math.sin(Math.toRadians(60)) + BLUE_KEY_CORNER_TO_SIDE_PEG * Math.sin(Math.toRadians(-30))
-                                + BLUE_HALF_KEY_LENGTH * Math.sin(Math.toRadians(-75)) + CENTER_TO_BACK * Math.sin(Math.toRadians(-165))) / 12.,
-                        Math.toRadians(16))
-        };
-
-        Waypoint[] backupRed = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(3, 1, Math.PI / 3)
-        };
-
-        Waypoint[] backupBlue = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(3, -1, -Math.PI / 3)
-        };
-
-        Waypoint[] blueLoadingToLoading = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(22, -5, 0)
-        };
-
-        Waypoint[] blueBoilerToLoading = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(5, 0, 0),
-                new Waypoint(22, -15, 0)
-        };
-
-        Waypoint[] redLoadingToLoading = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(22, 5, 0)
-        };
-
-        Waypoint[] redBoilerToLoading = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(5, 0, 0),
-                new Waypoint(22, 15, 0)
-        };
-
-        Waypoint[] leftXLeft = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(26.-39.5/12.,-2,-Math.PI/6)
-        };
-
-        Waypoint[] leftXRight = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((17.417+21.786)/2.-39.5/12./2.+0.5,-9,-Math.PI/2),
-                new Waypoint(26.-39.5/12., 34.5/12.-7.535-11.092-1, 0)
-        };
-
-
-        Map<String, Waypoint[]> profiles = new HashMap<>();
-//        profiles.put("RedLeft", redLeft);
-//        profiles.put("RedRight", redRight);
-//        profiles.put("RedMid", redCenter);
-//        profiles.put("BlueLeft", blueLeft);
-//        profiles.put("BlueRight", blueRight);
-//        profiles.put("BlueMid", blueCenter);
-//        profiles.put("RedShoot", redPegToKey);
-//        profiles.put("BlueShoot", bluePegToKey);
-//        profiles.put("RedBackup", backupRed);
-//        profiles.put("BlueBackup", backupBlue);
-        profiles.put("SameScale", leftXRight);
-//        profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
-//        profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
-//        profiles.put("RedLoadingToLoading", redLoadingToLoading);
-//        profiles.put("RedBoilerToLoading", redBoilerToLoading);
-//		profiles.put("forward100In", points);
-
-        final String ROBOT_NAME = "navi";
-
         //Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
         // the circumference of a circle moved by the robot via C = 360 * n / θ
         //You then find the diameter via C / π.
 
-        double naviWheelbase = 25.5/12.;
+        final double naviWheelbase = 25.5/12.;
+
+        final double LENGTH = 39.5 / 12.;
+        final double WIDTH = 34.5 / 12.;
+        final double CUBE_LENGTH = 13./12.;
+        final double DIAGONAL = Math.sqrt(WIDTH*WIDTH+LENGTH*LENGTH);
+        final double INT_ANGLE = Math.atan2(WIDTH, LENGTH);
+
+        Waypoint[] leftXLeft = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(26.-LENGTH, -2,-Math.PI/6)
+        };
+
+        Waypoint[] leftXRight = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint((17.417+21.786)/2.-LENGTH/2.+0.5,-9,-Math.PI/2),
+                new Waypoint(26.-LENGTH, WIDTH-7.535-11.092-1, 0)
+        };
+
+        Waypoint[] turn150Raw = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(naviWheelbase*Math.PI*150./360., 0, 0)
+        };
+
+//        double switchAngle = Math.PI/2-INT_ANGLE;
+//        double switchAngle = 0;
+        double switchAngle = Math.toRadians(10);
+
+        Waypoint[] sameScaleToCube = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(24.354-16.333-LENGTH/2-CUBE_LENGTH*1.5, 7.654-6.396+CUBE_LENGTH/2., 0),
+                new Waypoint(24.354-16.333-DIAGONAL/2*Math.sin(Math.PI-switchAngle-INT_ANGLE),
+                        7.654-6.396+CUBE_LENGTH/2.+DIAGONAL/2*Math.cos(Math.PI/2.-switchAngle-INT_ANGLE)-WIDTH/2.,switchAngle)
+//                new Waypoint(24.354-16.333-DIAGONAL/2*Math.abs(Math.cos(switchAngle+Math.PI*3/4)), 7.654-6.396+CUBE_LENGTH/2.+0.3,switchAngle)
+        };
+
+        double backupAngle= -Math.PI/4;
+
+        Waypoint[] backupFromSwitch = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(2*Math.abs(Math.cos(backupAngle/2)),2*Math.sin(backupAngle/2),backupAngle)
+        };
+
+        Waypoint[] backupIntakeLength = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(2.406833-LENGTH/2.+0.16666666+0.2, 0, 0)
+        };
+
+        double afterBackupAngle = -switchAngle+Math.abs(backupAngle);
+        double afterBackupXDistance = 19.7205-16.333-WIDTH/2.;
+        double afterBackupYDistance = 6.6672-6.396+LENGTH/2.;
+
+        Waypoint[] alignForCubes = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(afterBackupXDistance*Math.cos(afterBackupAngle)+afterBackupYDistance*Math.sin(afterBackupAngle),
+                        afterBackupXDistance*Math.sin(afterBackupAngle)+afterBackupYDistance*Math.cos(afterBackupAngle)
+                        , afterBackupAngle)
+        };
+
+        System.out.println(afterBackupXDistance);
+        System.out.println(Math.toDegrees(afterBackupAngle));
+
+
+        Map<String, Waypoint[]> profiles = new HashMap<>();
+        profiles.put("SameScale", leftXLeft);
+        profiles.put("OtherScale", leftXRight);
+        profiles.put("Turn150Raw", turn150Raw);
+        profiles.put("SameScaleToCube", sameScaleToCube);
+        profiles.put("BackupIntakeLength", backupIntakeLength);
+        profiles.put("BackupFromSwitch", backupFromSwitch);
+        profiles.put("AlignForCubes", alignForCubes);
+//		profiles.put("forward100In", points);
+
+        final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
                 0.05, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
