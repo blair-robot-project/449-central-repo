@@ -70,18 +70,23 @@ public class Pathgen {
         };
 
         double afterBackupAngle = -switchAngle+Math.abs(backupAngle);
-        double afterBackupXDistance = 19.7205-16.333-WIDTH/2.;
-        double afterBackupYDistance = 6.6672-6.396+LENGTH/2.;
+//        double afterBackupXDistance = 19.7205-16.333+LENGTH/2.;
+//        double afterBackupYDistance = 6.396-6.6672+WIDTH/2.;
+        double afterBackupXDistance = 20;
+        double afterBackupYDistance = -20;
 
         Waypoint[] alignForCubes = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(afterBackupXDistance*Math.cos(afterBackupAngle)+afterBackupYDistance*Math.sin(afterBackupAngle),
+                new Waypoint(afterBackupXDistance*Math.cos(afterBackupAngle)-afterBackupYDistance*Math.sin(afterBackupAngle),
                         afterBackupXDistance*Math.sin(afterBackupAngle)+afterBackupYDistance*Math.cos(afterBackupAngle)
                         , afterBackupAngle)
         };
 
         System.out.println(afterBackupXDistance);
+        System.out.println(afterBackupYDistance);
         System.out.println(Math.toDegrees(afterBackupAngle));
+        System.out.println(afterBackupXDistance*Math.cos(afterBackupAngle)+afterBackupYDistance*Math.sin(afterBackupAngle));
+        System.out.println(afterBackupXDistance*Math.sin(afterBackupAngle)+afterBackupYDistance*Math.cos(afterBackupAngle));
 
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
