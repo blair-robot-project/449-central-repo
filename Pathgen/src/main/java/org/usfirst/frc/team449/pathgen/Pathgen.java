@@ -31,7 +31,7 @@ public class Pathgen {
 
         Waypoint[] leftXLeft = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(26.-LENGTH, -2,-Math.PI/6)
+                new Waypoint(26.-LENGTH-0.5, -1,-Math.PI/5)
         };
 
         Waypoint[] leftXRight = new Waypoint[]{
@@ -40,69 +40,49 @@ public class Pathgen {
                 new Waypoint(26.-LENGTH, WIDTH-7.535-11.092-1, 0)
         };
 
-        Waypoint[] turn150Raw = new Waypoint[]{
+        Waypoint[] turn150 = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(naviWheelbase*Math.PI*150./360., 0, 0)
         };
 
-//        double switchAngle = Math.PI/2-INT_ANGLE;
-//        double switchAngle = 0;
-        double switchAngle = Math.toRadians(10);
-
-        Waypoint[] sameScaleToCube = new Waypoint[]{
+        Waypoint[] turnToSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(24.354-16.333-LENGTH/2-CUBE_LENGTH*1.5, 7.654-6.396+CUBE_LENGTH/2., 0),
-                new Waypoint(24.354-16.333-DIAGONAL/2*Math.sin(Math.PI-switchAngle-INT_ANGLE),
-                        7.654-6.396+CUBE_LENGTH/2.+DIAGONAL/2*Math.cos(Math.PI/2.-switchAngle-INT_ANGLE)-WIDTH/2.,switchAngle)
-//                new Waypoint(24.354-16.333-DIAGONAL/2*Math.abs(Math.cos(switchAngle+Math.PI*3/4)), 7.654-6.396+CUBE_LENGTH/2.+0.3,switchAngle)
+                new Waypoint(naviWheelbase*Math.PI*122.1511/360., 0, 0)
         };
 
-        double backupAngle= -Math.PI/4;
+        double angleFromHoriz = 1.102613;
+        double deltaAngle = Math.toRadians(158.1527-90)-angleFromHoriz;
+        double distFromBackPlateCorner = 7.049404;
+        double xDist = 18.9052653910365 - (11.971 + distFromBackPlateCorner*Math.sin(angleFromHoriz));
+        double yDist = 6.66871409506997 - (3.001 + distFromBackPlateCorner*Math.cos(angleFromHoriz));
+        System.out.println("X: "+xDist);
+        System.out.println("Y: "+yDist);
 
-        Waypoint[] backupFromSwitch = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(2*Math.abs(Math.cos(backupAngle/2)),2*Math.sin(backupAngle/2),backupAngle)
+        Waypoint[] sameScaleToCubeV2 = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(7.519406-LENGTH/2.-CUBE_LENGTH/2., 0, 0),
         };
 
-        Waypoint[] backupIntakeLength = new Waypoint[]{
+        Waypoint[] cubeToSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(2.406833-LENGTH/2.+0.16666666+0.2, 0, 0)
+                new Waypoint(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle),
+                        xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle)
+                        , deltaAngle)
         };
-
-        double afterBackupAngle = -switchAngle+Math.abs(backupAngle);
-//        double afterBackupXDistance = 19.7205-16.333+LENGTH/2.;
-//        double afterBackupYDistance = 6.396-6.6672+WIDTH/2.;
-        double afterBackupXDistance = 20;
-        double afterBackupYDistance = -20;
-
-        Waypoint[] alignForCubes = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(afterBackupXDistance*Math.cos(afterBackupAngle)-afterBackupYDistance*Math.sin(afterBackupAngle),
-                        afterBackupXDistance*Math.sin(afterBackupAngle)+afterBackupYDistance*Math.cos(afterBackupAngle)
-                        , afterBackupAngle)
-        };
-
-        System.out.println(afterBackupXDistance);
-        System.out.println(afterBackupYDistance);
-        System.out.println(Math.toDegrees(afterBackupAngle));
-        System.out.println(afterBackupXDistance*Math.cos(afterBackupAngle)+afterBackupYDistance*Math.sin(afterBackupAngle));
-        System.out.println(afterBackupXDistance*Math.sin(afterBackupAngle)+afterBackupYDistance*Math.cos(afterBackupAngle));
 
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("SameScale", leftXLeft);
         profiles.put("OtherScale", leftXRight);
-        profiles.put("Turn150Raw", turn150Raw);
-        profiles.put("SameScaleToCube", sameScaleToCube);
-        profiles.put("BackupIntakeLength", backupIntakeLength);
-        profiles.put("BackupFromSwitch", backupFromSwitch);
-        profiles.put("AlignForCubes", alignForCubes);
+        profiles.put("TurnToSwitch", turnToSwitch);
+        profiles.put("SameScaleToCube2", sameScaleToCubeV2);
+        profiles.put("CubeToSwitch", cubeToSwitch);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                0.002, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
