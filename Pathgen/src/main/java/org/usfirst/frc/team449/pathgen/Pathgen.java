@@ -50,26 +50,42 @@ public class Pathgen {
                 new Waypoint(naviWheelbase*Math.PI*122.1511/360., 0, 0)
         };
 
-        double angleFromHoriz = 1.102613;
-        double deltaAngle = Math.toRadians(158.1527-90)-angleFromHoriz;
-        double distFromBackPlateCorner = 7.049404;
-        double xDist = 18.9052653910365 - (11.971 + distFromBackPlateCorner*Math.sin(angleFromHoriz));
-        double yDist = 6.66871409506997 - (3.001 + distFromBackPlateCorner*Math.cos(angleFromHoriz));
-        System.out.println("X: "+xDist);
-        System.out.println("Y: "+yDist);
-
         Waypoint[] sameScaleToCubeV2 = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(7.519406-LENGTH/2.-CUBE_LENGTH/2., 0, 0),
         };
 
+        double angleFromHoriz = 1.102613;
+        double deltaAngle = Math.toRadians(158.1527-90)-angleFromHoriz;
+        double distFromBackPlateCorner = 7.049404;
+        double xDist = 18.9052653910365 - (11.971 + distFromBackPlateCorner*Math.sin(angleFromHoriz));
+        double yDist = 6.66871409506997 - (3.001 + distFromBackPlateCorner*Math.cos(angleFromHoriz));
         Waypoint[] cubeToSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle),
-                        xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle)
+                new Waypoint((xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle))*10,
+                        (xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle))*10
                         , deltaAngle)
         };
 
+        deltaAngle = Math.toRadians(90 - 157.6559);
+        xDist = (18.1336397008387 - (16.333+WIDTH/2.-0.1));
+        yDist = (13.5 -LENGTH/2 - 6.29190374820949);
+        System.out.println("X: "+xDist);
+        System.out.println("Y: "+yDist);
+        Waypoint[] cubeToAlignPoint = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(-2, 3, deltaAngle),
+//                new Waypoint(xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle),
+//                -(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle)), deltaAngle)
+        };
+        System.out.println("X: "+(xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle)));
+        System.out.println("Y: "+(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle))*-1);
+
+        Waypoint[] alignToCube = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(9.82704356541704 - 6.396 - LENGTH/2., -(18.8469404735703-16.333-WIDTH/2.), 0),
+                new Waypoint(9.82704356541704 - 4.054 - LENGTH/2., -(18.8469404735703-16.333-WIDTH/2.), 0)
+        };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("SameScale", leftXLeft);
@@ -77,12 +93,14 @@ public class Pathgen {
         profiles.put("TurnToSwitch", turnToSwitch);
         profiles.put("SameScaleToCube2", sameScaleToCubeV2);
         profiles.put("CubeToSwitch", cubeToSwitch);
+        profiles.put("CubeToAlign", cubeToAlignPoint);
+        profiles.put("AlignToCube", alignToCube);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.002, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                0.05, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
