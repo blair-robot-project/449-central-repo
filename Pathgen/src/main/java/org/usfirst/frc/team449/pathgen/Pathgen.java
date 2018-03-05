@@ -50,6 +50,11 @@ public class Pathgen {
                 new Waypoint(naviWheelbase*Math.PI*122.1511/360., 0, 0)
         };
 
+        Waypoint[] turnToScale = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(naviWheelbase*Math.PI*135./360., 0, 0)
+        };
+
         Waypoint[] sameScaleToCubeV2 = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(7.519406-LENGTH/2.-CUBE_LENGTH/2., 0, 0),
@@ -87,6 +92,11 @@ public class Pathgen {
                 new Waypoint(9.82704356541704 - 4.054 - LENGTH/2., -(18.8469404735703-16.333-WIDTH/2.), 0)
         };
 
+        Waypoint[] backupToScale = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(10-5.40400855828333-1,26-17.9364149306724-2,-Math.PI/2)
+        };
+
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("SameScale", leftXLeft);
         profiles.put("OtherScale", leftXRight);
@@ -95,6 +105,8 @@ public class Pathgen {
         profiles.put("CubeToSwitch", cubeToSwitch);
         profiles.put("CubeToAlign", cubeToAlignPoint);
         profiles.put("AlignToCube", alignToCube);
+        profiles.put("BackupToScale", backupToScale);
+        profiles.put("TurnToScale", turnToScale);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
