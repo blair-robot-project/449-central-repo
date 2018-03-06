@@ -4,6 +4,7 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
+import sun.nio.cs.ext.MacArabic;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class Pathgen {
         Waypoint[] leftXRight = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint((17.417+21.786)/2.-LENGTH/2.+0.5,-9,-Math.PI/2),
-                new Waypoint(26.-LENGTH, WIDTH-7.535-11.092-1, 0)
+                new Waypoint(26.-LENGTH-0.5, WIDTH-7.535-11.092-1, 0)
         };
 
         Waypoint[] turn180 = new Waypoint[]{
@@ -93,16 +94,21 @@ public class Pathgen {
                 new Waypoint(naviWheelbase*Math.PI/2, 0, 0)
         };
 
+        Waypoint[] turn90 = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(naviWheelbase*Math.PI/4., 0 ,0)
+        };
+
         Waypoint[] otherScaleToCube = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(1, 0, 0),
-                new Waypoint(24.359847636863-16.333-CUBE_LENGTH-LENGTH/2.,
+                new Waypoint(23.859847636863-16.333-CUBE_LENGTH-LENGTH/2.,
                         (6.396 + 5.313)/2. -7.09969547043006, -0.1)
         };
 
         Waypoint[] cubeToOtherSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(10, 0, 0)
+                new Waypoint(1, 0, 0)
         };
 
         Waypoint[] turnAfterScale = new Waypoint[]{
@@ -122,9 +128,36 @@ public class Pathgen {
                 new Waypoint(naviWheelbase*(
                         Math.abs(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,-2)))/2, 0, 0)
         };
-        System.out.println("X diff: "+(17.417+WIDTH/2+1-(17.417+16.333)/2.));
-        System.out.println("Y diff: "+((-6.396-5.313)/2.-((-6.396-5.313)/2.-2)));
-        System.out.println(Math.toDegrees(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,-2)));
+
+        Waypoint[] forward2 = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(2, 0, 0)
+        };
+
+        Waypoint[] leftSwitch = new Waypoint[]{
+                new Waypoint(LENGTH/2., 11.092-WIDTH/2., 0),
+                new Waypoint(LENGTH/2.+7, 11.092-WIDTH/2.+1, Math.PI/8),
+                new Waypoint((11.667+16.333)/2., 6.396+LENGTH/2., -Math.PI/2)
+        };
+
+        Waypoint[] crossFromLeftSwitch = new Waypoint[]{
+                new Waypoint(-14.0087625352467, 8.04061392262376, Math.PI/2),
+                new Waypoint(-17, 13-WIDTH/2, 0),
+                new Waypoint(-20, 8, -Math.PI/2),
+                new Waypoint(-19.5, -4, -Math.PI/2),
+                new Waypoint(-21, -8, -5*Math.PI/6)
+        };
+
+        Waypoint[] crossBackup = new Waypoint[]{
+                new Waypoint(19.323011796857, 6.98691304258737, Math.PI/6),
+//                new Waypoint(-24.971,-7.535-LENGTH/2., -Math.PI/2)
+                new Waypoint(23.6611187925359, 8.47314064611477, Math.PI/6),
+                new Waypoint(26.0144064617474, 10.4006621976282, Math.PI/2)
+//                new Waypoint(30, 16, Math.PI/2)
+//                new Waypoint(0, 0, 0),
+//                new Waypoint(5, 0, 0),
+//                new Waypoint(8, 0.5, Math.PI/2.+Math.toRadians(-29.8176))
+        };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("SameScale", leftXLeft);
@@ -142,12 +175,17 @@ public class Pathgen {
         profiles.put("CrossFromScale", crossFromScale);
         profiles.put("TurnAfterScale", turnAfterScale);
         profiles.put("TurnToCrossCube", turnToCrossCube);
+        profiles.put("Forward2", forward2);
+        profiles.put("LeftSwitch", leftSwitch);
+        profiles.put("Turn90", turn90);
+        profiles.put("CrossFromSwitch", crossFromLeftSwitch);
+        profiles.put("CrossBackup", crossBackup);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 7.5, 6, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                0.05, 7.5, 7, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
