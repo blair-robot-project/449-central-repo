@@ -34,17 +34,6 @@ public class Pathgen {
                 new Waypoint(26.-LENGTH-0.5, -1,-Math.PI/5)
         };
 
-        Waypoint[] leftXRight = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint((17.417+21.786)/2.-LENGTH/2.+0.5,-9,-Math.PI/2),
-                new Waypoint(26.-LENGTH, WIDTH-7.535-11.092-1, 0)
-        };
-
-        Waypoint[] turn150 = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase*Math.PI*150./360., 0, 0)
-        };
-
         Waypoint[] turnToSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(naviWheelbase*Math.PI*122.1511/360., 0, 0)
@@ -75,16 +64,12 @@ public class Pathgen {
         deltaAngle = Math.toRadians(90 - 157.6559);
         xDist = (18.1336397008387 - (16.333+WIDTH/2.-0.1));
         yDist = (13.5 -LENGTH/2 - 6.29190374820949);
-        System.out.println("X: "+xDist);
-        System.out.println("Y: "+yDist);
         Waypoint[] cubeToAlignPoint = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(-2, 3, deltaAngle),
 //                new Waypoint(xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle),
 //                -(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle)), deltaAngle)
         };
-        System.out.println("X: "+(xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle)));
-        System.out.println("Y: "+(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle))*-1);
 
         Waypoint[] alignToCube = new Waypoint[]{
                 new Waypoint(0,0,0),
@@ -97,6 +82,50 @@ public class Pathgen {
                 new Waypoint(10-5.40400855828333-1,26-17.9364149306724-2,-Math.PI/2)
         };
 
+        Waypoint[] leftXRight = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint((17.417+21.786)/2.-LENGTH/2.+0.5,-9,-Math.PI/2),
+                new Waypoint(26.-LENGTH, WIDTH-7.535-11.092-1, 0)
+        };
+
+        Waypoint[] turn180 = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(naviWheelbase*Math.PI/2, 0, 0)
+        };
+
+        Waypoint[] otherScaleToCube = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(1, 0, 0),
+                new Waypoint(24.359847636863-16.333-CUBE_LENGTH-LENGTH/2.,
+                        (6.396 + 5.313)/2. -7.09969547043006, -0.1)
+        };
+
+        Waypoint[] cubeToOtherSwitch = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(10, 0, 0)
+        };
+
+        Waypoint[] turnAfterScale = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(naviWheelbase*Math.PI*117/360., 0, 0)
+        };
+
+        Waypoint[] crossFromScale = new Waypoint[]{
+                new Waypoint(23.8542781528005, 8.65291742739445, Math.toRadians(-153.0016)),
+                new Waypoint(21.786, 5.399 + 2,Math.toRadians(-153.0016+10)),
+                new Waypoint(17.417+WIDTH/2+1, 0, -Math.PI/2),
+                new Waypoint(17.417+WIDTH/2+1,(-6.396-5.313)/2.-2,-Math.PI/2)
+        };
+
+        Waypoint[] turnToCrossCube = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(naviWheelbase*(
+                        Math.abs(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,-2)))/2, 0, 0)
+        };
+        System.out.println("X diff: "+(17.417+WIDTH/2+1-(17.417+16.333)/2.));
+        System.out.println("Y diff: "+((-6.396-5.313)/2.-((-6.396-5.313)/2.-2)));
+        System.out.println(Math.toDegrees(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,-2)));
+
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("SameScale", leftXLeft);
         profiles.put("OtherScale", leftXRight);
@@ -107,6 +136,12 @@ public class Pathgen {
         profiles.put("AlignToCube", alignToCube);
         profiles.put("BackupToScale", backupToScale);
         profiles.put("TurnToScale", turnToScale);
+        profiles.put("Turn180", turn180);
+        profiles.put("OtherScaleToCube", otherScaleToCube);
+        profiles.put("CubeToOtherSwitch", cubeToOtherSwitch);
+        profiles.put("CrossFromScale", crossFromScale);
+        profiles.put("TurnAfterScale", turnAfterScale);
+        profiles.put("TurnToCrossCube", turnToCrossCube);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
