@@ -163,7 +163,7 @@ public class Pathgen {
         profiles.put("SameScale", leftXLeft);
         profiles.put("OtherScale", leftXRight);
         profiles.put("TurnToSwitch", turnToSwitch);
-        profiles.put("SameScaleToCube2", sameScaleToCubeV2);
+        profiles.put("SameScaleToCube", sameScaleToCubeV2);
         profiles.put("CubeToSwitch", cubeToSwitch);
         profiles.put("CubeToAlign", cubeToAlignPoint);
         profiles.put("AlignToCube", alignToCube);
@@ -176,7 +176,7 @@ public class Pathgen {
         profiles.put("TurnAfterScale", turnAfterScale);
         profiles.put("TurnToCrossCube", turnToCrossCube);
         profiles.put("Forward2", forward2);
-        profiles.put("LeftSwitch", leftSwitch);
+        profiles.put("SameSwitch", leftSwitch);
         profiles.put("Turn90", turn90);
         profiles.put("CrossFromSwitch", crossFromLeftSwitch);
         profiles.put("CrossBackup", crossBackup);
