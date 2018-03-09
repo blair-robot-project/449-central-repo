@@ -22,67 +22,61 @@ public class Pathgen {
         // the circumference of a circle moved by the robot via C = 360 * n / θ
         //You then find the diameter via C / π.
 
-        final double naviWheelbase = 25.5/12.;
+        final double naviWheelbase = 25.5 / 12.;
 
         final double LENGTH = 39.5 / 12.;
         final double WIDTH = 34.5 / 12.;
-        final double CUBE_LENGTH = 13./12.;
-        final double DIAGONAL = Math.sqrt(WIDTH*WIDTH+LENGTH*LENGTH);
+        final double CUBE_LENGTH = 13. / 12.;
+        final double DIAGONAL = Math.sqrt(WIDTH * WIDTH + LENGTH * LENGTH);
         final double INT_ANGLE = Math.atan2(WIDTH, LENGTH);
 
         Waypoint[] leftXLeft = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(26.-LENGTH-0.5, -1,-Math.PI/5)
+                new Waypoint(0, 0, 0),
+                new Waypoint(26. - LENGTH - 0.5, -1, -Math.PI / 5)
         };
 
         Waypoint[] turnToSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase*Math.PI*122.1511/360., 0, 0)
+                new Waypoint(naviWheelbase * Math.PI * 122.1511 / 360., 0, 0)
         };
 
         Waypoint[] turnToScale = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(naviWheelbase*Math.PI*135./360., 0, 0)
+                new Waypoint(0, 0, 0),
+                new Waypoint(naviWheelbase * Math.PI * 135. / 360., 0, 0)
         };
 
         Waypoint[] sameScaleToCubeV2 = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(7.519406-LENGTH/2.-CUBE_LENGTH/2., 0, 0),
+                new Waypoint(0, 0, 0),
+                new Waypoint(7.519406 - LENGTH / 2. - CUBE_LENGTH / 2., 0, 0),
         };
 
         double angleFromHoriz = 1.102613;
-        double deltaAngle = Math.toRadians(158.1527-90)-angleFromHoriz;
+        double deltaAngle = Math.toRadians(158.1527 - 90) - angleFromHoriz;
         double distFromBackPlateCorner = 7.049404;
-        double xDist = 18.9052653910365 - (11.971 + distFromBackPlateCorner*Math.sin(angleFromHoriz));
-        double yDist = 6.66871409506997 - (3.001 + distFromBackPlateCorner*Math.cos(angleFromHoriz));
+        double xDist = 18.9052653910365 - (11.971 + distFromBackPlateCorner * Math.sin(angleFromHoriz));
+        double yDist = 6.66871409506997 - (3.001 + distFromBackPlateCorner * Math.cos(angleFromHoriz));
         Waypoint[] cubeToSwitch = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint((xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle))*10,
-                        (xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle))*10
+                new Waypoint((xDist * Math.cos(deltaAngle) - yDist * Math.sin(deltaAngle)) * 10,
+                        (xDist * Math.sin(deltaAngle) + yDist * Math.cos(deltaAngle)) * 10
                         , deltaAngle)
         };
 
-        deltaAngle = Math.toRadians(90 - 157.6559);
-        xDist = (18.1336397008387 - (16.333+WIDTH/2.-0.1));
-        yDist = (13.5 -LENGTH/2 - 6.29190374820949);
         Waypoint[] cubeToAlignPoint = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(-2, 3, deltaAngle),
-//                new Waypoint(xDist*Math.sin(deltaAngle)+yDist*Math.cos(deltaAngle),
-//                -(xDist*Math.cos(deltaAngle)-yDist*Math.sin(deltaAngle)), deltaAngle)
+                new Waypoint(18.1328517591505, 6.29347010384547, Math.toRadians(-157.6557) + Math.PI),
+                new Waypoint(18.8469404735703, 9.82704356541704, Math.PI / 2),
         };
 
         Waypoint[] alignToCube = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(9.82704356541704 - 6.396 - LENGTH/2., -(18.8469404735703-16.333-WIDTH/2.), 0),
-                new Waypoint(9.82704356541704 - 4.054 - LENGTH/2., -(18.8469404735703-16.333-WIDTH/2.), 0)
+                new Waypoint(0, 0, 0),
+                new Waypoint(9.82704356541704 - 6.396 - LENGTH / 2., -(18.8469404735703 - 16.333 - WIDTH / 2.), 0),
+                new Waypoint(9.82704356541704 - 4.054 - LENGTH / 2., -(18.8469404735703 - 16.333 - WIDTH / 2.), 0)
         };
 
         Waypoint[] backupToScale = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(10-5.40400855828333-1,26-17.9364149306724-2,-Math.PI/2)
+                new Waypoint(17.9500470066305, 5.40806356863358, Math.toRadians(-88.33607) + Math.PI),
+                new Waypoint(23.9056494181233,9.18286909009784,0)
         };
-
         Waypoint[] leftXRight = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint((17.417+21.786)/2.-LENGTH/2.+0.5,-9,-Math.PI/2),
@@ -116,17 +110,18 @@ public class Pathgen {
                 new Waypoint(naviWheelbase*Math.PI*117/360., 0, 0)
         };
 
+        double overshoot = -2;
         Waypoint[] crossFromScale = new Waypoint[]{
                 new Waypoint(23.8542781528005, 8.65291742739445, Math.toRadians(-153.0016)),
                 new Waypoint(21.786, 5.399 + 2,Math.toRadians(-153.0016+10)),
                 new Waypoint(17.417+WIDTH/2+1, 0, -Math.PI/2),
-                new Waypoint(17.417+WIDTH/2+1,(-6.396-5.313)/2.-2,-Math.PI/2)
+                new Waypoint(17.417+WIDTH/2+1,(-6.396-5.313)/2.+overshoot,-Math.PI/2)
         };
 
         Waypoint[] turnToCrossCube = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(naviWheelbase*(
-                        Math.abs(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,-2)))/2, 0, 0)
+                        Math.abs(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,overshoot)))/2, 0, 0)
         };
 
         Waypoint[] forward2 = new Waypoint[]{
@@ -141,22 +136,17 @@ public class Pathgen {
         };
 
         Waypoint[] crossFromLeftSwitch = new Waypoint[]{
-                new Waypoint(-14.0087625352467, 8.04061392262376, Math.PI/2),
-                new Waypoint(-17, 13-WIDTH/2, 0),
-                new Waypoint(-20, 8, -Math.PI/2),
-                new Waypoint(-19.5, -4, -Math.PI/2),
-                new Waypoint(-21, -8, -5*Math.PI/6)
+                new Waypoint(14.0087625352467, 8.04061392262376, Math.PI/2),
+                new Waypoint(17, 13-WIDTH/2, 0),
+                new Waypoint(20, 8, -Math.PI/2),
+                new Waypoint(19.5, -4, -Math.PI/2),
+                new Waypoint(21, -8, -Math.PI/6)
         };
 
         Waypoint[] crossBackup = new Waypoint[]{
-                new Waypoint(19.323011796857, 6.98691304258737, Math.PI/6),
-//                new Waypoint(-24.971,-7.535-LENGTH/2., -Math.PI/2)
-                new Waypoint(23.6611187925359, 8.47314064611477, Math.PI/6),
-                new Waypoint(26.0144064617474, 10.4006621976282, Math.PI/2)
-//                new Waypoint(30, 16, Math.PI/2)
-//                new Waypoint(0, 0, 0),
-//                new Waypoint(5, 0, 0),
-//                new Waypoint(8, 0.5, Math.PI/2.+Math.toRadians(-29.8176))
+                new Waypoint(19.323011796857, -6.98691304258737, -Math.PI/6),
+                new Waypoint(23.6611187925359, -8.47314064611477, -Math.PI/6),
+                new Waypoint(26.0144064617474, -10.4006621976282, -Math.PI/2)
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
@@ -177,7 +167,6 @@ public class Pathgen {
         profiles.put("TurnToCrossCube", turnToCrossCube);
         profiles.put("Forward2", forward2);
         profiles.put("SameSwitch", leftSwitch);
-        profiles.put("Turn90", turn90);
         profiles.put("CrossFromSwitch", crossFromLeftSwitch);
         profiles.put("CrossBackup", crossBackup);
 //		profiles.put("forward100In", points);
