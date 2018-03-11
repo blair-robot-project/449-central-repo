@@ -154,11 +154,7 @@ public class Pathgen {
         profiles.put("OtherScale", leftXRight);
         profiles.put("TurnToSwitch", turnToSwitch);
         profiles.put("SameScaleToCube", sameScaleToCubeV2);
-        profiles.put("CubeToSwitch", cubeToSwitch);
-        profiles.put("CubeToAlign", cubeToAlignPoint);
-        profiles.put("AlignToCube", alignToCube);
-        profiles.put("BackupToScale", backupToScale);
-        profiles.put("TurnToScale", turnToScale);
+//        profiles.put("CubeToSwitch", cubeToSwitch);
         profiles.put("Turn180", turn180);
         profiles.put("OtherScaleToCube", otherScaleToCube);
         profiles.put("CubeToOtherSwitch", cubeToOtherSwitch);
@@ -174,7 +170,7 @@ public class Pathgen {
         final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 7.5, 7, 10.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                0.05, 6.5, 7, 25.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
