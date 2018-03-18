@@ -22,7 +22,7 @@ public class Pathgen {
         // the circumference of a circle moved by the robot via C = 360 * n / θ
         //You then find the diameter via C / π.
 
-        final double naviWheelbase = 25.5 / 12.;
+        final double naviWheelbase = 2.34;
 
         final double LENGTH = 39.5 / 12.;
         final double WIDTH = 34.5 / 12.;
@@ -149,6 +149,11 @@ public class Pathgen {
                 new Waypoint(26.0144064617474, -10.4006621976282, -Math.PI/2)
         };
 
+        Waypoint[] forward9 = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(9, 0, 0)
+        };
+
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("SameScale", leftXLeft);
         profiles.put("OtherScale", leftXRight);
@@ -165,6 +170,7 @@ public class Pathgen {
         profiles.put("SameSwitch", leftSwitch);
         profiles.put("CrossFromSwitch", crossFromLeftSwitch);
         profiles.put("CrossBackup", crossBackup);
+        profiles.put("Forward9", forward9);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
