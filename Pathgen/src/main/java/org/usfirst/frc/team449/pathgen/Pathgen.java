@@ -155,28 +155,28 @@ public class Pathgen {
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
-        profiles.put("SameScale", leftXLeft);
-        profiles.put("OtherScale", leftXRight);
-        profiles.put("TurnToSwitch", turnToSwitch);
-        profiles.put("SameScaleToCube", sameScaleToCubeV2);
+//        profiles.put("CrossBackup", crossBackup); edited
+//        profiles.put("CrossFromScale", crossFromScale); edited 6 6
+//        profiles.put("CrossFromSwitch", crossFromLeftSwitch); edited
+//        profiles.put("OtherScale", leftXRight); edited 4.5 4.5
+//        profiles.put("OtherScaleToCube", otherScaleToCube); edited 6 5.5
+//        profiles.put("SameSwitch", leftSwitch); edited 4 4
+//        profiles.put("SameScale", leftXLeft);
+//        profiles.put("TurnToSwitch", turnToSwitch);
+//        profiles.put("SameScaleToCube", sameScaleToCubeV2);
 //        profiles.put("CubeToSwitch", cubeToSwitch);
-        profiles.put("Turn180", turn180);
-        profiles.put("OtherScaleToCube", otherScaleToCube);
-        profiles.put("CubeToOtherSwitch", cubeToOtherSwitch);
-        profiles.put("CrossFromScale", crossFromScale);
-        profiles.put("TurnAfterScale", turnAfterScale);
-        profiles.put("TurnToCrossCube", turnToCrossCube);
-        profiles.put("Forward2", forward2);
-        profiles.put("SameSwitch", leftSwitch);
-        profiles.put("CrossFromSwitch", crossFromLeftSwitch);
-        profiles.put("CrossBackup", crossBackup);
-        profiles.put("Forward9", forward9);
+//        profiles.put("Turn180", turn180);
+//        profiles.put("CubeToOtherSwitch", cubeToOtherSwitch);
+//        profiles.put("TurnAfterScale", turnAfterScale);
+//        profiles.put("TurnToCrossCube", turnToCrossCube);
+//        profiles.put("Forward2", forward2);
+//        profiles.put("Forward9", forward9);
 //		profiles.put("forward100In", points);
 
         final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 6.5, 7, 25.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                0.05, 4.5, 4.5, 25.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
