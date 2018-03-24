@@ -32,7 +32,8 @@ public class Pathgen {
 
         Waypoint[] leftXLeft = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(26. - LENGTH - 0.5, -1, -Math.PI / 5)
+                new Waypoint(16, 1.5,0),
+                new Waypoint(26. - LENGTH, -1, -Math.PI / 4)
         };
 
         Waypoint[] turnToSwitch = new Waypoint[]{
@@ -154,14 +155,29 @@ public class Pathgen {
                 new Waypoint(9, 0, 0)
         };
 
+        Waypoint[] forwardLong = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(18,0,0)
+        };
+
+        Waypoint[] forwardShort = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(4,0,0)
+        };
+
+        Waypoint[] forwardMedium = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(16.5,0,0)
+        };
+
         Map<String, Waypoint[]> profiles = new HashMap<>();
 //        profiles.put("CrossBackup", crossBackup); edited
 //        profiles.put("CrossFromScale", crossFromScale); edited 6 6
 //        profiles.put("CrossFromSwitch", crossFromLeftSwitch); edited
 //        profiles.put("OtherScale", leftXRight); edited 4.5 4.5
 //        profiles.put("OtherScaleToCube", otherScaleToCube); edited 6 5.5
-//        profiles.put("SameSwitch", leftSwitch); edited 4 4
-//        profiles.put("SameScale", leftXLeft);
+//        profiles.put("SameSwitch", leftSwitch); //edited 4 4
+        profiles.put("SameScale", leftXLeft);
 //        profiles.put("TurnToSwitch", turnToSwitch);
 //        profiles.put("SameScaleToCube", sameScaleToCubeV2);
 //        profiles.put("CubeToSwitch", cubeToSwitch);
@@ -172,11 +188,15 @@ public class Pathgen {
 //        profiles.put("Forward2", forward2);
 //        profiles.put("Forward9", forward9);
 //		profiles.put("forward100In", points);
+        profiles.put("ForwardLong", forwardLong);
+        profiles.put("Turn90", turn90);
+        profiles.put("ForwardShort", forwardShort);
+        profiles.put("ForwardMedium", forwardMedium);
 
         final String ROBOT_NAME = "navi";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 4.5, 4.5, 25.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                0.05, 5., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
