@@ -16,7 +16,7 @@ logLogSlope <- function(effectiveWheelbase, angularVel, n){
   return(model)
 }
 
-drawRobot <- function(robotFile, x, y, theta){
+drawRobot <- function(robotFile, x, y, theta, robotCircleFile=NA){
   robotCenter <- c(x,y)
   robot <- read.csv(robotFile)
   rotMatrix <- matrix(c(cos(theta), -sin(theta), sin(theta), cos(theta)), nrow=2, ncol=2, byrow=TRUE)
@@ -32,6 +32,16 @@ drawRobot <- function(robotFile, x, y, theta){
   ys <- c(rbind(point1s[2,], point2s[2,]))
   
   lines(x=xs, y=ys, col="Blue")
+  
+  if(!is.na(robotCircleFile)){
+    library("plotrix")
+    circles <- read.csv(robotCircleFile)
+    centers <- rotMatrix %*% matrix(c(circles$x, circles$y), nrow = 2, ncol = length(circles$x), byrow = TRUE)
+    centers <- centers + c(robotCenter[1], robotCenter[2])
+    for (i in 1:length(circles$x)) {
+      draw.circle(x=centers[1,i], y=centers[2, i], radius = circles$radius[i], col="Green")
+    }
+  }
 }
 
 plotField <- function(filename, xOffset=0, yOffset=0){
