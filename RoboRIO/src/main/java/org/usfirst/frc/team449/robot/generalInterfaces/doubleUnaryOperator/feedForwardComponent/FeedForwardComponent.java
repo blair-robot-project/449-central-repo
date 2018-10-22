@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.FeedForwardComponent;
+package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.NotNull;

@@ -53,7 +53,8 @@ public class NavXTurnToAngleRelative<T extends Subsystem & DriveUnidirectional &
                                    @JsonProperty(required = true) double setpoint,
                                    @NotNull @JsonProperty(required = true) T drive,
                                    @JsonProperty(required = true) double timeout) {
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, setpoint, drive, timeout);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP
+                , kI, kD, setpoint, drive, timeout);
     }
 
     /**

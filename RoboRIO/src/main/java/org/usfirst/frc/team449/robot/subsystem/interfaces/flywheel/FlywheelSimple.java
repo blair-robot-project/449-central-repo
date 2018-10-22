@@ -46,7 +46,7 @@ public class FlywheelSimple extends Subsystem implements SubsystemFlywheel {
      * The current state of the flywheel.
      */
     @NotNull
-    private FlywheelState state;
+    private SubsystemFlywheel.FlywheelState state;
 
     /**
      * Default constructor
@@ -122,7 +122,7 @@ public class FlywheelSimple extends Subsystem implements SubsystemFlywheel {
      */
     @NotNull
     @Override
-    public FlywheelState getFlywheelState() {
+    public SubsystemFlywheel.FlywheelState getFlywheelState() {
         return state;
     }
 
@@ -130,7 +130,7 @@ public class FlywheelSimple extends Subsystem implements SubsystemFlywheel {
      * @param state The state to switch the flywheel to.
      */
     @Override
-    public void setFlywheelState(@NotNull FlywheelState state) {
+    public void setFlywheelState(@NotNull SubsystemFlywheel.FlywheelState state) {
         this.state = state;
     }
 

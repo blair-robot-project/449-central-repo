@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package proto;
+
+message Path {
+    repeated double posLeft = 1;
+    repeated double velLeft = 2;
+    repeated double accelLeft = 3;
+    repeated double posRight = 4;
+    repeated double velRight = 5;
+    repeated double accelRight = 6;
+    required double deltaTime = 7;
+}

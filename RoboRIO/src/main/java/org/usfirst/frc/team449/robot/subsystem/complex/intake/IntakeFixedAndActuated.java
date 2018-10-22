@@ -62,7 +62,7 @@ public class IntakeFixedAndActuated extends Subsystem implements SubsystemSoleno
      * The mode the intake's currently in.
      */
     @NotNull
-    private IntakeMode mode;
+    private SubsystemIntake.IntakeMode mode;
 
     /**
      * Default constructor.
@@ -123,7 +123,7 @@ public class IntakeFixedAndActuated extends Subsystem implements SubsystemSoleno
      */
     @NotNull
     @Override
-    public IntakeMode getMode() {
+    public SubsystemIntake.IntakeMode getMode() {
         return mode;
     }
 
@@ -131,7 +131,7 @@ public class IntakeFixedAndActuated extends Subsystem implements SubsystemSoleno
      * @param mode The mode to switch the intake to.
      */
     @Override
-    public void setMode(@NotNull IntakeMode mode) {
+    public void setMode(@NotNull SubsystemIntake.IntakeMode mode) {
         this.mode = mode;
         switch (mode) {
             case OFF:

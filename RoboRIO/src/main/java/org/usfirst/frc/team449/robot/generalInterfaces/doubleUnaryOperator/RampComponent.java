@@ -56,11 +56,12 @@ public class RampComponent implements DoubleUnaryOperator, Cloneable {
     /**
      * Get an a copy of this object.
      *
-     * @return a new {@link RampComponent} with the same max change per second
+     * @return a new {@link org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent} with the
+     * same max change per second
      */
     @Override
     @NotNull
-    public RampComponent clone() {
-        return new RampComponent(maxChangePerMillis * 1000.);
+    public org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent clone() {
+        return new org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent(maxChangePerMillis * 1000.);
     }
 }

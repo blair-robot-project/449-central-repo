@@ -30,7 +30,7 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
                       @NotNull @JsonProperty(required = true) MotionProfileData profile,
                       @JsonProperty(required = true) double timeout) {
         addSequential(new LoadProfile(subsystem, profile));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+        addSequential(new RunLoadedProfile<>(subsystem, timeout));
     }
 
     /**
@@ -44,6 +44,6 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
                       @NotNull Supplier<MotionProfileData> profileSupplier,
                       double timeout) {
         addSequential(new LoadProfile(subsystem, profileSupplier));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+        addSequential(new RunLoadedProfile<>(subsystem, timeout));
     }
 }

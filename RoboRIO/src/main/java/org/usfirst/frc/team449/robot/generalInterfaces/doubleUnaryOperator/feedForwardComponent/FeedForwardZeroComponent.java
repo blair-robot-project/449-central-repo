@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.FeedForwardComponent;
+package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent;
 
 /**
  * A {@link FeedForwardComponent} that gives no output.

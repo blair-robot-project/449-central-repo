@@ -93,7 +93,8 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveU
                                                   @Nullable RampComponent rampComponent,
                                                   @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
                                                   @Nullable Double highGearAngularCoefficient) {
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, maxAngularVelToEnterLoop,
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband,
+                maxAngularVelToEnterLoop,
                 inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi, rampComponent);
         this.kP = kP;
         this.kI = kI;

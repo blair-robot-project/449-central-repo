@@ -47,7 +47,8 @@ public class ThrottleDeadbanded extends ThrottleBasic {
                               boolean inverted) {
         super(stick, axis, inverted);
         this.deadband = deadband;
-        this.filter = LinearDigitalFilter.singlePoleIIR(this, smoothingTimeSecs != null ? smoothingTimeSecs : 0.02, 0.02);
+        this.filter = LinearDigitalFilter.singlePoleIIR(this, smoothingTimeSecs != null ? smoothingTimeSecs : 0.02,
+                0.02);
     }
 
     /**

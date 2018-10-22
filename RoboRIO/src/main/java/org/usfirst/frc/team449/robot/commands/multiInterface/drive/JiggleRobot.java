@@ -47,7 +47,9 @@ public class JiggleRobot<T extends Subsystem & DriveUnidirectional & SubsystemAH
                        int kI,
                        int kD,
                        @NotNull @JsonProperty(required = true) T subsystem) {
-        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
-        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
+        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput,
+                loopTimeMillis, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
+        addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput,
+                loopTimeMillis, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
     }
 }

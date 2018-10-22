@@ -27,12 +27,14 @@ public class VoltageRamp<T extends Subsystem & DriveUnidirectional> extends Comm
      * The number of percentage points to increase motor output by per millisecond.
      */
     private final double percentPerMillis;
-
+    /**
+     * Whether to spin in place or drive straight.
+     */
+    private final boolean spin;
     /**
      * The last time execute() was run.
      */
     private long lastTime;
-
     /**
      * The output to give to the motors.
      */
@@ -43,13 +45,16 @@ public class VoltageRamp<T extends Subsystem & DriveUnidirectional> extends Comm
      *
      * @param subsystem      The subsystem to execute this command on
      * @param voltsPerSecond How many volts to increase the output by per second.
+     * @param spin           Whether to spin in place or drive straight. Defaults to false.
      */
     @JsonCreator
     public VoltageRamp(@NotNull @JsonProperty(required = true) T subsystem,
-                       @JsonProperty(required = true) double voltsPerSecond) {
+                       @JsonProperty(required = true) double voltsPerSecond,
+                       boolean spin) {
         requires(subsystem);
         this.subsystem = subsystem;
         this.percentPerMillis = voltsPerSecond / 12. / 1000.;
+        this.spin = spin;
     }
 
     /**
@@ -68,7 +73,7 @@ public class VoltageRamp<T extends Subsystem & DriveUnidirectional> extends Comm
     @Override
     protected void execute() {
         output += percentPerMillis * (Clock.currentTimeMillis() - lastTime);
-        subsystem.setOutput(output, output);
+        subsystem.setOutput(output, (spin ? -1 : 1) * output);
         lastTime = Clock.currentTimeMillis();
     }
 

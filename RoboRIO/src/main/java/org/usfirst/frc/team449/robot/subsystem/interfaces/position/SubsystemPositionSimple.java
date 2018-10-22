@@ -28,13 +28,13 @@ public class SubsystemPositionSimple extends Subsystem implements SubsystemPosit
     /**
      * Default constructor.
      *
-     * @param motor             The motor changing the position
+     * @param talon             The motor changing the position
      * @param onTargetTolerance How close the motor has to be to the setpoint to be considered on target, in feet.
      */
     @JsonCreator
-    public SubsystemPositionSimple(@NotNull @JsonProperty(required = true) FPSTalon motor,
+    public SubsystemPositionSimple(@NotNull @JsonProperty(required = true) FPSTalon talon,
                                    @JsonProperty(required = true) double onTargetTolerance) {
-        this.motor = motor;
+        this.motor = talon;
         this.onTargetTolerance = onTargetTolerance;
     }
 

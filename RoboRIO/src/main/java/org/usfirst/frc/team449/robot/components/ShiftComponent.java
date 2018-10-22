@@ -52,7 +52,8 @@ public class ShiftComponent {
             this.currentGear = startingGear.getNumVal();
         } else {
             //Get the starting gear from the piston's position if it's not provided
-            this.currentGear = piston.get() == DoubleSolenoid.Value.kForward ? Shiftable.gear.LOW.getNumVal() : Shiftable.gear.HIGH.getNumVal();
+            this.currentGear = piston.get() == DoubleSolenoid.Value.kForward ? Shiftable.gear.LOW.getNumVal() :
+                    Shiftable.gear.HIGH.getNumVal();
         }
 
         //Set all the shiftables to the starting gear.

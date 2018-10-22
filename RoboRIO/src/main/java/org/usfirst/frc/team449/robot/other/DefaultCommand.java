@@ -23,7 +23,8 @@ public class DefaultCommand {
                           @NotNull @JsonProperty(required = true) Command command) {
         //Check if it's an instant command and warn the user if it is
         if (InstantCommand.class.isAssignableFrom(command.getClass())) {
-            System.out.println("You're trying to set an InstantCommand as a default command! This is a really bad idea!");
+            System.out.println("You're trying to set an InstantCommand as a default command! This is a really bad " +
+                    "idea!");
             System.out.println("Subsystem: " + subsystem.getClass().toString());
             System.out.println("Command: " + command.getClass().toString());
         }

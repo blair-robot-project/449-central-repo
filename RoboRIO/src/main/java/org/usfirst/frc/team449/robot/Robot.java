@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
     /**
      * The name of the map to read from. Should be overriden by a subclass to change the name.
      */
-    protected String mapName = "map.yml";
+    protected String mapName = "test_bed.yml";
 
     /**
      * The object constructed directly from the yaml map.
@@ -36,14 +36,14 @@ public class Robot extends TimedRobot {
     protected RobotMap robotMap;
 
     /**
-     * The Notifier running the logging thread.
-     */
-    protected Notifier loggerNotifier;
-
-    /**
      * Whether or not the robot has been enabled yet.
      */
     protected boolean enabled;
+
+    /**
+     * Whether or not the auto command should be started.
+     */
+    protected boolean shouldStartAuto;
 
     /**
      * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -81,11 +81,9 @@ public class Robot extends TimedRobot {
         //Read sensors
         this.robotMap.getUpdater().run();
 
-        //Set fields from the map.
-        this.loggerNotifier = new Notifier(robotMap.getLogger());
+        shouldStartAuto = this.robotMap.getAutoStartupCommand() != null;
 
-        //Run the logger to write all the events that happened during initialization to a file.
-        robotMap.getLogger().run();
+        robotMap.getLogger().start();
     }
 
     /**
@@ -95,6 +93,10 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         //Read sensors
         this.robotMap.getUpdater().run();
+
+        if (this.robotMap.getAutoStartupCommand() != null) {
+            this.robotMap.getAutoStartupCommand().cancel();
+        }
 
         //Run startup command if we start in teleop.
         if (!enabled) {
@@ -108,9 +110,6 @@ public class Robot extends TimedRobot {
         if (robotMap.getTeleopStartupCommand() != null) {
             robotMap.getTeleopStartupCommand().start();
         }
-
-        //Log
-        loggerNotifier.startSingle(0);
     }
 
     /**
@@ -123,9 +122,6 @@ public class Robot extends TimedRobot {
 
         //Run all commands. This is a WPILib thing you don't really have to worry about.
         Scheduler.getInstance().run();
-
-        //Log
-        loggerNotifier.startSingle(0);
     }
 
     /**
@@ -145,12 +141,10 @@ public class Robot extends TimedRobot {
         }
 
         //Run the auto startup command
-        if (robotMap.getAutoStartupCommand() != null) {
+        if (shouldStartAuto && !DriverStation.getInstance().getGameSpecificMessage().isEmpty()) {
             robotMap.getAutoStartupCommand().start();
+            shouldStartAuto = false;
         }
-
-        //Log
-        loggerNotifier.startSingle(0);
     }
 
     /**
@@ -160,11 +154,15 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         //Read sensors
         this.robotMap.getUpdater().run();
+
+        //Start auto if the game-specific message has been set
+        if (shouldStartAuto && !DriverStation.getInstance().getGameSpecificMessage().isEmpty()) {
+            robotMap.getAutoStartupCommand().start();
+            shouldStartAuto = false;
+        }
+
         //Run all commands. This is a WPILib thing you don't really have to worry about.
         Scheduler.getInstance().run();
-
-        //Log
-        loggerNotifier.startSingle(0);
     }
 
     /**
@@ -196,8 +194,5 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         //Read sensors
         this.robotMap.getUpdater().run();
-
-        //Log
-        loggerNotifier.startSingle(0);
     }
 }

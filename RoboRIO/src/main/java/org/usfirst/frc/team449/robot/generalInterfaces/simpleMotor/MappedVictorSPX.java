@@ -29,27 +29,32 @@ public class MappedVictorSPX implements SimpleMotor, Loggable {
     /**
      * Default constructor.
      *
-     * @param port              The CAN ID of this Victor SPX.
-     * @param brakeMode         Whether to have the Victor brake or coast when no voltage is applied.
-     * @param inverted          Whether or not to invert this Victor. Defaults to false.
-     * @param enableVoltageComp Whether or not to enable voltage compensation. Defaults to true.
-     * @param slaveVictors      Any other Victor SPXs slaved to this one.
+     * @param port               The CAN ID of this Victor SPX.
+     * @param brakeMode          Whether to have the Victor brake or coast when no voltage is applied.
+     * @param inverted           Whether or not to invert this Victor. Defaults to false.
+     * @param enableVoltageComp  Whether or not to enable voltage compensation. Defaults to false.
+     * @param voltageCompSamples The number of 1-millisecond samples to use for voltage compensation. Defaults to 32.
+     * @param slaveVictors       Any other Victor SPXs slaved to this one.
      */
     @JsonCreator
     public MappedVictorSPX(@JsonProperty(required = true) int port,
                            @JsonProperty(required = true) boolean brakeMode,
                            boolean inverted,
-                           @Nullable Boolean enableVoltageComp,
+                           boolean enableVoltageComp,
+                           @Nullable Integer voltageCompSamples,
                            @Nullable List<SlaveVictor> slaveVictors) {
         victorSPX = new VictorSPX(port);
         victorSPX.setInverted(inverted);
         victorSPX.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
-        victorSPX.enableVoltageCompensation(enableVoltageComp != null ? enableVoltageComp : true);
+        victorSPX.enableVoltageCompensation(enableVoltageComp);
+        victorSPX.configVoltageCompSaturation(12, 0);
+        victorSPX.configVoltageMeasurementFilter(voltageCompSamples != null ? voltageCompSamples : 32, 0);
 
         if (slaveVictors != null) {
             //Set up slaves.
             for (SlaveVictor slave : slaveVictors) {
-                slave.setMaster(victorSPX, brakeMode);
+                slave.setMaster(victorSPX, brakeMode,
+                        enableVoltageComp ? (voltageCompSamples != null ? voltageCompSamples : 32) : null);
             }
         }
     }

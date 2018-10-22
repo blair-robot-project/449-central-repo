@@ -48,7 +48,7 @@ public class LoggingFlywheel extends Subsystem implements Loggable, SubsystemFly
      * Whether the flywheel is currently commanded to spin
      */
     @NotNull
-    private FlywheelState state;
+    private SubsystemFlywheel.FlywheelState state;
 
     /**
      * Default constructor
@@ -162,7 +162,7 @@ public class LoggingFlywheel extends Subsystem implements Loggable, SubsystemFly
      */
     @NotNull
     @Override
-    public FlywheelState getFlywheelState() {
+    public SubsystemFlywheel.FlywheelState getFlywheelState() {
         return state;
     }
 
@@ -170,7 +170,7 @@ public class LoggingFlywheel extends Subsystem implements Loggable, SubsystemFly
      * @param state The state to switch the multiSubsystem to.
      */
     @Override
-    public void setFlywheelState(@NotNull FlywheelState state) {
+    public void setFlywheelState(@NotNull SubsystemFlywheel.FlywheelState state) {
         this.state = state;
     }
 

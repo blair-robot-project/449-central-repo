@@ -75,13 +75,14 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
                            @Nullable Integer loopTimeMillis,
                            double deadband,
                            boolean inverted,
-                           int kP,
-                           int kI,
-                           int kD,
+                           double kP,
+                           double kI,
+                           double kD,
                            @JsonProperty(required = true) double setpoint,
                            @NotNull @JsonProperty(required = true) T subsystem,
                            @JsonProperty(required = true) double timeout) {
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted,
+                subsystem, kP, kI, kD);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
         //Convert from seconds to milliseconds
@@ -105,6 +106,7 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
      */
     @Override
     protected void initialize() {
+        Logger.addEvent("NavXTurnToAngle init.", this.getClass());
         //Set up start time
         this.startTime = Clock.currentTimeMillis();
         this.setSetpoint(clipTo180(setpoint));
@@ -131,7 +133,8 @@ public class NavXTurnToAngle<T extends Subsystem & DriveUnidirectional & Subsyst
      */
     @Override
     protected boolean isFinished() {
-        //The PIDController onTarget() is crap and sometimes never returns true because of floating point errors, so we need a timeout
+        //The PIDController onTarget() is crap and sometimes never returns true because of floating point errors, so
+        // we need a timeout
         return onTarget() || Clock.currentTimeMillis() - startTime > timeout;
     }
 
