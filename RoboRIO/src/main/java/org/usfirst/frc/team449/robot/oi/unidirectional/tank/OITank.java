@@ -64,7 +64,8 @@ public abstract class OITank implements OIUnidirectional {
      */
     @Override
     public double[] getFwdRotOutput() {
-        return new double[]{(getLeftThrottle() + getRightThrottle()) / 2., (getLeftThrottle() - getRightThrottle()) / 2.};
+        return new double[]{(getLeftThrottle() + getRightThrottle()) / 2.,
+                (getLeftThrottle() - getRightThrottle()) / 2.};
     }
 
     /**

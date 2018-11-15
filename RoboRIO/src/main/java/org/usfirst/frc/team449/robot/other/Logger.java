@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
@@ -12,10 +13,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * A logger that logs telemetry data and individual events. Should be run as a separate thread from the main robot
@@ -61,9 +59,50 @@ public class Logger implements Runnable {
     private final String[][] itemNames;
 
     /**
+     * The loop time of the logging loop in milliseconds.
+     */
+    private final int loopTimeMillis;
+
+    /**
+     * The notifier that runs this thread.
+     */
+    private final Notifier notifier;
+
+    /**
      * The time this that logging started. We don't use {@link Clock} because this is a separate thread.
      */
     private final long startTime;
+
+    /**
+     * The filewriters for writing to the telemetry and event logs.
+     */
+    @NotNull
+    private final FileWriter telemetryLogWriter, eventLogWriter;
+
+    /**
+     * The last time, in milliseconds, that the logger was run.
+     */
+    private long lastTime;
+
+    /**
+     * The type of the datum currently being logged. Field to avoid garbage collection.
+     */
+    private Class datumClass;
+
+    /**
+     * The list of data from the loggable being logged. Field to avoid garbage collection.
+     */
+    private Object[] data;
+
+    /**
+     * The datum currently being logged. Field to avoid garbage collection.
+     */
+    private Object datum;
+
+    /**
+     * The current line of telemetry data being built up. Field to avoid garbage collection.
+     */
+    private StringBuilder telemetryData;
 
     /**
      * Default constructor.
@@ -73,17 +112,21 @@ public class Logger implements Runnable {
      *                             appended onto the end.
      * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file
      *                             extension appended onto the end.
+     * @param loopTimeMillis       The loop time of the logging loop in milliseconds.
      * @throws IOException If the file names provided from the log can't be written to.
      */
     @JsonCreator
     public Logger(@NotNull @JsonProperty(required = true) Loggable[] loggables,
                   @NotNull @JsonProperty(required = true) String eventLogFilename,
-                  @NotNull @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
+                  @NotNull @JsonProperty(required = true) String telemetryLogFilename,
+                  @JsonProperty(required = true) int loopTimeMillis) throws IOException {
         //Set up the file names, using a time stamp to avoid overwriting old log files.
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         startTime = System.currentTimeMillis();
         this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
         this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
+        this.loopTimeMillis = loopTimeMillis;
+        this.notifier = new Notifier(this);
 
         //Set up the list of loggables.
         this.loggables = Arrays.copyOf(loggables, loggables.length + addedLoggables.size());
@@ -96,8 +139,8 @@ public class Logger implements Runnable {
         //Construct itemNames.
         itemNames = new String[this.loggables.length][];
 
-        FileWriter eventLogWriter = new FileWriter(this.eventLogFilename);
-        FileWriter telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
+        eventLogWriter = new FileWriter(this.eventLogFilename);
+        telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
         //Write the file headers
         eventLogWriter.write("time,class,message" + "\n");
         //We use a StringBuilder because it's better for building up a string via concatenation.
@@ -122,8 +165,9 @@ public class Logger implements Runnable {
         telemetryHeader.append("\n");
         //Write the telemetry file header
         telemetryLogWriter.write(telemetryHeader.toString());
-        eventLogWriter.close();
-        telemetryLogWriter.close();
+        eventLogWriter.flush();
+        telemetryLogWriter.flush();
+        lastTime = System.currentTimeMillis();
     }
 
     /**
@@ -151,33 +195,24 @@ public class Logger implements Runnable {
      */
     @Override
     public void run() {
-        FileWriter eventLogWriter = null;
-        try {
-            eventLogWriter = new FileWriter(eventLogFilename, true);
-        } catch (IOException e) {
-            System.out.println("Event log not found!");
-            e.printStackTrace();
-        }
-        FileWriter telemetryLogWriter = null;
-        try {
-            telemetryLogWriter = new FileWriter(telemetryLogFilename, true);
-        } catch (IOException e) {
-            System.out.println("Telemetry log not found!");
-            e.printStackTrace();
-        }
+//        System.out.println("dt: "+(System.currentTimeMillis()-lastTime));
+        lastTime = System.currentTimeMillis();
+
         try {
             //Log each event to a file
             for (LogEvent event : events) {
                 eventLogWriter.write(event.toString() + "\n");
             }
-        } catch (IOException e) {
+            eventLogWriter.flush();
+        } catch (Exception e) {
             System.out.println("Logging failed!");
             e.printStackTrace();
         }
+
         //Collect telemetry data and write it to SmartDashboard and a file.
         events = new ArrayList<>();
         //We use a StringBuilder because it's better for building up a string via concatenation.
-        StringBuilder telemetryData = new StringBuilder();
+        telemetryData = new StringBuilder();
 
         //Log the times
         telemetryData.append(System.currentTimeMillis() - startTime).append(",");
@@ -185,28 +220,31 @@ public class Logger implements Runnable {
 
         //Loop through each datum
         for (int i = 0; i < loggables.length; i++) {
-            Object[] data = loggables[i].getData();
+            try {
+                data = loggables[i].getData();
+            } catch (ConcurrentModificationException e) {
+                data = new Object[0];
+            }
+
             for (int j = 0; j < data.length; j++) {
-                Object datum = data[j];
+                datum = data[j];
+                datumClass = datum.getClass();
                 //We do this big thing here so we log it to SmartDashboard as the correct data type, so we make each
                 //thing into a booleanBox, graph, etc.
                 if (datum != null) {
-                    if (datum.getClass().equals(boolean.class) || datum.getClass().equals(Boolean.class)) {
+                    if (datumClass.equals(boolean.class) || datumClass.equals(Boolean.class)) {
                         SmartDashboard.putBoolean(itemNames[i][j], (boolean) datum);
-                    } else if (datum.getClass().equals(int.class) || datum.getClass().equals(Integer.class)) {
+                    } else if (datumClass.equals(int.class) || datumClass.equals(Integer.class)) {
                         SmartDashboard.putNumber(itemNames[i][j], (int) datum);
-                    } else if (datum.getClass().equals(double.class)) {
-                        System.out.println("Double item name: " + itemNames[i][j]);
-                        System.out.println("Double: " + datum);
-                        System.out.println("Double class: " + datum.getClass());
+                    } else if (datumClass.equals(double.class)) {
                         SmartDashboard.putNumber(itemNames[i][j], (double) datum);
-                    } else if (datum.getClass().equals(Double.class)) {
+                    } else if (datumClass.equals(Double.class)) {
                         SmartDashboard.putNumber(itemNames[i][j], (Double) datum);
-                    } else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)) {
+                    } else if (datumClass.equals(long.class) || datumClass.equals(Long.class)) {
                         SmartDashboard.putNumber(itemNames[i][j], (long) datum);
-                    } else if (datum.getClass().equals(Sendable.class)) {
+                    } else if (datumClass.equals(Sendable.class)) {
                         SmartDashboard.putData(itemNames[i][j], (Sendable) datum);
-                    } else if (datum.getClass().equals(String.class)) {
+                    } else if (datumClass.equals(String.class)) {
                         SmartDashboard.putString(itemNames[i][j], (String) datum);
                     } else {
                         SmartDashboard.putString(itemNames[i][j], datum.toString());
@@ -222,25 +260,20 @@ public class Logger implements Runnable {
             }
         }
 
-        String telemetryString = telemetryData.toString();
-        telemetryString = telemetryString.substring(0, telemetryString.length() - 1);
-        telemetryString += "\n";
         //Log the data to a file.
         try {
-            telemetryLogWriter.write(telemetryString);
-        } catch (IOException e) {
+            telemetryLogWriter.write(telemetryData.toString().substring(0, telemetryData.length() - 1) + "\n");
+            telemetryLogWriter.flush();
+        } catch (Exception e) {
             System.out.println("Logging failed!");
             e.printStackTrace();
         }
-        try {
-            telemetryLogWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            eventLogWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    }
+
+    /**
+     * Start running the logger.
+     */
+    public void start() {
+        notifier.startPeriodic(loopTimeMillis / 1000.);
     }
 }

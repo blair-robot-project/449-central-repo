@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package proto;
+
+message PathRequest {
+    repeated double x = 1;
+    repeated double y = 2;
+    repeated double theta = 3;
+    required int32 dt = 4;
+    required double maxVel = 5;
+    required double maxAccel = 6;
+    required double maxJerk = 7;
+}

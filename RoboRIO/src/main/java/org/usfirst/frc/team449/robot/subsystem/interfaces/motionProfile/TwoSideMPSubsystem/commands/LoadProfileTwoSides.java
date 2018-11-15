@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
  * Loads the given profiles into the subsystem, but doesn't run it.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoadProfileTwoSides extends InstantCommand {
+public class LoadProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> extends InstantCommand {
 
     /**
      * The subsystem to execute this command on.
@@ -45,10 +46,11 @@ public class LoadProfileTwoSides extends InstantCommand {
      * @param right     The profile for the right side to run.
      */
     @JsonCreator
-    public LoadProfileTwoSides(@NotNull @JsonProperty(required = true) SubsystemMPTwoSides subsystem,
+    public LoadProfileTwoSides(@NotNull @JsonProperty(required = true) T subsystem,
                                @NotNull @JsonProperty(required = true) MotionProfileData left,
                                @NotNull @JsonProperty(required = true) MotionProfileData right) {
         this.subsystem = subsystem;
+        requires(subsystem);
         this.left = left;
         this.right = right;
         this.leftSupplier = null;

@@ -2,54 +2,54 @@ package org.usfirst.frc.team449.robot.jacksonWrappers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
 
 /**
- * An object representing the Power Distribution Panel that logs power, current, and resistance.
+ * An object representing the {@link PowerDistributionPanel} that logs power, current, and resistance.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
+public class PDP implements Loggable, Updatable {
 
     /**
-     * The component for doing linear regression to find the resistance.
+     * The WPILib PDP this is a wrapper on.
      */
-    private final RunningLinRegComponent voltagePerCurrentLinReg;
+    private final PowerDistributionPanel PDP;
+
+    /**
+     * The cached values from the PDP object this wraps.
+     */
+    private double voltage, totalCurrent;
 
     /**
      * Default constructor.
      *
-     * @param canID                   CAN ID of the PDP. Defaults to 0.
-     * @param voltagePerCurrentLinReg The component for doing linear regression to find the resistance.
+     * @param canID CAN ID of the PDP. Defaults to 0.
      */
     @JsonCreator
-    public PDP(int canID,
-               @NotNull @JsonProperty(required = true) RunningLinRegComponent voltagePerCurrentLinReg) {
-        super(canID);
-        this.voltagePerCurrentLinReg = voltagePerCurrentLinReg;
+    public PDP(int canID) {
+        this.PDP = new PowerDistributionPanel(canID);
     }
 
     /**
-     * Get the resistance of the wires leading to the PDP.
+     * Query the input voltage of the PDP.
      *
-     * @return Resistance in ohms.
+     * @return The voltage of the PDP in volts
      */
-    public double getResistance() {
-        return -voltagePerCurrentLinReg.getSlope();
+    public double getVoltage() {
+        return voltage;
     }
 
     /**
-     * Get the voltage at the PDP when there's no load on the battery.
+     * Query the current of all monitored PDP channels (0-15).
      *
-     * @return Voltage in volts when there's 0 amps of current draw
+     * @return The current of all the channels in Amperes
      */
-    public double getUnloadedVoltage() {
-        return voltagePerCurrentLinReg.getIntercept();
+    public double getTotalCurrent() {
+        return totalCurrent;
     }
 
     /**
@@ -61,11 +61,8 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
     @Override
     public String[] getHeader() {
         return new String[]{
-                "temperature",
                 "current",
-                "voltage",
-                "resistance",
-                "unloaded_voltage"
+                "voltage"
         };
     }
 
@@ -78,11 +75,8 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
     @Override
     public Object[] getData() {
         return new Object[]{
-                getTemperature(),
                 getTotalCurrent(),
-                getVoltage(),
-                getResistance(),
-                getUnloadedVoltage()
+                getVoltage()
         };
     }
 
@@ -102,7 +96,7 @@ public class PDP extends PowerDistributionPanel implements Loggable, Updatable {
      */
     @Override
     public void update() {
-        //Calculate running linear regression
-        voltagePerCurrentLinReg.addPoint(getTotalCurrent(), getVoltage());
+        this.totalCurrent = PDP.getTotalCurrent();
+        this.voltage = PDP.getVoltage();
     }
 }

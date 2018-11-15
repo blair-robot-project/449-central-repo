@@ -84,7 +84,8 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends Subsystem & Drive
                                                    @NotNull @JsonProperty(required = true) OIFieldOriented oi,
                                                    @Nullable List<AngularSnapPoint> snapPoints) {
         //Assign stuff
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted,
+                subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
         this.snapPoints = snapPoints != null ? snapPoints : new ArrayList<>();
