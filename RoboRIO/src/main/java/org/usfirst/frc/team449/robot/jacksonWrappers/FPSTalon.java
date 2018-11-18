@@ -305,7 +305,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             }
         } else {
             this.encoderCPR = null;
-            canTalon.configSelectedFeedbackSensor(FeedbackDevice.None, 0, 0);
+//            canTalon.configSelectedFeedbackSensor(FeedbackDevice.None, 0, 0); Uncomment this if FeedbackDevice.None
+// is re-added in a future release.
         }
 
         //postEncoderGearing defaults to 1
@@ -565,11 +566,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     protected void setVelocityFPS(double velocity) {
         nativeSetpoint = FPSToEncoder(velocity);
-        canTalon.config_kF(0,
-                1023. / 12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity),
-                0);
         setpoint = velocity;
-        canTalon.set(ControlMode.Velocity, nativeSetpoint);
+        canTalon.set(ControlMode.Velocity, nativeSetpoint, DemandType.ArbitraryFeedForward,
+                currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity) * 1023. / 12.);
     }
 
     /**
