@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 
 /**
@@ -18,6 +19,17 @@ public class SlaveTalon implements Loggable {
      */
     @NotNull
     private final TalonSRX talonSRX;
+    /**
+     * The PDP this talon runs on. Used for resistance logging purposes.
+     */
+    @Nullable
+    private PDP PDP;
+
+    /**
+     * The linear regression component for logging resistance.
+     */
+    @Nullable
+    private RunningLinRegComponent linRegComponent;
 
     /**
      * Default constructor.
@@ -43,7 +55,6 @@ public class SlaveTalon implements Loggable {
 
         //Slow down frames so we don't overload the CAN bus
         talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, 0);
-        talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 100, 0);
         talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, 100, 0);
         talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, 100, 0);
         talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, 100, 0);
@@ -66,7 +77,7 @@ public class SlaveTalon implements Loggable {
      * @param voltageCompSamples The number of voltage compensation samples to use, or null to not compensate voltage.
      */
     public void setMaster(int port, boolean brakeMode, @Nullable Integer currentLimit,
-                          @Nullable Integer voltageCompSamples) {
+                          @Nullable Integer voltageCompSamples, @Nullable PDP PDP, @Nullable RunningLinRegComponent linRegComponent) {
         //Brake mode doesn't automatically follow master
         this.talonSRX.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
 
@@ -92,6 +103,10 @@ public class SlaveTalon implements Loggable {
 
         //Follow the leader
         this.talonSRX.set(ControlMode.Follower, port);
+
+        //Resistance logging
+        this.PDP = PDP;
+        this.linRegComponent = linRegComponent;
     }
 
     /**
@@ -105,6 +120,7 @@ public class SlaveTalon implements Loggable {
         return new String[]{
                 "current",
                 "voltage",
+                "resistance"
         };
     }
 
@@ -113,12 +129,16 @@ public class SlaveTalon implements Loggable {
      *
      * @return An N-length array of Objects, where N is the number of labels given by getHeader.
      */
-    @NotNull
+    @Nullable
     @Override
     public Object[] getData() {
+        if (linRegComponent != null && PDP != null) {
+            linRegComponent.addPoint(talonSRX.getOutputCurrent(), PDP.getVoltage() - talonSRX.getBusVoltage());
+        }
         return new Object[]{
                 talonSRX.getOutputCurrent(),
                 talonSRX.getMotorOutputVoltage(),
+                (linRegComponent != null && PDP != null) ? -linRegComponent.getSlope() : null
         };
     }
 

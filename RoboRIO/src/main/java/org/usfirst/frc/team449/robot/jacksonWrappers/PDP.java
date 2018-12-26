@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
 
@@ -17,12 +19,19 @@ public class PDP implements Loggable, Updatable {
     /**
      * The WPILib PDP this is a wrapper on.
      */
+    @NotNull
     private final PowerDistributionPanel PDP;
+
+    /**
+     * The component for doing linear regression to find the resistance.
+     */
+    @Nullable
+    private final RunningLinRegComponent voltagePerCurrentLinReg;
 
     /**
      * The cached values from the PDP object this wraps.
      */
-    private double voltage, totalCurrent;
+    private double voltage, totalCurrent, temperature, resistance, unloadedVoltage;
 
     /**
      * Default constructor.
@@ -30,8 +39,15 @@ public class PDP implements Loggable, Updatable {
      * @param canID CAN ID of the PDP. Defaults to 0.
      */
     @JsonCreator
-    public PDP(int canID) {
+    public PDP(int canID,
+               @Nullable RunningLinRegComponent voltagePerCurrentLinReg) {
         this.PDP = new PowerDistributionPanel(canID);
+        this.voltagePerCurrentLinReg = voltagePerCurrentLinReg;
+        this.voltage = 0;
+        this.totalCurrent = 0;
+        this.temperature = 0;
+        this.resistance = 0;
+        this.unloadedVoltage = 0;
     }
 
     /**
@@ -53,6 +69,35 @@ public class PDP implements Loggable, Updatable {
     }
 
     /**
+     * Query the temperature of the PDP.
+     *
+     * @return The temperature of the PDP in degrees Celsius.
+     */
+    public double getTemperature() {
+        return temperature;
+    }
+
+    /**
+     * Get the resistance of the wires leading to the PDP.
+     *
+     * @return Resistance in ohms, or null if not calculating resistance.
+     */
+    @Nullable
+    public Double getResistance() {
+        return voltagePerCurrentLinReg == null ? null : resistance;
+    }
+
+    /**
+     * Get the voltage at the PDP when there's no load on the battery.
+     *
+     * @return Voltage in volts when there's 0 amps of current draw, or null if not calculating resistance.
+     */
+    @Nullable
+    public Double getUnloadedVoltage() {
+        return voltagePerCurrentLinReg == null ? null : unloadedVoltage;
+    }
+
+    /**
      * Get the headers for the data this subsystem logs every loop.
      *
      * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
@@ -62,7 +107,10 @@ public class PDP implements Loggable, Updatable {
     public String[] getHeader() {
         return new String[]{
                 "current",
-                "voltage"
+                "voltage",
+                "temperature",
+                "resistance",
+                "unloaded_voltage"
         };
     }
 
@@ -71,12 +119,15 @@ public class PDP implements Loggable, Updatable {
      *
      * @return An N-length array of Objects, where N is the number of labels given by getHeader.
      */
-    @NotNull
+    @Nullable
     @Override
     public Object[] getData() {
         return new Object[]{
                 getTotalCurrent(),
-                getVoltage()
+                getVoltage(),
+                getTemperature(),
+                getResistance(),
+                getUnloadedVoltage()
         };
     }
 
@@ -98,5 +149,11 @@ public class PDP implements Loggable, Updatable {
     public void update() {
         this.totalCurrent = PDP.getTotalCurrent();
         this.voltage = PDP.getVoltage();
+        this.temperature = PDP.getTemperature();
+        if (voltagePerCurrentLinReg != null) {
+            voltagePerCurrentLinReg.addPoint(totalCurrent, voltage);
+            this.unloadedVoltage = voltagePerCurrentLinReg.getIntercept();
+            this.resistance = -voltagePerCurrentLinReg.getSlope();
+        }
     }
 }

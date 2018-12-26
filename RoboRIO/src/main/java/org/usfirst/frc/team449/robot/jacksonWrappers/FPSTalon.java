@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
@@ -37,6 +38,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     @NotNull
     protected final TalonSRX canTalon;
+    /**
+     * The PDP this Talon is connected to.
+     */
+    @Nullable
+    protected final PDP PDP;
     /**
      * The counts per rotation of the encoder being used, or null if there is no encoder.
      */
@@ -79,6 +85,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     @NotNull
     private final String name;
     /**
+     * The component for doing linear regression to find the resistance.
+     */
+    @Nullable
+    private final RunningLinRegComponent voltagePerCurrentLinReg;
+    /**
      * Whether the forwards or reverse limit switches are normally open or closed, respectively.
      */
     private final boolean fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen;
@@ -109,6 +120,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * The setpoint in native units. Field to avoid garbage collection.
      */
     private double nativeSetpoint;
+
     /**
      * Default constructor.
      *
@@ -116,6 +128,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
      * @param reverseOutput              Whether to reverse the output.
      * @param enableBrakeMode            Whether to brake or coast when stopped.
+     * @param voltagePerCurrentLinReg    The component for doing linear regression to find the resistance.
+     * @param PDP                        The PDP this Talon is connected to.
      * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
      *                                   the forward limit switch is disabled.
      * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
@@ -151,7 +165,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   starting a profile. Defaults to 20.
      * @param updaterProcessPeriodSecs   The period for the {@link Notifier} that moves points between the MP buffers, in
      *                                   seconds. Defaults to 0.005.
-     * @param updateMMPeriodSecs The period for the {@link Notifier} that updates the feedforward based on the current motion magic velocity setpoint. Defaults to 0.05.
+     * @param updateMMPeriodSecs         The period for the {@link Notifier} that updates the feedforward based on the current motion magic velocity setpoint. Defaults to 0.05.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
      * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
      * @param slaveTalons                The other {@link TalonSRX}s that are slaved to this one.
@@ -163,6 +177,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable String name,
                     boolean reverseOutput,
                     @JsonProperty(required = true) boolean enableBrakeMode,
+                    @Nullable RunningLinRegComponent voltagePerCurrentLinReg,
+                    @Nullable PDP PDP,
                     @Nullable Boolean fwdLimitSwitchNormallyOpen,
                     @Nullable Boolean revLimitSwitchNormallyOpen,
                     @Nullable Integer remoteLimitSwitchID,
@@ -196,6 +212,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         canTalon.setNeutralMode(enableBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
         //Reset the position
         resetPosition();
+
+        this.PDP = PDP;
+        this.voltagePerCurrentLinReg = voltagePerCurrentLinReg;
 
         //Set frame rates
         if (controlFrameRatesMillis != null) {
@@ -334,7 +353,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Enable or disable voltage comp
         canTalon.enableVoltageCompensation(enableVoltageComp);
         canTalon.configVoltageCompSaturation(12, 0);
-        canTalon.configVoltageMeasurementFilter(voltageCompSamples != null ? voltageCompSamples : 32, 0);
+        int notNullVoltageCompSamples = voltageCompSamples != null ? voltageCompSamples : 32;
+        canTalon.configVoltageMeasurementFilter(notNullVoltageCompSamples, 0);
 
         //Set up MP notifier
         bottomBufferLoader = new Notifier(this::processMotionProfileBuffer);
@@ -347,7 +367,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             //Set up slaves.
             for (SlaveTalon slave : slaveTalons) {
                 slave.setMaster(port, enableBrakeMode, currentLimit,
-                        enableVoltageComp ? (voltageCompSamples != null ? voltageCompSamples : 32) : null);
+                        enableVoltageComp ? notNullVoltageCompSamples : null, PDP, voltagePerCurrentLinReg);
             }
         }
 
@@ -355,7 +375,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             //Set up slaves.
             for (SlaveVictor slave : slaveVictors) {
                 slave.setMaster(canTalon, enableBrakeMode,
-                        enableVoltageComp ? (voltageCompSamples != null ? voltageCompSamples : 32) : null);
+                        enableVoltageComp ? notNullVoltageCompSamples : null);
             }
         }
     }
@@ -543,8 +563,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         }
     }
 
-    private void updateMotionMagicSetpoint(){
-        if (!canTalon.getControlMode().equals(ControlMode.MotionMagic)){
+    private void updateMotionMagicSetpoint() {
+        if (!canTalon.getControlMode().equals(ControlMode.MotionMagic)) {
             motionMagicNotifier.stop();
         } else {
             nativeSetpoint = feetToEncoder(setpoint);
@@ -877,8 +897,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 "voltage",
                 "current",
                 "control_mode",
-                "gear"
-//                "resistance"
+                "gear",
+                "resistance"
         };
     }
 
@@ -887,10 +907,12 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *
      * @return An N-length array of Objects, where N is the number of labels given by getHeader.
      */
-    @NotNull
+    @Nullable
     @Override
     public Object[] getData() {
-//        voltagePerCurrentLinReg.addPoint(getOutputCurrent(), PDP.getVoltage() - getBatteryVoltage());
+        if (voltagePerCurrentLinReg != null && PDP != null) {
+            voltagePerCurrentLinReg.addPoint(getOutputCurrent(), PDP.getVoltage() - getBatteryVoltage());
+        }
         return new Object[]{
                 getVelocity(),
                 getPositionFeet(),
@@ -900,8 +922,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                 getOutputVoltage(),
                 getOutputCurrent(),
                 getControlMode(),
-                getGear()
-//                -voltagePerCurrentLinReg.getSlope()
+                getGear(),
+                (voltagePerCurrentLinReg != null && PDP != null) ? -voltagePerCurrentLinReg.getSlope() : null
         };
     }
 
