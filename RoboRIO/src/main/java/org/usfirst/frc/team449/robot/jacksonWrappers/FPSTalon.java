@@ -83,15 +83,19 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      */
     private final boolean fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen;
     /**
+     * A notifier that updates the motion magic feedforward based on the current setpoint.
+     */
+    private final Notifier motionMagicNotifier;
+
+    /**
+     * The period for the {@link Notifier} that updates the feedforward based on the current motion magic velocity setpoint.
+     */
+    private final double updateMMPeriodSecs;
+    /**
      * The settings currently being used by this Talon.
      */
     @NotNull
     protected PerGearSettings currentGearSettings;
-    /**
-     * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
-     * traffic.
-     */
-    private long timeMPStatusLastRead;
     /**
      * The most recently set setpoint.
      */
@@ -105,7 +109,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      * The setpoint in native units. Field to avoid garbage collection.
      */
     private double nativeSetpoint;
-
     /**
      * Default constructor.
      *
@@ -146,8 +149,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   Defaults to the lowest gear.
      * @param minNumPointsInBottomBuffer The minimum number of points that must be in the bottom-level MP buffer before
      *                                   starting a profile. Defaults to 20.
-     * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
+     * @param updaterProcessPeriodSecs   The period for the {@link Notifier} that moves points between the MP buffers, in
      *                                   seconds. Defaults to 0.005.
+     * @param updateMMPeriodSecs The period for the {@link Notifier} that updates the feedforward based on the current motion magic velocity setpoint. Defaults to 0.05.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
      * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
      * @param slaveTalons                The other {@link TalonSRX}s that are slaved to this one.
@@ -177,6 +181,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                     @Nullable Integer startingGearNum,
                     @Nullable Integer minNumPointsInBottomBuffer,
                     @Nullable Double updaterProcessPeriodSecs,
+                    @Nullable Double updateMMPeriodSecs,
                     @Nullable Map<StatusFrameEnhanced, Integer> statusFrameRatesMillis,
                     @Nullable Map<ControlFrame, Integer> controlFrameRatesMillis,
                     @Nullable List<SlaveTalon> slaveTalons,
@@ -207,11 +212,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         //Set fields
         this.feetPerRotation = feetPerRotation != null ? feetPerRotation : 1;
         this.updaterProcessPeriodSecs = updaterProcessPeriodSecs != null ? updaterProcessPeriodSecs : 0.005;
+        this.updateMMPeriodSecs = updateMMPeriodSecs != null ? updateMMPeriodSecs : 0.05;
         this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 20;
 
         //Initialize
         this.motionProfileStatus = new MotionProfileStatus();
-        this.timeMPStatusLastRead = 0;
         this.perGearSettings = new HashMap<>();
 
         //If given no gear settings, use the default values.
@@ -333,6 +338,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
 
         //Set up MP notifier
         bottomBufferLoader = new Notifier(this::processMotionProfileBuffer);
+        motionMagicNotifier = new Notifier(this::updateMotionMagicSetpoint);
 
         //Use slot 0
         canTalon.selectProfileSlot(0, 0);
@@ -521,9 +527,11 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         setpoint = feet;
         nativeSetpoint = feetToEncoder(feet);
         if (currentGearSettings.getMotionMagicMaxVel() != null) {
+            motionMagicNotifier.stop();
             //We don't know the setpoint for motion magic so we can't do fancy F stuff
             canTalon.config_kF(0, 0, 0);
             canTalon.set(ControlMode.MotionMagic, nativeSetpoint);
+            motionMagicNotifier.startPeriodic(updateMMPeriodSecs);
         } else {
             if (nativeSetpoint == 0) {
                 canTalon.config_kF(0, 0, 0);
@@ -532,6 +540,17 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
                         1023. / 12. / nativeSetpoint * currentGearSettings.getFeedForwardComponent().applyAsDouble(feet), 0);
             }
             canTalon.set(ControlMode.Position, nativeSetpoint);
+        }
+    }
+
+    private void updateMotionMagicSetpoint(){
+        if (!canTalon.getControlMode().equals(ControlMode.MotionMagic)){
+            motionMagicNotifier.stop();
+        } else {
+            nativeSetpoint = feetToEncoder(setpoint);
+            //TODO check that this actually works
+            canTalon.set(ControlMode.MotionMagic, nativeSetpoint, DemandType.ArbitraryFeedForward,
+                    currentGearSettings.getFeedForwardComponent().calcMPVoltage(canTalon.getActiveTrajectoryPosition(), canTalon.getActiveTrajectoryVelocity(), 0) * 1023. / 12.);
         }
     }
 
@@ -567,6 +586,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     protected void setVelocityFPS(double velocity) {
         nativeSetpoint = FPSToEncoder(velocity);
         setpoint = velocity;
+        canTalon.config_kF(0, 0, 0);
         canTalon.set(ControlMode.Velocity, nativeSetpoint, DemandType.ArbitraryFeedForward,
                 currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity) * 1023. / 12.);
     }
