@@ -75,6 +75,8 @@ public class SlaveTalon implements Loggable {
      * @param brakeMode          Whether this Talon should be in brake mode or coast mode.
      * @param currentLimit       The current limit for this Talon. Can be null for no current limit.
      * @param voltageCompSamples The number of voltage compensation samples to use, or null to not compensate voltage.
+     * @param PDP                The PDP this Talon is connected to.
+     * @param linRegComponent    The linear regression component for logging resistance.
      */
     public void setMaster(int port, boolean brakeMode, @Nullable Integer currentLimit,
                           @Nullable Integer voltageCompSamples, @Nullable PDP PDP, @Nullable RunningLinRegComponent linRegComponent) {
