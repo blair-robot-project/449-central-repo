@@ -570,7 +570,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
             nativeSetpoint = feetToEncoder(setpoint);
             //TODO check that this actually works
             canTalon.set(ControlMode.MotionMagic, nativeSetpoint, DemandType.ArbitraryFeedForward,
-                    currentGearSettings.getFeedForwardComponent().calcMPVoltage(canTalon.getActiveTrajectoryPosition(), canTalon.getActiveTrajectoryVelocity(), 0) * 1023. / 12.);
+                    currentGearSettings.getFeedForwardComponent().calcMPVoltage(canTalon.getActiveTrajectoryPosition(), canTalon.getActiveTrajectoryVelocity(), 0) / 12.);
         }
     }
 
@@ -608,7 +608,7 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         setpoint = velocity;
         canTalon.config_kF(0, 0, 0);
         canTalon.set(ControlMode.Velocity, nativeSetpoint, DemandType.ArbitraryFeedForward,
-                currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity) * 1023. / 12.);
+                currentGearSettings.getFeedForwardComponent().applyAsDouble(velocity) / 12.);
     }
 
     /**
