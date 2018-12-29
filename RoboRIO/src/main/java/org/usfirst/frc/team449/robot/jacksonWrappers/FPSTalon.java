@@ -626,9 +626,9 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     }
 
     /**
-     * Get the current velocity setpoint of the Talon in FPS. WARNING: will give garbage if not in velocity mode.
+     * Get the current velocity setpoint of the Talon in FPS, the position setpoint in feet, or the {@link SetValueMotionProfile} in MP mode.
      *
-     * @return The closed-loop velocity setpoint in FPS, or null if no encoder CPR was given.
+     * @return The setpoint in sensible units for the current control mode.
      */
     @Nullable
     public Double getSetpoint() {
