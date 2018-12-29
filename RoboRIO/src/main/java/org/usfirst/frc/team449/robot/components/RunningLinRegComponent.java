@@ -131,7 +131,7 @@ public class RunningLinRegComponent {
      * @return A RunningLinRegComponent with the same buffer size as this one.
      */
     @Override
-    public org.usfirst.frc.team449.robot.components.RunningLinRegComponent clone() {
-        return new org.usfirst.frc.team449.robot.components.RunningLinRegComponent(bufferSize, rSquaredThreshhold);
+    public RunningLinRegComponent clone() {
+        return new RunningLinRegComponent(bufferSize, rSquaredThreshhold);
     }
 }

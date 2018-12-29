@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.generalInterfaces.loggable;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An object that logs telemetry data every loop.
@@ -22,7 +23,7 @@ public interface Loggable {
      *
      * @return An N-length array of Objects, where N is the number of labels given by getHeader.
      */
-    @NotNull
+    @Nullable
     Object[] getData();
 
     /**
