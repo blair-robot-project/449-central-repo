@@ -6,10 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
+
+import static com.kauailabs.navx.frc.AHRS.SerialDataType.kProcessedData;
 
 /**
  * A Jackson-compatible, invertible wrapper for the NavX.
@@ -28,6 +31,11 @@ public class MappedAHRS implements Loggable, Updatable {
     protected final int invertYaw;
 
     /**
+     * The angle, in degrees, to offset the output of getHeading by.
+     */
+    protected double offsetAngle;
+
+    /**
      * The 9-axis heading value to return. Field to avoid garbage collection.
      */
     private double toRet;
@@ -44,15 +52,20 @@ public class MappedAHRS implements Loggable, Updatable {
      * @param invertYaw Whether or not to invert the yaw axis. Defaults to true.
      */
     @JsonCreator
-    public MappedAHRS(@JsonProperty(required = true) SPI.Port port,
+    public MappedAHRS(@JsonProperty(required = true) SerialPort.Port port,
                       Boolean invertYaw) {
-        this.ahrs = new AHRS(port);
+        if (port.equals(SerialPort.Port.kMXP)) {
+            this.ahrs = new AHRS(SPI.Port.kMXP);
+        } else {
+            this.ahrs = new AHRS(port, kProcessedData, (byte) 100);
+        }
         ahrs.reset();
         if (invertYaw == null || invertYaw) {
             this.invertYaw = -1;
         } else {
             this.invertYaw = 1;
         }
+        setHeading(0);
     }
 
     /**
@@ -72,11 +85,14 @@ public class MappedAHRS implements Loggable, Updatable {
      * @return The heading, in degrees from [-180, 180]
      */
     public double getHeading() {
-        toRet = ahrs.getFusedHeading();
-        if (toRet > 180) {
+        toRet = invertYaw * ahrs.getFusedHeading() - offsetAngle;
+        while (toRet > 180) {
             toRet -= 360;
         }
-        return toRet * invertYaw;
+        while (toRet < -180) {
+            toRet += 360;
+        }
+        return toRet;
     }
 
     /**
@@ -85,7 +101,7 @@ public class MappedAHRS implements Loggable, Updatable {
      * @param headingDegrees An angle in degrees, from [-180, 180], to set the heading to.
      */
     public void setHeading(double headingDegrees) {
-        ahrs.setAngleAdjustment(ahrs.getYaw() + invertYaw * headingDegrees);
+        this.offsetAngle = getHeading() - headingDegrees;
         cachedHeading = headingDegrees;
     }
 

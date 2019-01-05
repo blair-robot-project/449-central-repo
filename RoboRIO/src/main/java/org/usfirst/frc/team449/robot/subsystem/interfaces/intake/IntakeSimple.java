@@ -38,7 +38,7 @@ public class IntakeSimple extends Subsystem implements SubsystemIntake {
      * The current mode.
      */
     @NotNull
-    private IntakeMode mode;
+    private SubsystemIntake.IntakeMode mode;
 
     /**
      * Default constructor
@@ -82,7 +82,7 @@ public class IntakeSimple extends Subsystem implements SubsystemIntake {
      */
     @NotNull
     @Override
-    public IntakeMode getMode() {
+    public SubsystemIntake.IntakeMode getMode() {
         return mode;
     }
 
@@ -90,7 +90,7 @@ public class IntakeSimple extends Subsystem implements SubsystemIntake {
      * @param mode The mode to switch the intake to.
      */
     @Override
-    public void setMode(@NotNull IntakeMode mode) {
+    public void setMode(@NotNull SubsystemIntake.IntakeMode mode) {
         switch (mode) {
             case OFF:
                 motor.setVelocity(0);

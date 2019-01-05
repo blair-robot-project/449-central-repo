@@ -108,7 +108,8 @@ public class AHRSRumbleComponent implements MappedRunnable {
     @Override
     public void run() {
         if (yIsFrontBack) {
-            //Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.
+            //Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about
+            // magnitude.
             frontBack = Math.abs(ahrs.getYAccel());
             leftRight = ahrs.getXAccel() * (invertLeftRight ? -1 : 1);
         } else {
@@ -116,7 +117,8 @@ public class AHRSRumbleComponent implements MappedRunnable {
             leftRight = ahrs.getXAccel() * (invertLeftRight ? -1 : 1);
         }
 
-        //Left is negative jerk, so we subtract it from left so that when we're going left, left is bigger and vice versa
+        //Left is negative jerk, so we subtract it from left so that when we're going left, left is bigger and vice
+        // versa
         left = ((frontBack - lastFrontBackAccel) - (leftRight - lastLeftRightAccel)) / (Clock.currentTimeMillis() - timeLastCalled);
         right = ((frontBack - lastFrontBackAccel) + (leftRight - lastLeftRightAccel)) / (Clock.currentTimeMillis() - timeLastCalled);
 

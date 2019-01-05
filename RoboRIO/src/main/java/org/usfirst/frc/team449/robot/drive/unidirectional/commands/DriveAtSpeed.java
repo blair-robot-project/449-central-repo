@@ -93,7 +93,8 @@ public class DriveAtSpeed<T extends Subsystem & DriveUnidirectional> extends Com
      */
     @Override
     protected void end() {
-        //Brake on exit. Yes this should be setOutput because often we'll be testing how well the PID loop handles a full stop.
+        //Brake on exit. Yes this should be setOutput because often we'll be testing how well the PID loop handles a
+        // full stop.
         subsystem.setOutput(0, 0);
         Logger.addEvent("DriveAtSpeed end.", this.getClass());
     }

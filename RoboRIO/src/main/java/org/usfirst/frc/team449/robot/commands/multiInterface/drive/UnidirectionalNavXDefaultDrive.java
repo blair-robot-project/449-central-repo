@@ -100,11 +100,13 @@ public class UnidirectionalNavXDefaultDrive<T extends Subsystem & DriveUnidirect
                                           @NotNull @JsonProperty(required = true) OIUnidirectional oi,
                                           @Nullable RampComponent rampComponent) {
         //Assign stuff
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted,
+                subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
         this.leftRamp = rampComponent;
-        this.rightRamp = rampComponent != null ? rampComponent.clone() : null; //We want the same settings but different objects, so we clone
+        this.rightRamp = rampComponent != null ? rampComponent.clone() : null; //We want the same settings but
+        // different objects, so we clone
 
         this.driveStraightLoopEntryTimer = driveStraightLoopEntryTimer;
         this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop != null ? maxAngularVelToEnterLoop : 180;

@@ -66,11 +66,15 @@ public class SecondDerivativeLimit implements DoubleUnaryOperator {
         //Time between the last value and this one
         deltaTime = Clock.currentTimeMillis() - previousTime;
         if (value - previousValue > previousFirstDerivative) {
-            //If the first derivative is increasing, make sure it's increasing slower than the secondDerivativeLimit and not exceeding the firstDerivativeLimit
-            previousFirstDerivative = Math.min(previousFirstDerivative + deltaTime * secondDerivativeLimit, Math.min((value - previousValue) / deltaTime, firstDerivativeLimit));
+            //If the first derivative is increasing, make sure it's increasing slower than the secondDerivativeLimit
+            // and not exceeding the firstDerivativeLimit
+            previousFirstDerivative = Math.min(previousFirstDerivative + deltaTime * secondDerivativeLimit,
+                    Math.min((value - previousValue) / deltaTime, firstDerivativeLimit));
         } else {
-            //If the first derivative is decreasing, make sure it's decreasing slower than the secondDerivativeLimit and not going below the -firstDerivativeLimit
-            previousFirstDerivative = Math.max(previousFirstDerivative - deltaTime * secondDerivativeLimit, Math.max((value - previousValue) / deltaTime, -firstDerivativeLimit));
+            //If the first derivative is decreasing, make sure it's decreasing slower than the secondDerivativeLimit
+            // and not going below the -firstDerivativeLimit
+            previousFirstDerivative = Math.max(previousFirstDerivative - deltaTime * secondDerivativeLimit,
+                    Math.max((value - previousValue) / deltaTime, -firstDerivativeLimit));
         }
         previousValue = previousValue + previousFirstDerivative * deltaTime;
         previousTime = Clock.currentTimeMillis();

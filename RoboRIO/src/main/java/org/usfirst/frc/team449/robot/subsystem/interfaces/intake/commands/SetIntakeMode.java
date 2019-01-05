@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
@@ -13,13 +14,13 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake
  * Sets the mode of the intake.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SetIntakeMode extends InstantCommand {
+public class SetIntakeMode<T extends Subsystem & SubsystemIntake> extends InstantCommand {
 
     /**
      * The subsystem to execute this command on.
      */
     @NotNull
-    private final SubsystemIntake subsystem;
+    private final T subsystem;
 
     /**
      * The mode to set this subsystem to.
@@ -34,8 +35,9 @@ public class SetIntakeMode extends InstantCommand {
      * @param mode      The mode to set the intake to.
      */
     @JsonCreator
-    public SetIntakeMode(@NotNull @JsonProperty(required = true) SubsystemIntake subsystem,
+    public SetIntakeMode(@NotNull @JsonProperty(required = true) T subsystem,
                          @NotNull @JsonProperty(required = true) SubsystemIntake.IntakeMode mode) {
+        requires(subsystem);
         this.subsystem = subsystem;
         this.mode = mode;
     }

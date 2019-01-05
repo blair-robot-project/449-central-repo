@@ -1,10 +1,10 @@
 plugins {
     id 'java'
-    id 'eclipse'
     id 'idea'
     id 'maven'
     id 'org.hidetake.ssh' version "2.9.0"
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
+    id "com.google.protobuf" version "0.8.6"
 }
 
 repositories {
@@ -17,6 +17,7 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
 }
 
+
 dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
@@ -28,10 +29,51 @@ dependencies {
     //com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.3'
     compile 'org.jetbrains:annotations:15.0'
+    compile 'com.google.protobuf:protobuf-java:2.6.1'
+    compile 'io.grpc:grpc-stub:1.0.0-pre2'
+    compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
+    // https://mvnrepository.com/artifact/org.zeromq/jeromq
+    compile group: 'org.zeromq', name: 'jeromq', version: '0.4.3'
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+}
+
+protobuf {
+    generatedFilesBaseDir = "$projectDir/gen"
+    protoc {
+        // The artifact spec for the Protobuf Compiler
+        artifact = 'com.google.protobuf:protoc:2.6.1'
+    }
+    plugins {
+        // Optional: an artifact spec for a protoc plugin, with "grpc" as
+        // the identifier, which can be referred to in the "plugins"
+        // container of the "generateProtoTasks" closure.
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.0.0-pre2'
+        }
+    }
+    generateProtoTasks {
+        ofSourceSet('main')*.plugins {
+            // Apply the "grpc" plugin whose spec is defined above, without
+            // options.  Note the braces cannot be omitted, otherwise the
+            // plugin will not be added. This is because of the implicit way
+            // NamedDomainObjectContainer binds the methods.
+            grpc {}
+        }
+    }
+}
+
+/* Utils */
+clean {
+    delete protobuf.generatedFilesBaseDir
+}
+
+idea {
+    module {
+        sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
+    }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

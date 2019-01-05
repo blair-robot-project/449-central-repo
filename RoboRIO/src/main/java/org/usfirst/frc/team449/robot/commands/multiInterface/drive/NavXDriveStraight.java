@@ -76,7 +76,8 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
                              @NotNull @JsonProperty(required = true) T subsystem,
                              @NotNull @JsonProperty(required = true) OITank oi,
                              @JsonProperty(required = true) boolean useLeft) {
-        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted, subsystem, kP, kI, kD);
+        super(absoluteTolerance, onTargetBuffer, minimumOutput, maximumOutput, loopTimeMillis, deadband, inverted,
+                subsystem, kP, kI, kD);
         this.oi = oi;
         this.subsystem = subsystem;
         this.useLeft = useLeft;

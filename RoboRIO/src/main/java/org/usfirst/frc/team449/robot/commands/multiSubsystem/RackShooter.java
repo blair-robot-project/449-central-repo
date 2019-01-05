@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands.SpinUpFlywheel;
@@ -17,7 +18,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.Sole
  * intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RackShooter<T extends SubsystemIntake & SubsystemSolenoid> extends CommandGroup {
+public class RackShooter<T extends Subsystem & SubsystemIntake & SubsystemSolenoid> extends CommandGroup {
 
     /**
      * Constructs a RackShooter command group
