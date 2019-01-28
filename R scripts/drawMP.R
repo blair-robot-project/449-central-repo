@@ -1,6 +1,6 @@
 plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, centerToBack, startY = 0, startPos = c(-1,-1,-1,-1,-1,-1), usePosition = TRUE){
-  left <- read.csv(paste("../calciferLeft",profileName,"Profile.csv",sep=""), header=FALSE)
-  right <- read.csv(paste("../calciferRight",profileName,"Profile.csv",sep=""), header=FALSE)
+  left <- read.csv(paste("../robot2019Left",profileName,"Profile.csv",sep=""), header=FALSE)
+  right <- read.csv(paste("../robot2019Right",profileName,"Profile.csv",sep=""), header=FALSE)
   startingCenter <- c(startY, centerToBack)
   left$V1[1] <- 0
   left$V2[1] <- 0
@@ -145,3 +145,5 @@ plotField <- function(filename, xOffset=0, yOffset=0){
 wheelbaseDiameter <- 25.5/12.
 centerToBack <- (39.5/2.)/12.
 centerToSide <- (24.5)/12.
+
+drawProfile(plotProfile("LFToLoad", wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack), wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack)
