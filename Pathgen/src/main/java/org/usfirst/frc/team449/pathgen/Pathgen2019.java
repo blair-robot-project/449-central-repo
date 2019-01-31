@@ -25,6 +25,10 @@ public class Pathgen2019 {
         final double robot2019Wheelbase = 1.833;
 
         //Naming: side, then position. HAB to first hatch uses suffix "Hatch". To load is suffix "ToLoad". From load is prefix "loadTo".
+        Waypoint[] basicProfile = new Waypoint[] {
+                new Waypoint(0,0,0),
+                new Waypoint(100./12.,0,0)
+        };
         Waypoint[] StartToLF = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(202.7375 / 12 - 3,3,0),
@@ -32,32 +36,37 @@ public class Pathgen2019 {
         };
         Waypoint[] LFToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(105.69 / 12, -308.08 / 12, -Math.PI / 2)
+                new Waypoint(-3,0,0),
+                new Waypoint(-105.69 / 12,-220.25 / 12,1*Math.PI)
         };
         Waypoint[] StartToLM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(222.8625 / 12 - 3,3,0),
-                new Waypoint(222.8625 / 12, 0, -Math.PI / 2)
+                new Waypoint(215.0 / 12 - 3,3,0),
+                new Waypoint(215.0 / 12, 0, -Math.PI / 2)
         };
         Waypoint[] LMToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-105.69 / 12, -328.305 / 12, -Math.PI / 2)
         };
         Waypoint[] LoadToLM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-328.305 / 12, -105.69 / 12, -Math.PI / 2)
         };
         Waypoint[] StartToLB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(242.9875 / 12 - 3,3,0),
-                new Waypoint(242.9875 / 12, 0, -Math.PI / 2)
+                new Waypoint(237.0/ 12 - 3,3,0),
+                new Waypoint(237.0 / 12, 0, -Math.PI / 2)
         };
         Waypoint[] LBToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-,0,0),
                 new Waypoint(-105.69 / 12, -348.44 / 12, -Math.PI / 2)
         };
         Waypoint[] LoadToLB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-348.44 / 12, -105.69 / 12, -Math.PI / 2)
         };
         Waypoint[] StartToRF = new Waypoint[]{
@@ -67,61 +76,68 @@ public class Pathgen2019 {
         };
         Waypoint[] RFToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-105.69 / 12, 308.08 / 12, Math.PI / 2)
         };
         Waypoint[] StartToRM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(222.8625 / 12 - 3,-3,0),
-                new Waypoint(222.8625 / 12, 0, Math.PI / 2)
+                new Waypoint(215.0 / 12 - 3,-3,0),
+                new Waypoint(215.0 / 12, 0, Math.PI / 2)
         };
         Waypoint[] RMToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-105.69 / 12, 328.305 / 12, Math.PI / 2)
         };
         Waypoint[] LoadToRM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-328.305 / 12, 105.69 / 12, Math.PI / 2)
         };
         Waypoint[] StartToRB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(222.8625/12 - 3,-3,0),
-                new Waypoint(242.9875 / 12, 0, Math.PI / 2)
+                new Waypoint(237.0 / 12, 0, Math.PI / 2)
         };
         Waypoint[] RBToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-105.69 / 12, 348.44 / 12, Math.PI / 2)
         };
         Waypoint[] LoadToRB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
                 new Waypoint(-348.44 / 12, 105.69 / 12, Math.PI / 2)
         };
         Waypoint[] StartToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(172.25 / 12,26 / 12,0)
+                new Waypoint(-3,0,0),
+                new Waypoint(195.8/ 12.0,26.0 / 12.0,0)
         };
-        Waypoint[] StartToFR = new Waypoint[]{
+        Waypoint[] FLToLoad = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(172.25/12,-26/12,0)
-        };
-
-        /*Waypoint[] FLToLoad = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(-220/12,0,Math.PI/2),
-                new Waypoint(0,105.69/12+6,Math.PI),//changed x - Anika
-                new Waypoint(-,105.69/12,Math.PI)
+                new Waypoint(-3,0,0),//Not sure if 3 will be too close, maybe change to 4.
+                new Waypoint(-105.69/12,220.25/12,1*Math.PI)
         };
         Waypoint[] loadToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(-220/12,,Math.PI)
+                new Waypoint(-3,0,0),
+                new Waypoint(-220.25/12,105.69/12,1*Math.PI)
+        };
+        Waypoint[] StartToFR = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(-3,0,0),
+                new Waypoint(195.8/12.0,-26./12.,0)
         };
         Waypoint[] FRToLoad = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(-220/12,,Math.PI)
-        };*/
-
+                new Waypoint(-3,0,0),
+                new Waypoint(-105.69/12,220.25/12,1*Math.PI)
+        };
         Waypoint[] loadToFR = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                //new Waypoint()
+                new Waypoint(-3,0,0),
+                new Waypoint(-220.25/12,105.69/12,1*Math.PI)
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
@@ -133,6 +149,7 @@ public class Pathgen2019 {
         profiles.put("StartToRB", StartToRB);
         profiles.put("StartToFL", StartToFL);
         profiles.put("StartToFR", StartToFR);
+        profiles.put("BasicProfile", basicProfile);
 //        profiles.put("LFToLoad", LFToLoad);
 //        profiles.put("LMToLoad", LMToLoad);
 //        profiles.put("LBToLoad", LBToLoad);
