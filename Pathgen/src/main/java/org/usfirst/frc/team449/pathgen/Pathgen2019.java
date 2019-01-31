@@ -4,7 +4,6 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
-import sun.nio.cs.ext.MacArabic;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,11 +58,12 @@ public class Pathgen2019 {
                 new Waypoint(237.0/ 12 - 3,3,0),
                 new Waypoint(237.0 / 12, 0, -Math.PI / 2)
         };
+        /*
         Waypoint[] LBToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(-,0,0),
                 new Waypoint(-105.69 / 12, -348.44 / 12, -Math.PI / 2)
-        };
+        };*/
         Waypoint[] LoadToLB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(-3,0,0),
