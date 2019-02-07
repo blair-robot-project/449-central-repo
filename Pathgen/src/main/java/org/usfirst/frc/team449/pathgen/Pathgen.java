@@ -4,7 +4,6 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
-import sun.nio.cs.ext.MacArabic;
 
 import java.io.FileWriter;
 import java.io.IOException;
