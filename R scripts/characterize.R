@@ -42,9 +42,7 @@ characterizeDrive <- function(velFile, accelFile, smoothing = 2){
   goodVel$right_accel <- smoothDerivative(goodVel$right.velocity, goodVel$time, smoothing)
   accel$left_accel <- smoothDerivative(accel$left.velocity, accel$time, smoothing)
   accel$right_accel <- smoothDerivative(accel$right.velocity, accel$time, smoothing)
-  print(length(accel$time))
   goodAccel <- subset(accel, left.voltage != 0 & right.voltage != 0)
-  print(length(goodAccel$time))
   goodAccel <- goodAccel[1:(length(goodAccel$time) - 2),]
   goodAccelLeft <- goodAccel[(which.max(abs(goodAccel$left_accel))+1):length(goodAccel$time),]
   goodAccelRight <- goodAccel[(which.max(abs(goodAccel$right_accel))+1):length(goodAccel$time),]

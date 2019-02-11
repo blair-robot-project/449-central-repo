@@ -32,7 +32,7 @@ public class Pathgen2019 {
         Waypoint[] LFToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(-3,0,0),
-                new Waypoint(-110.625 / 12.0, -259.938 / 12.0, -Math.PI / 2)
+                new Waypoint(-110.625 / 12.0,-259.938 / 12.0, -Math.PI / 2)
         };
         Waypoint[] StartToLM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
@@ -142,16 +142,16 @@ public class Pathgen2019 {
         profiles.put("StartToRB", StartToRB);
         profiles.put("StartToFL", StartToFL);
         profiles.put("StartToFR", StartToFR);
-//        profiles.put("LFToLoad", LFToLoad);
-//        profiles.put("LMToLoad", LMToLoad);
-//        profiles.put("LBToLoad", LBToLoad);
-//        profiles.put("RFToLoad", RFToLoad);
-//        profiles.put("RMToLoad", RMToLoad);
-//        profiles.put("RBToLoad", RBToLoad);
-//        profiles.put("LoadToLM", LoadToLM);
-//        profiles.put("LoadToLB", LoadToLB);
-//        profiles.put("LoadToRM", LoadToRM);
-//        profiles.put("LoadToRB", LoadToRB);
+        profiles.put("LFToLoad", LFToLoad);
+        profiles.put("LMToLoad", LMToLoad);
+        profiles.put("LBToLoad", LBToLoad);
+        profiles.put("RFToLoad", RFToLoad);
+        profiles.put("RMToLoad", RMToLoad);
+        profiles.put("RBToLoad", RBToLoad);
+        profiles.put("LoadToLM", LoadToLM);
+        profiles.put("LoadToLB", LoadToLB);
+        profiles.put("LoadToRM", LoadToRM);
+        profiles.put("LoadToRB", LoadToRB);
 
         final String ROBOT_NAME = "robot2019";
 

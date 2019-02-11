@@ -90,7 +90,7 @@ drawProfile <- function (coords, centerToBack, wheelbaseDiameter, clear=TRUE, li
     } else {
       plot(coords[,2],coords[,3], col="Green", ylim=c(-16, 16), xlim = c(0,54), xlab = "X Position (feet)", ylab="Y Position (feet)", asp=1)
     }
-    plotField("powerUpField.csv")
+    plotField("deepSpaceField.csv")
   } else {
     if (linePlot){
       lines(coords[,2],coords[,3],col="Green")
