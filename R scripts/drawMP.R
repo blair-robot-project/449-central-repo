@@ -146,4 +146,4 @@ wheelbaseDiameter <- 25.5/12.
 centerToBack <- (39.5/2.)/12.
 centerToSide <- (24.5)/12.
 
-drawProfile(plotProfile("LFToLoad", wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack), wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack)
+drawProfile(plotProfile("RFToLoad", wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack), wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack)
