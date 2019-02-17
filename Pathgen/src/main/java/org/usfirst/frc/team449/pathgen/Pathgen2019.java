@@ -21,9 +21,14 @@ public class Pathgen2019 {
         // the circumference of a circle moved by the robot via C = 360 * n / θ
         //You then find the diameter via C / π.
 
-        final double robot2019Wheelbase = 1.833;
+        // Measured
+        final double robot2019Wheelbase = 2.14;
 
         //Naming: side, then position. HAB to first hatch uses suffix "Hatch". To load is suffix "ToLoad". From load is prefix "loadTo".
+        Waypoint[] ToLoadLeftRev = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(-3,-3, -Math.PI / 2)
+        };
         Waypoint[] StartToLF = new Waypoint[]{
                 new Waypoint(0, 0, 0),
                 new Waypoint(193.750 / 12.0 - 3.0,3,0),
@@ -31,8 +36,9 @@ public class Pathgen2019 {
         };
         Waypoint[] LFToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(-3,0,0),
-                new Waypoint(-110.625 / 12.0,-259.938 / 12.0, -Math.PI / 2)
+                new Waypoint(1.5,1.25,Math.PI / 2),
+                new Waypoint(0,2.5, 1 * Math.PI),
+                new Waypoint(-259.938 / 12.0 + 3,-2.625 / 12.0, 1 * Math.PI)
         };
         Waypoint[] StartToLM = new Waypoint[]{
                 new Waypoint(0, 0, 0),

@@ -2,25 +2,25 @@
 rad2deg <- function(rad) {return((rad * 180) / (pi))}
 deg2rad <- function(deg) {return((deg * pi) / (180))}
 distance <- function(x1, y1, x2, y2){return(sqrt((x1-x2)^2 + (y1-y2)^2))}
-leftKVFwd <- 1.483639
-leftKVRev <- 1.465076
-leftKA <- 0.179707
-leftInterceptFwd <- 0.718235
-leftInterceptRev <- 0.969839
-rightKVFwd <- 1.479436
-rightKVRev <- 1.439699
-rightKA <- 0.171817
-rightInterceptFwd <- 0.703256
-rightInterceptRev <- 0.984755
+leftKVFwd <- 1.433226
+leftKVRev <- 1.408763
+leftKA <- 0.165688
+leftInterceptFwd <- 0.960891
+leftInterceptRev <- 1.120689
+rightKVFwd <- 1.460269
+rightKVRev <- 1.421145
+rightKA <- 0.224505
+rightInterceptFwd <- 0.959980
+rightInterceptRev <- 1.120998
 
 
 plotProfile <- function(profileName, leftInverted = FALSE, rightInverted=FALSE, wheelbaseDiameter, centerToBack, startY = 0, startPos = c(-1,-1,-1,-1,-1,-1), usePosition = TRUE){
   if (leftInverted & rightInverted){
-    left <- read.csv(paste("../../449-central-repo/naviRight",profileName,"Profile.csv",sep=""), header=FALSE)
-    right <- read.csv(paste("../../449-central-repo/naviLeft",profileName,"Profile.csv",sep=""), header=FALSE)
+    left <- read.csv(paste("../../449-central-repo/robot2019Left",profileName,"Profile.csv",sep=""), header=FALSE)
+    right <- read.csv(paste("../../449-central-repo/robot2019Right",profileName,"Profile.csv",sep=""), header=FALSE)
   } else {
-    left <- read.csv(paste("../../449-central-repo/naviLeft",profileName,"Profile.csv",sep=""), header=FALSE)
-    right <- read.csv(paste("../../449-central-repo/naviRight",profileName,"Profile.csv",sep=""), header=FALSE)
+    left <- read.csv(paste("../../449-central-repo/robot2019Left",profileName,"Profile.csv",sep=""), header=FALSE)
+    right <- read.csv(paste("../../449-central-repo/robot2019Right",profileName,"Profile.csv",sep=""), header=FALSE)
   }
   startingCenter <- c(startY, centerToBack)
   left$V1[1] <- 0
@@ -131,7 +131,7 @@ drawProfile <- function (coords, centerToBack, wheelbaseDiameter, clear=TRUE, li
     } else {
       plot(coords[,2],coords[,3], col="Green", ylim=c(-16, 16), xlim = c(0,54), xlab = "X Position (feet)", ylab="Y Position (feet)", asp=1)
     }
-    plotField("powerUpField.csv")
+    plotField("deepSpaceField.csv")
   } else {
     if (linePlot){
       lines(coords[,2],coords[,3],col="Green")
@@ -224,7 +224,7 @@ executeProfileSequence <- function(names, leftInverted, rightInverted, wheelbase
   return(totalOut)
 }
 
-wheelbaseDiameter <- 25.5/12.
+wheelbaseDiameter <- 2.14
 centerToBack <- (39.5/2.)/12.
 centerToSide <- (24.5)/12.
 
