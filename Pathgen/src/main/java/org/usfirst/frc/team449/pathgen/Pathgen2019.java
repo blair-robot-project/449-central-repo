@@ -161,8 +161,11 @@ public class Pathgen2019 {
 
         final String ROBOT_NAME = "robot2019";
 
+        double dt = 0.05;
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                0.05, 5., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                dt, 5., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+
+        CalculateMPAngles calculateMPAngles = new CalculateMPAngles(robot2019Wheelbase, dt);
 
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
@@ -172,18 +175,19 @@ public class Pathgen2019 {
             FileWriter lfw = new FileWriter(ROBOT_NAME + "Left" + profile + "Profile.csv", false);
             FileWriter rfw = new FileWriter(ROBOT_NAME + "Right" + profile + "Profile.csv", false);
 
+            double[] angles = calculateMPAngles.calculateAngles(tm.getLeftTrajectory(), tm.getRightTrajectory());
 
             lfw.write(tm.getLeftTrajectory().length() + "\n");
             for (int i = 0; i < tm.getLeftTrajectory().length(); i++) {
                 lfw.write(tm.getLeftTrajectory().get(i).position + ",\t" + tm.getLeftTrajectory().get(i).velocity + ",\t"
-                        + tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getLeftTrajectory().get(i).dt);
+                        + tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getLeftTrajectory().get(i).dt + ",\t" + angles[i]);
                 lfw.write("\n");
             }
 
             rfw.write(tm.getRightTrajectory().length() + "\n");
             for (int i = 0; i < tm.getRightTrajectory().length(); i++) {
-                rfw.write(tm.getRightTrajectory().get(i).position + ",\t" + tm.getRightTrajectory().get(i).velocity +
-                        ",\t" + tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getRightTrajectory().get(i).dt);
+                rfw.write(tm.getRightTrajectory().get(i).position + ",\t" + tm.getRightTrajectory().get(i).velocity + ",\t"
+                        + tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getRightTrajectory().get(i).dt + ",\t" + angles[i]);
                 rfw.write("\n");
             }
 
