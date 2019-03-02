@@ -227,5 +227,5 @@ executeProfileSequence <- function(names, leftInverted, rightInverted, wheelbase
 wheelbaseDiameter <- 2.14
 centerToBack <- (39.5/2.)/12.
 centerToSide <- (24.5)/12.
-
-drawProfile(plotProfile("RFToLoad", wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack), wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack)
+#Time, Left X, Left Y, Right X, Right Y, Angle
+drawProfile(plotProfile("LoadToFR", leftInverted = FALSE, rightInverted = FALSE, startPos = c(0, 4 + centerToBack, -0+wheelbaseDiameter/2.,  4 + centerToBack, -0-wheelbaseDiameter/2., 0), wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack), wheelbaseDiameter=wheelbaseDiameter, centerToBack=centerToBack)
