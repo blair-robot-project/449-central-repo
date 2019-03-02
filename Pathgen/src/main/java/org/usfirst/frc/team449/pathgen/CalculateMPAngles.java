@@ -35,7 +35,7 @@ public class CalculateMPAngles {
         valuesAtCurrentTime[4] = -wheelBaseDiameter / 2.;
         valuesAtCurrentTime[5] = 0.;
         valuesAtAllTimes[0] = valuesAtCurrentTime;
-        for (int i = 1; i < leftTraj.length() - 1; i++) {
+        for (int i = 1; i < leftTraj.length(); i++) {
             valuesAtCurrentTime = Arrays.copyOf(valuesAtAllTimes[i-1], 6);
 //    Get the angle the robot is facing.
             perpendicular = valuesAtCurrentTime[5];
@@ -85,7 +85,7 @@ public class CalculateMPAngles {
             valuesAtAllTimes[i] = valuesAtCurrentTime;
         }
         double[] angles = new double[leftTraj.length()];
-        for (int i = 0; i < valuesAtAllTimes.length - 1; i++) {
+        for (int i = 0; i < valuesAtAllTimes.length; i++) {
             valuesAtCurrentTime = valuesAtAllTimes[i];
             angles[i] = Math.toDegrees(valuesAtCurrentTime[5]);
         }
