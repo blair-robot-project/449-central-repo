@@ -139,9 +139,15 @@ public class Pathgen2019 {
                 new Waypoint(-1.5, -4.75,-Math.PI / 2.),
                 new Waypoint(110.625 / 12.0 - 5, -303.438 / 12.0 + 10, 1. * Math.PI)
         };
-        Waypoint[] StartToF = new Waypoint[]{
+        Waypoint[] StartToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(136.0 / 12.0,0,0)
+                new Waypoint(136.0 / 12.0,1,0),
+                new Waypoint(142./12.,1,0)
+        };
+        Waypoint[] StartToFR = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(136./12.,-1.,0),
+                new Waypoint(142./12.,-1.,0)
         };
         Waypoint[] FToLoadRev = new Waypoint[]{
                 new Waypoint(0,0,0),
@@ -149,11 +155,13 @@ public class Pathgen2019 {
         };
         Waypoint[] FLToLoadFwd = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(124.413 / 12.,124.413 / 12.,Math.PI / 2.)
+                new Waypoint(124.09 / 12.,124.413 / 12.,Math.PI / 2.),
+                new Waypoint(124.09 / 12.,130.413 / 12.,Math.PI / 2.)
         };
         Waypoint[] FRToLoadFwd = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(124.413 / 12.,-124.413 / 12.,-Math.PI / 2.)
+                new Waypoint(124.09 / 12.,-124.413 / 12.,-Math.PI / 2.),
+                new Waypoint(124.09 / 12.,-130.413 / 12.,-Math.PI / 2.)
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
@@ -170,7 +178,8 @@ public class Pathgen2019 {
 //        profiles.put("StartToRF", StartToRF);
 //        profiles.put("StartToRM", StartToRM);
 //        profiles.put("StartToRB", StartToRB);
-        profiles.put("StartToF", StartToF);
+        profiles.put("StartToFL", StartToFL);
+        profiles.put("StartToFR", StartToFR);
 //        profiles.put("LFToLoad", LFToLoad);
 //        profiles.put("LMToLoad", LMToLoad);
 //        profiles.put("LBToLoad", LBToLoad);
@@ -188,7 +197,7 @@ public class Pathgen2019 {
 
         double dt = 0.05;
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                dt, 5., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                dt, 3., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         CalculateMPAngles calculateMPAngles = new CalculateMPAngles(robot2019Wheelbase, dt);
 
