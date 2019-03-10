@@ -141,13 +141,13 @@ public class Pathgen2019 {
         };
         Waypoint[] StartToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(136.0 / 12.0,1,0),
-                new Waypoint(142./12.,1,0)
+                new Waypoint(136.0 / 12.0,3.5/12.,0),
+                new Waypoint(142./12.,3.5/12.,0)
         };
         Waypoint[] StartToFR = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(136./12.,-1.,0),
-                new Waypoint(142./12.,-1.,0)
+                new Waypoint(136./12.,-3.5/12.,0),
+                new Waypoint(142./12.,-3.5/12.,0)
         };
         Waypoint[] FToLoadRev = new Waypoint[]{
                 new Waypoint(0,0,0),
