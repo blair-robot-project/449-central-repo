@@ -24,6 +24,9 @@ public class Pathgen2019 {
         // Measured
         final double robot2019Wheelbase = 2.14;
 
+        //Don't forget
+        final double robot2019Length = 38.25;
+
         //Naming: side, then position. HAB to first hatch uses suffix "Hatch". To load is suffix "ToLoad". From load is prefix "loadTo".
         Waypoint[] ToLoadLeftRev = new Waypoint[]{
                 new Waypoint(0,0,0),
@@ -149,25 +152,24 @@ public class Pathgen2019 {
                 new Waypoint(136./12.,-3.5/12.,0),
                 new Waypoint(142./12.,-3.5/12.,0)
         };
-        Waypoint[] FToLoadRev = new Waypoint[]{
+        Waypoint[] FToLoadFwd = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(-135.82 / 12.,0,0)
+                new Waypoint((122.303 - robot2019Length) / 12.,0,0)
         };
-        Waypoint[] FLToLoadFwd = new Waypoint[]{
+        Waypoint[] FLToLoadRev = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(124.09 / 12.,124.413 / 12.,Math.PI / 2.),
-                new Waypoint(124.09 / 12.,130.413 / 12.,Math.PI / 2.)
+                new Waypoint(124.09 / 12.,266.233 / 12.,Math.PI / 2.)
         };
-        Waypoint[] FRToLoadFwd = new Waypoint[]{
+        Waypoint[] FRToLoadRev = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(124.09 / 12.,-124.413 / 12.,-Math.PI / 2.),
-                new Waypoint(124.09 / 12.,-130.413 / 12.,-Math.PI / 2.)
+                new Waypoint(-129.424 / 12.,-125.413 / 12.,-Math.PI / 2.)
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
-        profiles.put("FToLoadRev", FToLoadRev);
-        profiles.put("FLToLoadFwd", FLToLoadFwd);
-        profiles.put("FRToLoadFwd", FRToLoadFwd);
+        profiles.put("FToLoadFwd", FToLoadFwd);
+        profiles.put("FLToLoadRev", FLToLoadRev);
+        profiles.put("FRToLoadRev", FRToLoadRev);
         profiles.put("LoadToLeftRev", LoadToLeftRev);
         profiles.put("LoadToRightRev", LoadToRightRev);
 //        profiles.put("ToLoadLeftRev", ToLoadLeftRev);
