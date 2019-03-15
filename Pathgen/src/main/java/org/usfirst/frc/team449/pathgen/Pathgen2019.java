@@ -152,24 +152,38 @@ public class Pathgen2019 {
                 new Waypoint(136./12.,-3.5/12.,0),
                 new Waypoint(142./12.,-3.5/12.,0)
         };
+        Waypoint[] FToLoadFwdLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
+                new Waypoint(0,0,0),
+                new Waypoint(134.213 / 12.,0,0)
+        };
+        Waypoint[] FLToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
+                new Waypoint(0,0,0),
+                new Waypoint((-89.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
+        };
+        Waypoint[] FRToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
+                new Waypoint(0,0,0),
+                new Waypoint((-89.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
+        };
         Waypoint[] FToLoadFwd = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint((122.303 - robot2019Length) / 12.,0,0)
+                new Waypoint(94.213 / 12.,0,0)
         };
         Waypoint[] FLToLoadRev = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(124.09 / 12.,124.413 / 12.,Math.PI / 2.),
-                new Waypoint(124.09 / 12.,266.233 / 12.,Math.PI / 2.)
+                new Waypoint((-129.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
         };
         Waypoint[] FRToLoadRev = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(-129.424 / 12.,-125.413 / 12.,-Math.PI / 2.)
+                new Waypoint((-129.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
         profiles.put("FToLoadFwd", FToLoadFwd);
         profiles.put("FLToLoadRev", FLToLoadRev);
         profiles.put("FRToLoadRev", FRToLoadRev);
+        profiles.put("FToLoadFwdLess", FToLoadFwdLess);//Not as useful, probably impossible to do optimally
+        profiles.put("FLToLoadRevLess", FLToLoadRevLess);//Not as useful, probably impossible to do optimally
+        profiles.put("FRToLoadRevLess", FRToLoadRevLess);//Not as useful, probably impossible to do optimally
         profiles.put("LoadToLeftRev", LoadToLeftRev);
         profiles.put("LoadToRightRev", LoadToRightRev);
 //        profiles.put("ToLoadLeftRev", ToLoadLeftRev);
