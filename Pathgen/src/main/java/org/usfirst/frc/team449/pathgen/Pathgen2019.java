@@ -4,7 +4,6 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class Pathgen2019 {
         // Measured
         final double robot2019Wheelbase = 2.14;
 
-        //Don't forget
+        // Don't forget
         final double robot2019Length = 38.25;
 
         //Naming: side, then position. HAB to first hatch uses suffix "Hatch". To load is suffix "ToLoad". From load is prefix "loadTo".
@@ -152,18 +151,18 @@ public class Pathgen2019 {
                 new Waypoint(136./12.,-3.5/12.,0),
                 new Waypoint(142./12.,-3.5/12.,0)
         };
-        Waypoint[] FToLoadFwdLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-                new Waypoint(0,0,0),
-                new Waypoint(134.213 / 12.,0,0)
-        };
-        Waypoint[] FLToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-                new Waypoint(0,0,0),
-                new Waypoint((-89.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
-        };
-        Waypoint[] FRToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-                new Waypoint(0,0,0),
-                new Waypoint((-89.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
-        };
+//        Waypoint[] FToLoadFwdLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
+//                new Waypoint(0,0,0),
+//                new Waypoint(134.213 / 12.,0,0)
+//        };
+//        Waypoint[] FLToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
+//                new Waypoint(0,0,0),
+//                new Waypoint((-89.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
+//        };
+//        Waypoint[] FRToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
+//                new Waypoint(0,0,0),
+//                new Waypoint((-89.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
+//        };
         Waypoint[] FToLoadFwd = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(94.213 / 12.,0,0)
@@ -181,9 +180,9 @@ public class Pathgen2019 {
         profiles.put("FToLoadFwd", FToLoadFwd);
         profiles.put("FLToLoadRev", FLToLoadRev);
         profiles.put("FRToLoadRev", FRToLoadRev);
-        profiles.put("FToLoadFwdLess", FToLoadFwdLess);//Not as useful, probably impossible to do optimally
-        profiles.put("FLToLoadRevLess", FLToLoadRevLess);//Not as useful, probably impossible to do optimally
-        profiles.put("FRToLoadRevLess", FRToLoadRevLess);//Not as useful, probably impossible to do optimally
+//        profiles.put("FToLoadFwdLess", FToLoadFwdLess);//Not as useful, probably impossible to do optimally
+//        profiles.put("FLToLoadRevLess", FLToLoadRevLess);//Not as useful, probably impossible to do optimally
+//        profiles.put("FRToLoadRevLess", FRToLoadRevLess);//Not as useful, probably impossible to do optimally
         profiles.put("LoadToLeftRev", LoadToLeftRev);
         profiles.put("LoadToRightRev", LoadToRightRev);
 //        profiles.put("ToLoadLeftRev", ToLoadLeftRev);

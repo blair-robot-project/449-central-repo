@@ -97,3 +97,26 @@ characterizeElevatorTrimmed <- function(vel, accelDat, smoothing = 2){
   model <- lm(combinedVoltage~combinedVel+combinedAccel)
   print(summary(model))
 }
+
+characterizeArm <- function(velFile, accelFile, smoothing = 2, velOffset = 0, accelOffset = 0){
+  vel <- read.csv(velFile)
+  accel <- read.csv(accelFile)
+  goodVel <- subset(vel, abs(arm.velocity) > 0.03 & abs(arm.voltage) > 0.1)
+  goodVel <- goodVel[1:(length(goodVel$time) - 1), ]
+  goodVel$left_accel <- smoothDerivative(goodVel$arm.velocity, goodVel$time, smoothing)
+  accel$left_accel <- smoothDerivative(accel$arm.velocity, accel$time, smoothing)
+  goodAccel <- subset(accel, arm.voltage != 0)
+  goodAccel <- goodAccel[1:(length(goodAccel$time) - 2),]
+  goodAccelLeft <- goodAccel[(which.max(abs(goodAccel$left_accel))+1):length(goodAccel$time),]
+  combinedLeftVoltage <- c(goodVel$arm.voltage, goodAccelLeft$arm.voltage)
+  combinedLeftVel <- c(goodVel$arm.velocity, goodAccelLeft$arm.velocity)
+  combinedLeftAccel <- c(goodVel$left_accel, goodAccelLeft$left_accel)
+  plot(goodAccelLeft$time, goodAccelLeft$left_accel)
+  plot(goodVel$time, goodVel$arm.voltage)
+  plot(goodVel$arm.voltage, goodVel$arm.velocity)
+  angle <- c(goodVel$arm.position + velOffset, goodAccelLeft$arm.position + accelOffset)
+  angleFactor <- cos(angle*2*pi)
+  combinedLeftAccel <- combinedLeftAccel*angleFactor
+  leftModel <- lm(combinedLeftVoltage~combinedLeftVel+angleFactor)
+  print(summary(leftModel))
+}
