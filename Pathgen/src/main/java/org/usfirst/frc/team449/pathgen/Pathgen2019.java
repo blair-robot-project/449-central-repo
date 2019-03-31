@@ -143,13 +143,13 @@ public class Pathgen2019 {
         };
         Waypoint[] StartToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(136.0 / 12.0,3.5/12.,0),
-                new Waypoint(142./12.,3.5/12.,0)
+                new Waypoint(136.0 / 12.0,4.5/12.,0),
+                new Waypoint(148./12.,4.5/12.,0)
         };
         Waypoint[] StartToFR = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(136./12.,-3.5/12.,0),
-                new Waypoint(142./12.,-3.5/12.,0)
+                new Waypoint(136./12.,-4.5/12.,0),
+                new Waypoint(148./12.,-4.5/12.,0)
         };
 //        Waypoint[] FToLoadFwdLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
 //                new Waypoint(0,0,0),
@@ -212,7 +212,7 @@ public class Pathgen2019 {
 
         double dt = 0.05;
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                dt, 3., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                dt, 2., 4., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         CalculateMPAngles calculateMPAngles = new CalculateMPAngles(robot2019Wheelbase, dt);
 
