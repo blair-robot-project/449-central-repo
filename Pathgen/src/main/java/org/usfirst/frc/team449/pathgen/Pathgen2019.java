@@ -144,25 +144,13 @@ public class Pathgen2019 {
         Waypoint[] StartToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(136.0 / 12.0,4.5/12.,0),
-                new Waypoint(148./12.,4.5/12.,0)
+                new Waypoint(145./12.,4.5/12.,0)
         };
         Waypoint[] StartToFR = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(136./12.,-4.5/12.,0),
-                new Waypoint(148./12.,-4.5/12.,0)
+                new Waypoint(145./12.,-4.5/12.,0)
         };
-//        Waypoint[] FToLoadFwdLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-//                new Waypoint(0,0,0),
-//                new Waypoint(134.213 / 12.,0,0)
-//        };
-//        Waypoint[] FLToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-//                new Waypoint(0,0,0),
-//                new Waypoint((-89.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
-//        };
-//        Waypoint[] FRToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-//                new Waypoint(0,0,0),
-//                new Waypoint((-89.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
-//        };
         Waypoint[] FToLoadFwd = new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(94.213 / 12.,0,0)
