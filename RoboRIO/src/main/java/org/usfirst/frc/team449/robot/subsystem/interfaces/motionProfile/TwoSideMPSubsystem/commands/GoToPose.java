@@ -74,7 +74,7 @@ public class GoToPose<T extends Subsystem & SubsystemMPTwoSides & SubsystemAHRS>
         this.subsystem = subsystem;
         GetPathFromJetson getPath = new GetPathFromJetson(pathRequester, null, deltaTime, maxVel, maxAccel, maxJerk,
                 false);
-        GoToPositionRelative goToPositionRelative = new GoToPositionRelative<>(getPath, subsystem);
+        GoToPositionRelative<T> goToPositionRelative = new GoToPositionRelative<>(getPath, subsystem);
         goToPositionRelative.setWaypoints(this::getWaypoints);
         addSequential(goToPositionRelative);
     }

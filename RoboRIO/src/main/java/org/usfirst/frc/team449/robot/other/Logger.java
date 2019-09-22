@@ -26,7 +26,7 @@ public class Logger implements Runnable {
      * A list of all events that have been logged that haven't yet been written to a file.
      */
     @NotNull
-    private static List<LogEvent> events = new ArrayList<>();
+    private static List<LogEvent<?>> events = new ArrayList<>();
 
     /**
      * All loggables added to the Logger outside of the constructor.
@@ -87,7 +87,7 @@ public class Logger implements Runnable {
     /**
      * The type of the datum currently being logged. Field to avoid garbage collection.
      */
-    private Class datumClass;
+    private Class<?> datumClass;
 
     /**
      * The list of data from the loggable being logged. Field to avoid garbage collection.
@@ -176,8 +176,8 @@ public class Logger implements Runnable {
      * @param message The text of the event to log.
      * @param caller  The class causing the event. Almost always will be this.getClass().
      */
-    public static void addEvent(@NotNull String message, @NotNull Class caller) {
-        events.add(new LogEvent(message, caller));
+    public static <T> void addEvent(@NotNull String message, @NotNull Class<T> caller) {
+        events.add(new LogEvent<T>(message, caller));
     }
 
     /**
@@ -200,7 +200,7 @@ public class Logger implements Runnable {
 
         try {
             //Log each event to a file
-            for (LogEvent event : events) {
+            for (LogEvent<?> event : events) {
                 eventLogWriter.write(event.toString() + "\n");
             }
             eventLogWriter.flush();
