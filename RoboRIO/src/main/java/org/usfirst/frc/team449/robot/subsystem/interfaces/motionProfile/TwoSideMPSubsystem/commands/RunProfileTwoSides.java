@@ -48,7 +48,7 @@ public class RunProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exten
                               @NotNull Supplier<MotionProfileData> leftSupplier,
                               @NotNull Supplier<MotionProfileData> rightSupplier,
                               double timeout) {
-        addSequential(new LoadProfileTwoSides(subsystem, leftSupplier, rightSupplier));
+        addSequential(new LoadProfileTwoSides<>(subsystem, leftSupplier, rightSupplier));
         addSequential(new RunLoadedProfile<>(subsystem, timeout));
     }
 }
