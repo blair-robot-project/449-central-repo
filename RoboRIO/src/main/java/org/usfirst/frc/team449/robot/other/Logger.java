@@ -82,7 +82,8 @@ public class Logger implements Runnable {
     /**
      * The last time, in milliseconds, that the logger was run.
      */
-    private long lastTime;
+    @SuppressWarnings("unused")
+	private long lastTime;
 
     /**
      * The type of the datum currently being logged. Field to avoid garbage collection.
