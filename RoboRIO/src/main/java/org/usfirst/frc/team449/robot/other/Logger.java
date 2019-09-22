@@ -80,12 +80,6 @@ public class Logger implements Runnable {
     private final FileWriter telemetryLogWriter, eventLogWriter;
 
     /**
-     * The last time, in milliseconds, that the logger was run.
-     */
-    @SuppressWarnings("unused")
-	private long lastTime;
-
-    /**
      * The type of the datum currently being logged. Field to avoid garbage collection.
      */
     private Class<?> datumClass;
@@ -168,7 +162,7 @@ public class Logger implements Runnable {
         telemetryLogWriter.write(telemetryHeader.toString());
         eventLogWriter.flush();
         telemetryLogWriter.flush();
-        lastTime = System.currentTimeMillis();
+        System.currentTimeMillis();
     }
 
     /**
@@ -196,8 +190,7 @@ public class Logger implements Runnable {
      */
     @Override
     public void run() {
-//        System.out.println("dt: "+(System.currentTimeMillis()-lastTime));
-        lastTime = System.currentTimeMillis();
+System.currentTimeMillis();
 
         try {
             //Log each event to a file
