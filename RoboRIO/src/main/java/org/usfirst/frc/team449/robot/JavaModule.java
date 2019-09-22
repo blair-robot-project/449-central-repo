@@ -11,6 +11,11 @@ import java.util.function.DoubleUnaryOperator;
 public class JavaModule extends SimpleModule {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5358258077148119979L;
+
+	/**
      * Default constructor
      */
     public JavaModule() {
