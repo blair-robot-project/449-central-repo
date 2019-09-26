@@ -34,7 +34,7 @@ public class RackShooter<T extends Subsystem & SubsystemIntake & SubsystemSoleno
         }
         if (subsystemIntake != null) {
             addParallel(new SolenoidReverse(subsystemIntake));
-            addParallel(new SetIntakeMode(subsystemIntake, SubsystemIntake.IntakeMode.IN_SLOW));
+            addParallel(new SetIntakeMode<>(subsystemIntake, SubsystemIntake.IntakeMode.IN_SLOW));
         }
     }
 }

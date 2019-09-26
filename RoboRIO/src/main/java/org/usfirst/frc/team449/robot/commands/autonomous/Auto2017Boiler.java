@@ -34,7 +34,7 @@ public class Auto2017Boiler extends CommandGroup {
      *                               than .05.
      */
     @JsonCreator
-    public Auto2017Boiler(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+    public Auto2017Boiler(@NotNull @JsonProperty(required = true) RunLoadedProfile<?> runWallToPegProfile,
                           @NotNull @JsonProperty(required = true) Command dropGear,
                           @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
                           @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,

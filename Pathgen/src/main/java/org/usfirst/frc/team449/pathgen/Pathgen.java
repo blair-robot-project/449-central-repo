@@ -15,7 +15,8 @@ import java.util.Map;
  */
 public class Pathgen {
 
-    public static void main(String[] args) throws IOException {
+    @SuppressWarnings("unused")
+	public static void main(String[] args) throws IOException {
 
         //Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
         // the circumference of a circle moved by the robot via C = 360 * n / θ
