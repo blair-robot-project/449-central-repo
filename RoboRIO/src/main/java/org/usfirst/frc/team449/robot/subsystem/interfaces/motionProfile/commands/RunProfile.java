@@ -29,7 +29,7 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
     public RunProfile(@NotNull @JsonProperty(required = true) T subsystem,
                       @NotNull @JsonProperty(required = true) MotionProfileData profile,
                       @JsonProperty(required = true) double timeout) {
-        addSequential(new LoadProfile<>(subsystem, profile));
+        addSequential(new LoadProfile(subsystem, profile));
         addSequential(new RunLoadedProfile<>(subsystem, timeout));
     }
 
@@ -43,7 +43,7 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
     public RunProfile(@NotNull T subsystem,
                       @NotNull Supplier<MotionProfileData> profileSupplier,
                       double timeout) {
-        addSequential(new LoadProfile<>(subsystem, profileSupplier));
+        addSequential(new LoadProfile(subsystem, profileSupplier));
         addSequential(new RunLoadedProfile<>(subsystem, timeout));
     }
 }

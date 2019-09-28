@@ -20,7 +20,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive<T> {
+public class UnidirectionalNavXShiftingDefaultDrive<T extends Subsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
     /**
      * The drive to execute this command on.

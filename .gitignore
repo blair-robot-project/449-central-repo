@@ -46,6 +46,3 @@ logs/
 
 #Generated profiles in the base-level directory
 *Profile.csv
-
-#Build binaries
-*/bin/
