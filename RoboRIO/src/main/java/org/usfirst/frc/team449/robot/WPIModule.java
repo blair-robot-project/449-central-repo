@@ -12,11 +12,6 @@ import org.usfirst.frc.team449.robot.mixIn.SubsystemMixIn;
 public class WPIModule extends SimpleModule {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2317468877178800440L;
-
-	/**
      * Default constructor
      */
     public WPIModule() {

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * An logged event with a message, timestamp, and calling class.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LogEvent<T> {
+public class LogEvent {
 
     /**
      * The time, in milliseconds, at which this event was created.
@@ -27,7 +27,7 @@ public class LogEvent<T> {
      * The class that called this event.
      */
     @NotNull
-    private final Class<T> caller;
+    private final Class caller;
 
     /**
      * Default constructor.
@@ -41,7 +41,7 @@ public class LogEvent<T> {
      */
     @JsonCreator
     public LogEvent(@NotNull @JsonProperty(required = true) String message,
-                    @NotNull @JsonProperty(required = true) Class<T> caller) {
+                    @NotNull @JsonProperty(required = true) Class caller) {
         timeCalled = Clock.currentTimeMillis();
         this.message = message;
         this.caller = caller;

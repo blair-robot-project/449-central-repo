@@ -27,7 +27,7 @@ public class Auto2017Center extends CommandGroup {
      */
     @JsonCreator
     public Auto2017Center(
-            @NotNull @JsonProperty(required = true) RunLoadedProfile<?> runWallToPegProfile,
+            @NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
             @NotNull @JsonProperty(required = true) Command dropGear,
             @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
             @NotNull @JsonProperty(required = true) Command driveBack) {

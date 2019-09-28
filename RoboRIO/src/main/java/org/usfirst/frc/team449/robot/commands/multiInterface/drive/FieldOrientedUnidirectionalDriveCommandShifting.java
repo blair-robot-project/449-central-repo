@@ -21,7 +21,7 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FieldOrientedUnidirectionalDriveCommandShifting<T extends Subsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable>
-        extends FieldOrientedUnidirectionalDriveCommand<T> {
+        extends FieldOrientedUnidirectionalDriveCommand {
 
     /**
      * The drive to execute this command on.

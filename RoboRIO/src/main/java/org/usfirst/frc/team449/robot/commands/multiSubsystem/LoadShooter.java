@@ -34,7 +34,7 @@ public class LoadShooter<T extends Subsystem & SubsystemIntake & SubsystemSoleno
         }
         if (subsystemIntake != null) {
             addParallel(new SolenoidReverse(subsystemIntake));
-            addParallel(new SetIntakeMode<>(subsystemIntake, SubsystemIntake.IntakeMode.IN_FAST));
+            addParallel(new SetIntakeMode(subsystemIntake, SubsystemIntake.IntakeMode.IN_FAST));
         }
     }
 }

@@ -48,7 +48,7 @@ public abstract class SelectCommand<T> extends Command {
 
     private void requireAll() {
         for (T key : m_commands.keySet()) {
-            for (Enumeration<?> e = m_commands.get(key).getRequirements(); e.hasMoreElements(); ) {
+            for (Enumeration e = m_commands.get(key).getRequirements(); e.hasMoreElements(); ) {
                 requires((Subsystem) e.nextElement());
             }
         }
