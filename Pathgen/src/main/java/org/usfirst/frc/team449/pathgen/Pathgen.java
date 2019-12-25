@@ -4,6 +4,7 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
+import sun.nio.cs.ext.MacArabic;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,178 +22,139 @@ public class Pathgen {
         // the circumference of a circle moved by the robot via C = 360 * n / θ
         //You then find the diameter via C / π.
 
-        final double naviWheelbase = 2.34;
+        final double robot2019Wheelbase = 1.833;
 
-        final double LENGTH = 39.5 / 12.;
-        final double WIDTH = 34.5 / 12.;
-        final double CUBE_LENGTH = 13. / 12.;
-        final double DIAGONAL = Math.sqrt(WIDTH * WIDTH + LENGTH * LENGTH);
-        final double INT_ANGLE = Math.atan2(WIDTH, LENGTH);
-
-        Waypoint[] leftXLeft = new Waypoint[]{
+        //Naming: side, then position. HAB to first hatch uses suffix "Hatch". To load is suffix "ToLoad". From load is prefix "loadTo".
+        Waypoint[] StartToLF = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(16, 1.5,0),
-                new Waypoint(26. - LENGTH, -1, -Math.PI / 4)
+                new Waypoint(193.750 / 12.0 - 3.0,3,0),
+                new Waypoint(193.750 / 12.0, 0, -Math.PI / 2)
         };
-
-        Waypoint[] turnToSwitch = new Waypoint[]{
+        Waypoint[] LFToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase * Math.PI * 122.1511 / 360., 0, 0)
+                new Waypoint(-3,0,0),
+                new Waypoint(-110.625 / 12.0, -259.938 / 12.0, -Math.PI / 2)
         };
-
-        Waypoint[] turnToScale = new Waypoint[]{
+        Waypoint[] StartToLM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase * Math.PI * 135. / 360., 0, 0)
+                new Waypoint(215.5 / 12.0 - 3.0,3,0),
+                new Waypoint(215.5 / 12.0, 0, -Math.PI / 2)
         };
-
-        Waypoint[] sameScaleToCubeV2 = new Waypoint[]{
+        Waypoint[] LMToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(7.519406 - LENGTH / 2. - CUBE_LENGTH / 2., 0, 0),
+                new Waypoint(-3,0,0),
+                new Waypoint(-110.625 / 12.0, -281.688 / 12.0, -Math.PI / 2)
         };
-
-        double angleFromHoriz = 1.102613;
-        double deltaAngle = Math.toRadians(158.1527 - 90) - angleFromHoriz;
-        double distFromBackPlateCorner = 7.049404;
-        double xDist = 18.9052653910365 - (11.971 + distFromBackPlateCorner * Math.sin(angleFromHoriz));
-        double yDist = 6.66871409506997 - (3.001 + distFromBackPlateCorner * Math.cos(angleFromHoriz));
-        Waypoint[] cubeToSwitch = new Waypoint[]{
+        Waypoint[] LoadToLM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint((xDist * Math.cos(deltaAngle) - yDist * Math.sin(deltaAngle)) * 10,
-                        (xDist * Math.sin(deltaAngle) + yDist * Math.cos(deltaAngle)) * 10
-                        , deltaAngle)
+                new Waypoint(-3,0,0),
+                new Waypoint(-281.688 / 12.0, -110.625 / 12.0, -Math.PI / 2)
         };
-
-        Waypoint[] cubeToAlignPoint = new Waypoint[]{
-                new Waypoint(18.1328517591505, 6.29347010384547, Math.toRadians(-157.6557) + Math.PI),
-                new Waypoint(18.8469404735703, 9.82704356541704, Math.PI / 2),
-        };
-
-        Waypoint[] alignToCube = new Waypoint[]{
+        Waypoint[] StartToLB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(9.82704356541704 - 6.396 - LENGTH / 2., -(18.8469404735703 - 16.333 - WIDTH / 2.), 0),
-                new Waypoint(9.82704356541704 - 4.054 - LENGTH / 2., -(18.8469404735703 - 16.333 - WIDTH / 2.), 0)
+                new Waypoint(237.25 / 12.0 - 3.0,3,0),
+                new Waypoint(237.25 / 12.0, 0, -Math.PI / 2)
         };
-
-        Waypoint[] backupToScale = new Waypoint[]{
-                new Waypoint(17.9500470066305, 5.40806356863358, Math.toRadians(-88.33607) + Math.PI),
-                new Waypoint(23.9056494181233,9.18286909009784,0)
-        };
-        Waypoint[] leftXRight = new Waypoint[]{
+        Waypoint[] LBToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint((17.417+21.786)/2.-LENGTH/2.+0.5,-9,-Math.PI/2),
-                new Waypoint(26.-LENGTH-0.5, WIDTH-7.535-11.092-1, 0)
+                new Waypoint(-3,0,0),
+                new Waypoint(-110.625 / 12.0, -303.438 / 12.0, -Math.PI / 2)
         };
-
-        Waypoint[] turn180 = new Waypoint[]{
+        Waypoint[] LoadToLB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase*Math.PI/2, 0, 0)
+                new Waypoint(-3,0,0),
+                new Waypoint(-303.438 / 12.0, -110.625 / 12.0, -Math.PI / 2)
         };
-
-        Waypoint[] turn90 = new Waypoint[]{
+        Waypoint[] StartToRF = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase*Math.PI/4., 0 ,0)
+                new Waypoint(193.750 / 12.0 - 3.0,-3.0,0),
+                new Waypoint(193.750 / 12.0, 0, Math.PI / 2)
         };
-
-        Waypoint[] otherScaleToCube = new Waypoint[]{
+        Waypoint[] RFToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(1, 0, 0),
-                new Waypoint(23.859847636863-16.333-CUBE_LENGTH-LENGTH/2.,
-                        (6.396 + 5.313)/2. -7.09969547043006, -0.1)
+                new Waypoint(-3,0,0),
+                new Waypoint(110.625 / 12.0, 259.938 / 12.0 / 12.0, Math.PI / 2)
         };
-
-        Waypoint[] cubeToOtherSwitch = new Waypoint[]{
+        Waypoint[] StartToRM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(1, 0, 0)
+                new Waypoint(215.5 / 12.0 - 3.0,-3,0),
+                new Waypoint(215.5 / 12.0, 0, Math.PI / 2)
         };
-
-        Waypoint[] turnAfterScale = new Waypoint[]{
+        Waypoint[] RMToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase*Math.PI*117/360., 0, 0)
+                new Waypoint(-3,0,0),
+                new Waypoint(-105.69 / 12.0, 281.688 / 12.0, Math.PI / 2)
         };
-
-        double overshoot = -2;
-        Waypoint[] crossFromScale = new Waypoint[]{
-                new Waypoint(23.8542781528005, 8.65291742739445, Math.toRadians(-153.0016)),
-                new Waypoint(21.786, 5.399 + 2,Math.toRadians(-153.0016+10)),
-                new Waypoint(17.417+WIDTH/2+1, 0, -Math.PI/2),
-                new Waypoint(17.417+WIDTH/2+1,(-6.396-5.313)/2.+overshoot,-Math.PI/2)
-        };
-
-        Waypoint[] turnToCrossCube = new Waypoint[]{
+        Waypoint[] LoadToRM = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(naviWheelbase*(
-                        Math.abs(Math.atan2(17.417+WIDTH/2+1-(17.417+16.333)/2.,overshoot)))/2, 0, 0)
+                new Waypoint(-3,0,0),
+                new Waypoint(-281.688 / 12.0, 110.625 / 12.0, Math.PI / 2)
         };
-
-        Waypoint[] forward2 = new Waypoint[]{
+        Waypoint[] StartToRB = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(2, 0, 0)
+                new Waypoint(237.25 / 12 - 3,-3,0),
+                new Waypoint(237.25 / 12.0, 0, Math.PI / 2)
         };
-
-        Waypoint[] leftSwitch = new Waypoint[]{
-                new Waypoint(LENGTH/2., 11.092-WIDTH/2., 0),
-                new Waypoint(LENGTH/2.+7, 11.092-WIDTH/2.+1, Math.PI/8),
-                new Waypoint((11.667+16.333)/2., 6.396+LENGTH/2., -Math.PI/2)
-        };
-
-        Waypoint[] crossFromLeftSwitch = new Waypoint[]{
-                new Waypoint(14.0087625352467, 8.04061392262376, Math.PI/2),
-                new Waypoint(17, 13-WIDTH/2, 0),
-                new Waypoint(20, 8, -Math.PI/2),
-                new Waypoint(19.5, -4, -Math.PI/2),
-                new Waypoint(21, -8, -Math.PI/6)
-        };
-
-        Waypoint[] crossBackup = new Waypoint[]{
-                new Waypoint(19.323011796857, -6.98691304258737, -Math.PI/6),
-                new Waypoint(23.6611187925359, -8.47314064611477, -Math.PI/6),
-                new Waypoint(26.0144064617474, -10.4006621976282, -Math.PI/2)
-        };
-
-        Waypoint[] forward9 = new Waypoint[]{
+        Waypoint[] RBToLoad = new Waypoint[]{
                 new Waypoint(0, 0, 0),
-                new Waypoint(9, 0, 0)
+                new Waypoint(-3,0,0),
+                new Waypoint(-110.625 / 12.0, 303.438 / 12.0, Math.PI / 2)
         };
-
-        Waypoint[] forwardLong = new Waypoint[]{
+        Waypoint[] LoadToRB = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint(-3,0,0),
+                new Waypoint(-303.438 / 12.0, 110.625 / 12.0, Math.PI / 2)
+        };
+        Waypoint[] StartToFL = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(18,0,0)
+                new Waypoint(136.0 / 12.0,26.0 / 12.0,0)
+        };
+        Waypoint[] StartToFR = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(136.0 / 12.0,-26.0 / 12.0,0)
         };
 
-        Waypoint[] forwardShort = new Waypoint[]{
+        /*Waypoint[] FLToLoad = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(4,0,0)
+                new Waypoint(-220/12,0,Math.PI/2),
+                new Waypoint(0,105.69/12+6,Math.PI),//changed x - Anika
+                new Waypoint(-,105.69/12,Math.PI)
+        };
+        Waypoint[] loadToFL = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(-220/12,,Math.PI)
+        };
+        Waypoint[] FRToLoad = new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(-220/12,,Math.PI)
         };
 
-        Waypoint[] forwardMedium = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(16.5,0,0)
-        };
+        Waypoint[] loadToFR = new Waypoint[]{
+                new Waypoint(0, 0, 0),
+                new Waypoint()
+        };*/
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
-//        profiles.put("CrossBackup", crossBackup); edited
-//        profiles.put("CrossFromScale", crossFromScale); edited 6 6
-//        profiles.put("CrossFromSwitch", crossFromLeftSwitch); edited
-//        profiles.put("OtherScale", leftXRight); edited 4.5 4.5
-//        profiles.put("OtherScaleToCube", otherScaleToCube); edited 6 5.5
-//        profiles.put("SameSwitch", leftSwitch); //edited 4 4
-        profiles.put("SameScale", leftXLeft);
-//        profiles.put("TurnToSwitch", turnToSwitch);
-//        profiles.put("SameScaleToCube", sameScaleToCubeV2);
-//        profiles.put("CubeToSwitch", cubeToSwitch);
-//        profiles.put("Turn180", turn180);
-//        profiles.put("CubeToOtherSwitch", cubeToOtherSwitch);
-//        profiles.put("TurnAfterScale", turnAfterScale);
-//        profiles.put("TurnToCrossCube", turnToCrossCube);
-//        profiles.put("Forward2", forward2);
-//        profiles.put("Forward9", forward9);
-//		profiles.put("forward100In", points);
-        profiles.put("ForwardLong", forwardLong);
-        profiles.put("Turn90", turn90);
-        profiles.put("ForwardShort", forwardShort);
-        profiles.put("ForwardMedium", forwardMedium);
+        profiles.put("StartToLF", StartToLF);
+        profiles.put("StartToLM", StartToLM);
+        profiles.put("StartToLB", StartToLB);
+        profiles.put("StartToRF", StartToRF);
+        profiles.put("StartToRM", StartToRM);
+        profiles.put("StartToRB", StartToRB);
+        profiles.put("StartToFL", StartToFL);
+        profiles.put("StartToFR", StartToFR);
+//        profiles.put("LFToLoad", LFToLoad);
+//        profiles.put("LMToLoad", LMToLoad);
+//        profiles.put("LBToLoad", LBToLoad);
+//        profiles.put("RFToLoad", RFToLoad);
+//        profiles.put("RMToLoad", RMToLoad);
+//        profiles.put("RBToLoad", RBToLoad);
+//        profiles.put("LoadToLM", LoadToLM);
+//        profiles.put("LoadToLB", LoadToLB);
+//        profiles.put("LoadToRM", LoadToRM);
+//        profiles.put("LoadToRB", LoadToRB);
 
-        final String ROBOT_NAME = "navi";
+        final String ROBOT_NAME = "robot2019";
 
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
                 0.05, 5., 5., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
@@ -200,7 +162,7 @@ public class Pathgen {
         for (String profile : profiles.keySet()) {
             Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
 
-            TankModifier tm = new TankModifier(trajectory).modify(naviWheelbase); //Units are feet
+            TankModifier tm = new TankModifier(trajectory).modify(robot2019Wheelbase); //Units are feet
 
             FileWriter lfw = new FileWriter(ROBOT_NAME + "Left" + profile + "Profile.csv", false);
             FileWriter rfw = new FileWriter(ROBOT_NAME + "Right" + profile + "Profile.csv", false);
