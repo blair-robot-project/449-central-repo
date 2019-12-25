@@ -124,36 +124,37 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
     /**
      * Default constructor.
      *
-     * @param port                       CAN port of this Talon.
-     * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
-     * @param reverseOutput              Whether to reverse the output.
+     * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
      * @param enableBrakeMode            Whether to brake or coast when stopped.
-     * @param voltagePerCurrentLinReg    The component for doing linear regression to find the resistance.
-     * @param PDP                        The PDP this Talon is connected to.
+     * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
+     *                                   feedbackDevice is, but otherwise must have a value.
+     * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
+     *                                   null if there is no encoder attached to this Talon.
+     * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to.
+     *                                   Defaults to 1.
      * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
      *                                   the forward limit switch is disabled.
+     * @param fwdSoftLimit               The forward software limit, in feet. If this is null, the forward software
+     *                                   limit is disabled. Ignored if there's no encoder.
+     * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
+     * @param PDP                        The PDP this Talon is connected to.
+     * @param port                       CAN port of this Talon.
+     * @param reverseOutput              Whether to reverse the output.
+     * @param voltagePerCurrentLinReg    The component for doing linear regression to find the resistance.
      * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
      *                                   the reverse limit switch is disabled.
      * @param remoteLimitSwitchID        The CAN port of the Talon the limit switch to use for this talon is plugged
      *                                   into, or null to not use a limit switch or use the limit switch plugged into
      *                                   this talon.
-     * @param fwdSoftLimit               The forward software limit, in feet. If this is null, the forward software
-     *                                   limit is disabled. Ignored if there's no encoder.
      * @param revSoftLimit               The reverse software limit, in feet. If this is null, the reverse software
      *                                   limit is disabled. Ignored if there's no encoder.
      * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
      *                                   this would be 1/70 if there was a 70:1 gearing between the encoder and the
      *                                   final output. Defaults to 1.
-     * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to.
-     *                                   Defaults to 1.
      * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
      * @param enableVoltageComp          Whether or not to use voltage compensation. Defaults to false.
      * @param voltageCompSamples         The number of 1-millisecond samples to use for voltage compensation. Defaults
      *                                   to 32.
-     * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
-     *                                   null if there is no encoder attached to this Talon.
-     * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
-     *                                   feedbackDevice is, but otherwise must have a value.
      * @param reverseSensor              Whether or not to reverse the reading from the encoder on this Talon. Ignored
      *                                   if feedbackDevice is null. Defaults to false.
      * @param perGearSettings            The settings for each gear this motor has. Can be null to use default values
@@ -167,7 +168,6 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
      *                                   seconds. Defaults to 0.005.
      * @param updateMMPeriodSecs         The period for the {@link Notifier} that updates the feedforward based on the current motion magic velocity setpoint. Defaults to 0.05.
      * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
-     * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
      * @param slaveTalons                The other {@link TalonSRX}s that are slaved to this one.
      * @param slaveVictors               The {@link com.ctre.phoenix.motorcontrol.can.VictorSPX}s that are slaved to
      *                                   this Talon.
