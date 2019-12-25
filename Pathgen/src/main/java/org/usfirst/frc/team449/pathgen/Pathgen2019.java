@@ -26,193 +26,20 @@ public class Pathgen2019 {
         // Don't forget
         final double robot2019Length = 38.25;
 
-        //Naming: side, then position. HAB to first hatch uses suffix "Hatch". To load is suffix "ToLoad". From load is prefix "loadTo".
-        Waypoint[] ToLoadLeftRev = new Waypoint[]{
+        //Exaqmple waypoint, for reference
+        Waypoint[] example = new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(-3,3, -Math.PI / 2)
-        };
-        Waypoint[] LoadToLeftRev = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(-10, -5, Math.PI / 2)
-        };
-        Waypoint[] StartToLF = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(180 / 12.0 - 3.0,3,0),
-                new Waypoint(180 / 12.0, 0, -Math.PI / 2)
-        };
-        Waypoint[] LFToLoad = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5,1.25,Math.PI / 2),
-                new Waypoint(0,2.5, 1 * Math.PI),
-                new Waypoint(-259.938 / 12.0 + 3,110.625 / 12.0 - 3., 1 * Math.PI)
-        };
-        Waypoint[] LoadToLF = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(260.963 / 12. - 10.,-110.625 / 12. + 5,-Math.PI / 2.)
-        };
-        Waypoint[] StartToLM = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(215.5 / 12.0 - 3.0,3,0),
-                new Waypoint(215.5 / 12.0, 0, -Math.PI / 2)
-        };
-        Waypoint[] LMToLoad = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5,1.25,Math.PI / 2),
-                new Waypoint(0,2.5, 1 * Math.PI),
-                new Waypoint(-281.688 / 12.0 + 3, 110.625 / 12.0 - 3, 1 * Math.PI)
-        };
-        Waypoint[] LoadToLM = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5, -1.25,-Math.PI / 2.),
-                new Waypoint(1.5, -4.25,-Math.PI / 2.),
-                new Waypoint(-110.625 / 12.0 + 5,  -281.688 / 12.0 + 10, -1 * Math.PI)
-        };
-        Waypoint[] StartToLB = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(237.25 / 12.0 - 3.0,3,0),
-                new Waypoint(237.25 / 12.0, 0, -Math.PI / 2)
-        };
-        Waypoint[] LBToLoad = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5,1.25,Math.PI / 2),
-                new Waypoint(0,2.5, 1 * Math.PI),
-                new Waypoint(-303.438 / 12.0 + 3, 110.625 / 12.0 - 3, 1 * Math.PI)
-        };
-        Waypoint[] LoadToLB = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5, -1.25,-Math.PI / 2.),
-                new Waypoint(1.5, -4.75,-Math.PI / 2.),
-                new Waypoint(-110.625 / 12.0 + 5, -303.438 / 12.0 + 10, 1. * Math.PI)
-        };
-        Waypoint[] ToLoadRightRev = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(-3,-3, -Math.PI / 2)
-        };
-        Waypoint[] LoadToRightRev = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(-10, 5, Math.PI / 2)
-        };
-        Waypoint[] StartToRF = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(185 / 12.0 - 3.0,-5.0,Math.PI/6.),
-                new Waypoint(185 / 12.0, 0, Math.PI / 2.)
-        };
-        Waypoint[] RFToLoad = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5,-1.25,Math.PI / 2),
-                new Waypoint(0,-2.5, 1 * Math.PI),
-                new Waypoint(259.938 / 12.0 - 3, 110.625 / 12.0 - 9, 1 * Math.PI)
-        };
-        Waypoint[] LoadToRF = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(260.963 / 12. - 10.,110.625 / 12. - 5,Math.PI / 2.)
-        };
-        Waypoint[] StartToRM = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(215.5 / 12.0 - 3.0,-3,0),
-                new Waypoint(215.5 / 12.0, 0, Math.PI / 2)
-        };
-        Waypoint[] RMToLoad = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5,-1.25,Math.PI / 2),
-                new Waypoint(0,-2.5, 1 * Math.PI),
-                new Waypoint(281.688 / 12.0 - 3, 110.625 / 12.0 - 9, 1 * Math.PI)
-        };
-        Waypoint[] LoadToRM = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(-1.5, -1.25,-Math.PI / 2.),
-                new Waypoint(-1.5, -4.25,-Math.PI / 2.),
-                new Waypoint(110.625 / 12.0 - 5, -281.688 / 12.0 + 10, 1. * Math.PI)
-        };
-        Waypoint[] StartToRB = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(237.25 / 12 - 3,-3,0),
-                new Waypoint(237.25 / 12.0, 0, Math.PI / 2)
-        };
-        Waypoint[] RBToLoad = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(1.5,-1.25,Math.PI / 2),
-                new Waypoint(0,-2.5, 1 * Math.PI),
-                new Waypoint(303.438 / 12.0 - 3, 110.625 / 12.0 - 9, 1 * Math.PI)
-        };
-        Waypoint[] LoadToRB = new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(-1.5, -1.25,-Math.PI / 2.),
-                new Waypoint(-1.5, -4.75,-Math.PI / 2.),
-                new Waypoint(110.625 / 12.0 - 5, -303.438 / 12.0 + 10, 1. * Math.PI)
-        };
-        Waypoint[] StartToFL = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(136.0 / 12.0,4.5/12.,0),
-                new Waypoint(148./12.,4.5/12.,0)
-        };
-        Waypoint[] StartToFR = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(136./12.,-4.5/12.,0),
-                new Waypoint(148./12.,-4.5/12.,0)
-        };
-//        Waypoint[] FToLoadFwdLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-//                new Waypoint(0,0,0),
-//                new Waypoint(134.213 / 12.,0,0)
-//        };
-//        Waypoint[] FLToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-//                new Waypoint(0,0,0),
-//                new Waypoint((-89.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
-//        };
-//        Waypoint[] FRToLoadRevLess = new Waypoint[]{//Not as useful, probably impossible to do optimally. Avoid if possible
-//                new Waypoint(0,0,0),
-//                new Waypoint((-89.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
-//        };
-        Waypoint[] FToLoadFwd = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(94.213 / 12.,0,0)
-        };
-        Waypoint[] FLToLoadRev = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint((-129.424 + robot2019Length) / 12.,-124.413 / 12.,-Math.PI / 2.)
-        };
-        Waypoint[] FRToLoadRev = new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint((-129.424 + robot2019Length) / 12.,124.413 / 12.,Math.PI / 2.)
+                new Waypoint(10,0, 0)
         };
 
         Map<String, Waypoint[]> profiles = new HashMap<>();
-        profiles.put("FToLoadFwd", FToLoadFwd);
-        profiles.put("FLToLoadRev", FLToLoadRev);
-        profiles.put("FRToLoadRev", FRToLoadRev);
-//        profiles.put("FToLoadFwdLess", FToLoadFwdLess);//Not as useful, probably impossible to do optimally
-//        profiles.put("FLToLoadRevLess", FLToLoadRevLess);//Not as useful, probably impossible to do optimally
-//        profiles.put("FRToLoadRevLess", FRToLoadRevLess);//Not as useful, probably impossible to do optimally
-        profiles.put("LoadToLeftRev", LoadToLeftRev);
-        profiles.put("LoadToRightRev", LoadToRightRev);
-//        profiles.put("ToLoadLeftRev", ToLoadLeftRev);
-//        profiles.put("ToLoadRightRev", ToLoadRightRev);
-//        profiles.put("StartToLF", StartToLF);
-//        profiles.put("StartToLM", StartToLM);
-//        profiles.put("StartToLB", StartToLB);
-//        profiles.put("StartToRF", StartToRF);
-//        profiles.put("StartToRM", StartToRM);
-//        profiles.put("StartToRB", StartToRB);
-        profiles.put("StartToFL", StartToFL);
-        profiles.put("StartToFR", StartToFR);
-//        profiles.put("LFToLoad", LFToLoad);
-//        profiles.put("LMToLoad", LMToLoad);
-//        profiles.put("LBToLoad", LBToLoad);
-//        profiles.put("RFToLoad", RFToLoad);
-//        profiles.put("RMToLoad", RMToLoad);
-//        profiles.put("RBToLoad", RBToLoad);
-        profiles.put("LoadToLF", LoadToLF);
-//        profiles.put("LoadToLM", LoadToLM);
-//        profiles.put("LoadToLB", LoadToLB);
-        profiles.put("LoadToRF", LoadToRF);
-//        profiles.put("LoadToRM", LoadToRM);
-//        profiles.put("LoadToRB", LoadToRB);
+//        profiles.put("example", example);
 
         final String ROBOT_NAME = "robot2019";
 
         double dt = 0.05;
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH,
-                dt, 2., 4., 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+                dt, 4., 4.5, 15.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
         CalculateMPAngles calculateMPAngles = new CalculateMPAngles(robot2019Wheelbase, dt);
 
