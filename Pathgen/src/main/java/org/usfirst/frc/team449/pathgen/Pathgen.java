@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Generates a motion profile that hits any number of waypoints.
  */
-public class Pathgen2019 {
+public class Pathgen {
 
     public static void main(String[] args) throws IOException {
 
