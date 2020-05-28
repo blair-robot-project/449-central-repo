@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands;
 
 import com.fasterxml.jackson.annotation.*;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.PathRequester;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * Requests and receives a profile from the Jetson, accessible via a getter.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class GetPathFromJetson extends Command implements PoseCommand {
+public class GetPathFromJetson extends CommandBase implements PoseCommand {
 
     /**
      * The object for interacting with the Jetson.
@@ -96,7 +96,7 @@ public class GetPathFromJetson extends Command implements PoseCommand {
      * Log when this command is initialized and send the request to the Jetson.
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         Logger.addEvent("GetPathFromJetson init", this.getClass());
         //Check if we're using the supplier or the parameter
         if (waypointSupplier != null) {
@@ -123,7 +123,7 @@ public class GetPathFromJetson extends Command implements PoseCommand {
      * Receive the path, or null if the Jetson hasn't replied yet.
      */
     @Override
-    protected void execute() {
+    public void execute() {
         motionProfileData = pathRequester.getPath(inverted, resetPosition);
     }
 
@@ -133,7 +133,7 @@ public class GetPathFromJetson extends Command implements PoseCommand {
      * @return true when the profile is received from the Jetson, false otherwise.
      */
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return motionProfileData != null;
     }
 
@@ -141,16 +141,9 @@ public class GetPathFromJetson extends Command implements PoseCommand {
      * Log that the command has ended.
      */
     @Override
-    protected void end() {
-        Logger.addEvent("GetPathFromJetson end", this.getClass());
-    }
-
-    /**
-     * Log that the command has been interrupted.
-     */
-    @Override
-    protected void interrupted() {
-        Logger.addEvent("GetPathFromJetson interrupted!", this.getClass());
+    public void end(boolean interrupted) {
+        if (interrupted) Logger.addEvent("GetPathFromJetson interrupted!", this.getClass());
+        else Logger.addEvent("GetPathFromJetson end", this.getClass());
     }
 
     /**

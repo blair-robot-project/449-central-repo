@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake
  * Run a BinaryMotor while a condition is true.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & SubsystemConditional> extends Command {
+public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & SubsystemConditional> extends CommandBase {
 
     /**
      * The subsystem to execute this command on
@@ -47,7 +47,7 @@ public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & Subs
     public IntakeUntilConditonMet(@NotNull @JsonProperty(required = true) T subsystem,
                                   @NotNull @JsonProperty(required = true) SubsystemIntake.IntakeMode intakeMode,
                                   @Nullable SubsystemIntake.IntakeMode stopMode) {
-        requires(subsystem);
+        addRequirements(subsystem);
         this.subsystem = subsystem;
         this.intakeMode = intakeMode;
         this.stopMode = stopMode != null ? stopMode : SubsystemIntake.IntakeMode.OFF;
@@ -57,7 +57,7 @@ public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & Subs
      * Log when this command is initialized
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         Logger.addEvent("IntakeUntilConditonMet init", this.getClass());
     }
 
@@ -65,7 +65,7 @@ public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & Subs
      * Run the intake in the given mode
      */
     @Override
-    protected void execute() {
+    public void execute() {
         subsystem.setMode(intakeMode);
     }
 
@@ -75,7 +75,7 @@ public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & Subs
      * @return true if the condition is met, false otherwise.
      */
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return subsystem.isConditionTrueCached();
     }
 
@@ -83,7 +83,7 @@ public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & Subs
      * Stop the intake and log that the command has ended.
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         //Stop the intake when we meet the condition.
         subsystem.setMode(stopMode);
         Logger.addEvent("IntakeUntilConditonMet end", this.getClass());
@@ -92,7 +92,7 @@ public class IntakeUntilConditonMet<T extends Subsystem & SubsystemIntake & Subs
     /**
      * Stop the intake and log that the command has been interrupted.
      */
-    @Override
+    //TODO Remove this! @Override
     protected void interrupted() {
         //Stop the intake if this command is interrupted.
         subsystem.setMode(SubsystemIntake.IntakeMode.OFF);

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.other.MotionProfileData;
  * A simple subsystem that uses a Talon for motion profiling.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SubsystemMPSimple extends Subsystem implements SubsystemMP {
+public class SubsystemMPSimple implements Subsystem, SubsystemMP {
 
     /**
      * The motor this subsystem controls.
@@ -82,15 +82,5 @@ public class SubsystemMPSimple extends Subsystem implements SubsystemMP {
     @Override
     public boolean readyToRunProfile() {
         return motor.readyForMP();
-    }
-
-    /**
-     * Initialize the default command for a subsystem By default subsystems have no default command, but if they do, the
-     * default command is set with this method. It is called on all Subsystems by CommandBase in the users program after
-     * all the Subsystems are created.
-     */
-    @Override
-    protected void initDefaultCommand() {
-        //Do nothing
     }
 }

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.poseCommand.PoseCommand;
@@ -20,7 +20,8 @@ import java.util.function.Supplier;
  * A command that drives the given subsystem to a position relative to the current position.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class GoToPositionRelative<T extends Subsystem & SubsystemMPTwoSides> extends CommandGroup implements PoseCommand {
+public class GoToPositionRelative<T extends Subsystem & SubsystemMPTwoSides> extends
+    SequentialCommandGroup implements PoseCommand {
 
     /**
      * The command for getting the path from the Jetson.
@@ -37,8 +38,7 @@ public class GoToPositionRelative<T extends Subsystem & SubsystemMPTwoSides> ext
     public GoToPositionRelative(@NotNull @JsonProperty(required = true) GetPathFromJetson getPath,
                                 @NotNull @JsonProperty(required = true) T subsystem) {
         this.getPath = getPath;
-        addSequential(this.getPath);
-        addSequential(new RunProfileTwoSides<>(subsystem, this::getLeft,
+        addCommands(this.getPath, new RunProfileTwoSides<>(subsystem, this::getLeft,
                 this::getRight, 10));
     }
 

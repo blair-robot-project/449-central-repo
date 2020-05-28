@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
@@ -17,7 +17,8 @@ import java.util.function.Supplier;
  * Loads and runs the given profiles into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> extends CommandGroup {
+public class RunProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> extends
+    SequentialCommandGroup {
 
     /**
      * Default constructor.
@@ -32,8 +33,9 @@ public class RunProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exten
                               @NotNull @JsonProperty(required = true) MotionProfileData left,
                               @NotNull @JsonProperty(required = true) MotionProfileData right,
                               @JsonProperty(required = true) double timeout) {
-        addSequential(new LoadProfileTwoSides(subsystem, left, right));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout));
+        addCommands(
+            new LoadProfileTwoSides(subsystem, left, right),
+            new RunLoadedProfile<>(subsystem, timeout));
     }
 
     /**
@@ -48,7 +50,8 @@ public class RunProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exten
                               @NotNull Supplier<MotionProfileData> leftSupplier,
                               @NotNull Supplier<MotionProfileData> rightSupplier,
                               double timeout) {
-        addSequential(new LoadProfileTwoSides(subsystem, leftSupplier, rightSupplier));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout));
+        addCommands(
+            new LoadProfileTwoSides(subsystem, leftSupplier, rightSupplier),
+            new RunLoadedProfile<>(subsystem, timeout));
     }
 }

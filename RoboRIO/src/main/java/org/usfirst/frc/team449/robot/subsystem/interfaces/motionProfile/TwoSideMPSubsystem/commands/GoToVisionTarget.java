@@ -1,8 +1,8 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands;
 
 import com.fasterxml.jackson.annotation.*;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.PathRequester;
@@ -19,7 +19,8 @@ import java.util.function.Supplier;
  * A command that drives the given subsystem to an absolute position.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class GoToVisionTarget<T extends Subsystem & SubsystemMPTwoSides & SubsystemAHRS> extends CommandGroup implements PoseCommand {
+public class GoToVisionTarget<T extends Subsystem & SubsystemMPTwoSides & SubsystemAHRS>
+    extends SequentialCommandGroup implements PoseCommand {
 
 //    /**
 //     * The object to get robot pose from.
@@ -76,7 +77,7 @@ public class GoToVisionTarget<T extends Subsystem & SubsystemMPTwoSides & Subsys
                 false);
         GoToPositionRelative goToPositionRelative = new GoToPositionRelative<>(getPath, subsystem);
         goToPositionRelative.setWaypoints(this::getWaypoints);
-        addSequential(goToPositionRelative);
+        addCommands(goToPositionRelative);
     }
 
     /**

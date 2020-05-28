@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -50,7 +50,7 @@ public class LoadProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exte
                                @NotNull @JsonProperty(required = true) MotionProfileData left,
                                @NotNull @JsonProperty(required = true) MotionProfileData right) {
         this.subsystem = subsystem;
-        requires(subsystem);
+        addRequirements(subsystem);
         this.left = left;
         this.right = right;
         this.leftSupplier = null;
@@ -78,7 +78,7 @@ public class LoadProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exte
      * Log when this command is initialized
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         Logger.addEvent("LoadProfileTwoSides init.", this.getClass());
     }
 
@@ -86,7 +86,7 @@ public class LoadProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exte
      * Load the profiles.
      */
     @Override
-    protected void execute() {
+    public void execute() {
         if (left != null) {
             subsystem.loadMotionProfile(left, right);
         } else {
@@ -98,14 +98,14 @@ public class LoadProfileTwoSides<T extends Subsystem & SubsystemMPTwoSides> exte
      * Log when this command ends
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         Logger.addEvent("LoadProfileTwoSides end.", this.getClass());
     }
 
     /**
      * Log when this command is interrupted.
      */
-    @Override
+    //TODO remove this! @Override
     protected void interrupted() {
         Logger.addEvent("LoadProfileTwoSides Interrupted!", this.getClass());
     }

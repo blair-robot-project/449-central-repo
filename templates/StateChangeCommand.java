@@ -34,7 +34,7 @@ public class StateChangeCommand extends InstantCommand {
      * Log when this command is initialized
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         Logger.addEvent("StateChangeCommand init.", this.getClass());
     }
 
@@ -42,7 +42,7 @@ public class StateChangeCommand extends InstantCommand {
      * Do the state change.
      */
     @Override
-    protected void execute() {
+    public void execute() {
         subsystem.doAThing();
     }
 
@@ -50,14 +50,14 @@ public class StateChangeCommand extends InstantCommand {
      * Log when this command ends
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         Logger.addEvent("StateChangeCommand end.", this.getClass());
     }
 
     /**
      * Log when this command is interrupted.
      */
-    @Override
+    //TODO Remove this! @Override
     protected void interrupted() {
         Logger.addEvent("StateChangeCommand Interrupted!", this.getClass());
     }

@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * A command that runs a command from a dictionary.
  */
-public abstract class SelectCommand<T> extends Command {
+public abstract class SelectCommand<T> extends CommandBase {
 
     /**
      * The Commands to choose from.
@@ -90,7 +90,7 @@ public abstract class SelectCommand<T> extends Command {
     }
 
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         if (m_chosenCommand != null) {
             return m_chosenCommand.isCompleted();
         } else {

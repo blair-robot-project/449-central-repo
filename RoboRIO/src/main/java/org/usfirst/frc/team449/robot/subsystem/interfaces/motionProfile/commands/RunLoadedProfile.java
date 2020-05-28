@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.Subsyste
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command {
+public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends CommandBase {
 
     /**
      * The amount of time this command is allowed to run for, in milliseconds.
@@ -50,7 +50,7 @@ public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command
     public RunLoadedProfile(@NotNull @JsonProperty(required = true) T subsystem,
                             @JsonProperty(required = true) double timeout) {
         this.subsystem = subsystem;
-        requires(subsystem);
+        addRequirements(subsystem);
 
         //Convert to milliseconds.
         this.timeout = (long) (timeout * 1000.);
@@ -62,7 +62,7 @@ public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command
      * Record the start time.
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         //Record the start time.
         startTime = Clock.currentTimeMillis();
         Logger.addEvent("RunLoadedProfile init", this.getClass());
@@ -74,7 +74,7 @@ public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command
      * If the subsystem is ready to start running the profile and it's not running yet, start running it.
      */
     @Override
-    protected void execute() {
+    public void execute() {
         if (!runningProfile && startingFinished) {
             startingFinished = subsystem.profileFinished();
         }
@@ -90,7 +90,7 @@ public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command
      * @return true if the profile is finished or the timeout has been exceeded, false otherwise.
      */
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         if (Clock.currentTimeMillis() - startTime > timeout) {
             Logger.addEvent("Command timed out", this.getClass());
             System.out.println("RunLoadedProfile timed out!");
@@ -103,7 +103,7 @@ public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command
      * Hold position and log on exit.
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         subsystem.holdPosition();
         Logger.addEvent("RunLoadedProfile end.", this.getClass());
     }
@@ -111,7 +111,7 @@ public class RunLoadedProfile<T extends Subsystem & SubsystemMP> extends Command
     /**
      * Disable and log if interrupted.
      */
-    @Override
+    //TODO Remove this! @Override
     protected void interrupted() {
         subsystem.disable();
         Logger.addEvent("RunLoadedProfile interrupted!", this.getClass());

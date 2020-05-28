@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * Loads and runs the given profile into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends CommandGroup {
+public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends SequentialCommandGroup {
 
     /**
      * Default constructor.
@@ -29,8 +29,8 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
     public RunProfile(@NotNull @JsonProperty(required = true) T subsystem,
                       @NotNull @JsonProperty(required = true) MotionProfileData profile,
                       @JsonProperty(required = true) double timeout) {
-        addSequential(new LoadProfile(subsystem, profile));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout));
+        addCommands(new LoadProfile<>(subsystem, profile),
+            new RunLoadedProfile<>(subsystem, timeout));
     }
 
     /**
@@ -43,7 +43,7 @@ public class RunProfile<T extends Subsystem & SubsystemMPTwoSides> extends Comma
     public RunProfile(@NotNull T subsystem,
                       @NotNull Supplier<MotionProfileData> profileSupplier,
                       double timeout) {
-        addSequential(new LoadProfile(subsystem, profileSupplier));
-        addSequential(new RunLoadedProfile<>(subsystem, timeout));
+        addCommands(new LoadProfile<>(subsystem, profileSupplier),
+            new RunLoadedProfile<>(subsystem, timeout));
     }
 }

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Logger;
@@ -48,7 +48,7 @@ public class LoadProfile<T extends Subsystem & SubsystemMP> extends InstantComma
     public LoadProfile(@NotNull @JsonProperty(required = true) T subsystem,
                        @NotNull @JsonProperty(required = true) MotionProfileData profile) {
         this.subsystem = subsystem;
-        requires(subsystem);
+        addRequirements(subsystem);
         this.profile = profile;
         this.profileSupplier = null;
     }
@@ -70,7 +70,7 @@ public class LoadProfile<T extends Subsystem & SubsystemMP> extends InstantComma
      * Log when this command is initialized
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         Logger.addEvent("LoadProfile init.", this.getClass());
     }
 
@@ -78,7 +78,7 @@ public class LoadProfile<T extends Subsystem & SubsystemMP> extends InstantComma
      * Load the profile.
      */
     @Override
-    protected void execute() {
+    public void execute() {
         if (profile != null) {
             subsystem.loadMotionProfile(profile);
         } else {
@@ -90,14 +90,14 @@ public class LoadProfile<T extends Subsystem & SubsystemMP> extends InstantComma
      * Log when this command ends
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         Logger.addEvent("LoadProfile end.", this.getClass());
     }
 
     /**
      * Log when this command is interrupted.
      */
-    @Override
+    //TODO Remove this! @Override
     protected void interrupted() {
         Logger.addEvent("LoadProfile Interrupted!", this.getClass());
     }

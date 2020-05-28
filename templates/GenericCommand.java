@@ -46,7 +46,7 @@ public class GenericCommand extends YamlCommandWrapper {
      * Log when this command is initialized
      */
     @Override
-    protected void initialize() {
+    public void initialize() {
         Logger.addEvent("GenericCommand init", this.getClass());
     }
 
@@ -54,7 +54,7 @@ public class GenericCommand extends YamlCommandWrapper {
      * Do something
      */
     @Override
-    protected void execute() {
+    public void execute() {
         //Put something to do here
     }
 
@@ -64,7 +64,7 @@ public class GenericCommand extends YamlCommandWrapper {
      * @return true if finished, false otherwise.
      */
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         //Return whether something is true or not
     }
 
@@ -74,14 +74,14 @@ public class GenericCommand extends YamlCommandWrapper {
      * Log that the command has ended.
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         Logger.addEvent("GenericCommand end", this.getClass());
     }
 
     /**
      * Log that the command has been interrupted.
      */
-    @Override
+    //TODO Remove this! @Override
     protected void interrupted() {
         Logger.addEvent("GenericCommand interrupted!", this.getClass());
     }
@@ -91,14 +91,14 @@ public class GenericCommand extends YamlCommandWrapper {
      * Log that the command has ended.
      */
     @Override
-    protected void end() {
+    public void end(boolean interrupted) {
         Logger.addEvent("GenericSubsytemInterface end", this.getClass());
     }
 
     /**
      * Log that the command has been interrupted.
      */
-    @Override
+    //TODO Remove this! @Override
     protected void interrupted() {
         Logger.addEvent("GenericSubsytemInterface interrupted!", this.getClass());
     }

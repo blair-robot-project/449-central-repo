@@ -1,24 +1,32 @@
+import edu.wpi.first.gradlerio.GradleRIOPlugin
+
 plugins {
     id 'java'
     id 'idea'
     id 'maven'
     id 'org.hidetake.ssh' version "2.9.0"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1"
-    id "com.google.protobuf" version "0.8.6"
+    id "edu.wpi.first.GradleRIO" version "2020.2.2"
+    id "com.google.protobuf" version "0.8.8"
 }
+
+def ROBOT_MAIN_CLASS = "org.usfirst.frc.team449.robot.Main"
 
 repositories {
     mavenCentral()
+    maven { url 'http://www.revrobotics.com/content/sw/max/sdk/maven/' }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url 'https://jitpack.io' }
+    //Not sure if I should keep this one
     maven {
         name = "GradleRio"
         url = "http://dev.imjac.in/maven"
     }
-
-    maven { url "https://plugins.gradle.org/m2/" }
 }
 
-
+// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+// Also defines JUnit 4.
 dependencies {
+
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
@@ -34,11 +42,56 @@ dependencies {
     compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
     // https://mvnrepository.com/artifact/org.zeromq/jeromq
     compile group: 'org.zeromq', name: 'jeromq', version: '0.4.3'
-    compile wpi.deps.wpilib()
-    compile wpi.deps.vendor.java()
+    compile 'com.github.Oblarg:Oblog:3.1.0'
+
+    compile 'com.revrobotics.frc:SparkMax-java:1.4.1'
+
+    implementation wpi.deps.wpilib()
+    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
+
+
+    implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+
+    // In Java for now, the argument must be false
+    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+
+    testImplementation 'junit:junit:4.12'
 }
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        roboRIO("roborio") {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
+            team = frc.getTeamOrDefault(449)
+        }
+    }
+    artifacts {
+        frcJavaArtifact('frcJava') {
+            targets << "roborio"
+            // Debug can be overridden by command line, for use with VSCode
+            debug = frc.getDebugOrDefault(false)
+        }
+        // Built in artifact to deploy arbitrary files to the roboRIO.
+        fileTreeArtifact('frcStaticFileDeploy') {
+            // The directory below is the local directory to deploy
+            files = fileTree(dir: 'src/main/deploy')
+            // Deploy to RoboRIO target, into /home/lvuser/deploy
+            targets << "roborio"
+            directory = '/home/lvuser/deploy'
+        }
+    }
+}
+
+
+/* Utils */
 
 protobuf {
     generatedFilesBaseDir = "$projectDir/gen"
@@ -76,13 +129,75 @@ idea {
     }
 }
 
+/* ssh stuff */
+remotes {
+    rio {
+//        host = 'roboRIO-449-frc.local'  //Default, sometimes doesn't work
+        host = '172.22.11.2' //USB B cable
+//        host = '10.4.49.2' //Radio/ethernet IP
+        user = 'lvuser'
+        knownHosts = allowAnyHosts
+    }
+
+    jetson {
+        host = '10.4.49.7'
+        user = 'nvidia'
+        knownHosts = allowAnyHosts
+        password = 'nvidia'
+    }
+}
+
+task('copyResources') {
+    doLast {
+        ssh.run {
+            session(remotes.rio) {
+                execute 'mkdir ~/449_resources', ignoreError: true
+                execute 'mkdir ~/logs', ignoreError: true
+                put from: fileTree('src/main/resources'), into: './449_resources/'
+                execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
+            }
+        }
+    }
+}
+
+task('startVision') {
+    doLast {
+        ssh.run {
+            session(remotes.jetson) {
+                execute './jetson_vision.sh', ignoreError: true
+            }
+        }
+    }
+}
+
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+}
+
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '6.0'
+//}
+
+//wrapper {
+//    gradleVersion = '6.0'
+//}
+
+compileJava.options.compilerArgs.add '-parameters'
+
+/*--------------Old stuff------------------*/
+
+
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
 task genJavadoc(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 
@@ -99,8 +214,4 @@ task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]) {
 artifacts {
     archives sourcesJar
     archives genJavadoc
-}
-
-compileJava {
-    options.compilerArgs << '-parameters'
 }

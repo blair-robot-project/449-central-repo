@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.jetbrains.annotations.NotNull;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+addRequirements(import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
