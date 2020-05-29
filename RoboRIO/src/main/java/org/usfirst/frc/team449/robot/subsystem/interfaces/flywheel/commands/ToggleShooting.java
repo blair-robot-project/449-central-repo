@@ -20,6 +20,7 @@ public final class ToggleShooting<T extends Subsystem & SubsystemFlywheel>
    * Default constructor.
    *
    * @param subsystem The subsystem to execute this command on.
+   * @param feeder
    */
   @JsonCreator
   public ToggleShooting(

@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,10 +14,13 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 
 /**
+ * TODO check this. The class originally had sequential and parallel commands, so
+ *   I just made it a parallel command group and had a local variable that was a
+ *   SequentialCommandGroup. Not sure if it'll work
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Auto2017Boiler extends CommandGroup {
+public class Auto2017Boiler extends ParallelCommandGroup {
 
     /**
      * Default constructor.
@@ -45,24 +49,26 @@ public class Auto2017Boiler extends CommandGroup {
                           double waitBetweenProfiles) {
         waitBetweenProfiles = Math.max(.05, waitBetweenProfiles);
         if (spinUpShooter != null) {
-            addParallel(spinUpShooter);
+            addCommands(spinUpShooter);
         }
-        addSequential(runWallToPegProfile);
+        SequentialCommandGroup sequential = new SequentialCommandGroup();
+        sequential.addCommands(runWallToPegProfile);
         if (dropGearSwitch.get()) {
-            addSequential(dropGear);
+            sequential.addCommands(dropGear);
         }
 
-        addSequential(new WaitCommand(waitBetweenProfiles));
+        sequential.addCommands(new WaitCommand(waitBetweenProfiles));
 
         //Red is true, blue is false
         if (allianceSwitch.get()) {
-            addSequential(runRedPegToKeyProfile);
+            sequential.addCommands(runRedPegToKeyProfile);
         } else {
-            addSequential(runBluePegToKeyProfile);
+            sequential.addCommands(runBluePegToKeyProfile);
         }
 
         if (fireShooter != null) {
-            addSequential(fireShooter);
+            sequential.addCommands(fireShooter);
         }
+        addCommands(sequential);
     }
 }

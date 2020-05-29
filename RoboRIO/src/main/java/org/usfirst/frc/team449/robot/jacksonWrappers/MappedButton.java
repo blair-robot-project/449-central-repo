@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * A jackson-compatible wrapper on WPILib's {@link Button}.

@@ -1,9 +1,14 @@
 package edu.wpi.first.wpilibj.command;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Set;
 
 /**
+ * TODO test the changes
  * A command that runs a command from a dictionary.
  */
 public abstract class SelectCommand<T> extends CommandBase {
@@ -11,7 +16,7 @@ public abstract class SelectCommand<T> extends CommandBase {
     /**
      * The Commands to choose from.
      */
-    private Map<T, Command> m_commands;
+    private final Map<T, Command> m_commands;
 
     /**
      * Stores command chosen by condition.
@@ -20,8 +25,8 @@ public abstract class SelectCommand<T> extends CommandBase {
 
     /**
      * Creates a new SelectCommand with given map of selectors and m_commands.
-     * <p>
-     * <p>Users of this constructor should also override selector().
+     * <br>
+     * Users of this constructor should also override selector().
      *
      * @param commands The map of selectors to the command that should be run if they're chosen via selector().
      */
@@ -40,18 +45,16 @@ public abstract class SelectCommand<T> extends CommandBase {
      * @param commands The map of selectors to the command that should be run if they're chosen via selector().
      */
     public SelectCommand(String name, Map<T, Command> commands) {
-        super(name);
+        setName(name);
         m_commands = commands;
 
         requireAll();
     }
 
     private void requireAll() {
-        for (T key : m_commands.keySet()) {
-            for (Enumeration e = m_commands.get(key).getRequirements(); e.hasMoreElements(); ) {
-                requires((Subsystem) e.nextElement());
-            }
-        }
+        for (Command c : m_commands.values())
+            for (Subsystem requirement : c.getRequirements())
+                addRequirements(requirement);
     }
 
     /**
@@ -65,7 +68,7 @@ public abstract class SelectCommand<T> extends CommandBase {
      * Calls {@link SelectCommand#selector()} and runs the proper command.
      */
     @Override
-    protected void _initialize() {
+    public void initialize() {
         m_chosenCommand = m_commands.get(selector());
 
         if (m_chosenCommand != null) {
@@ -73,37 +76,35 @@ public abstract class SelectCommand<T> extends CommandBase {
              * This is a hack to make cancelling the chosen command inside a
              * CommandGroup work properly
              */
-            m_chosenCommand.clearRequirements();
+            //m_chosenCommand.clearRequirements();
 
-            m_chosenCommand.start();
+            m_chosenCommand.initialize();
         }
-        super._initialize();
+        super.initialize();
     }
 
     @Override
-    protected void _cancel() {
-        if (m_chosenCommand != null && m_chosenCommand.isRunning()) {
+    public void cancel() {
+        if (m_chosenCommand != null && !m_chosenCommand.isFinished()) {
             m_chosenCommand.cancel();
         }
 
-        super._cancel();
+        super.cancel();
     }
 
     @Override
     public boolean isFinished() {
         if (m_chosenCommand != null) {
-            return m_chosenCommand.isCompleted();
+            return m_chosenCommand.isFinished();
         } else {
             return true;
         }
     }
 
-    @Override
-    protected void _interrupted() {
-        if (m_chosenCommand != null && m_chosenCommand.isRunning()) {
+    //TODO Remove this! @Override
+    public void end(boolean interrupted) {
+        if (interrupted && m_chosenCommand != null && !m_chosenCommand.isFinished()) {
             m_chosenCommand.cancel();
         }
-
-        super._interrupted();
     }
 }

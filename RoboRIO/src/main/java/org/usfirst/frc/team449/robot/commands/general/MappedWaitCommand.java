@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * A jackson-compatible wrapper on {@link WaitCommand}.

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,16 +23,7 @@ public class ConditionalCommandSwitchBased extends ConditionalCommand {
     @JsonCreator
     public ConditionalCommandSwitchBased(@NotNull Command leftSwitch,
                                          @NotNull Command rightSwitch) {
-        super(leftSwitch, rightSwitch);
-    }
-
-    /**
-     * The Condition to test to determine which Command to run.
-     *
-     * @return true if m_onTrue should be run or false if m_onFalse should be run.
-     */
-    @Override
-    protected boolean condition() {
-        return DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L';
+        //BooleanSupplier returns true if m_onTrue should be run or false if m_onFalse should be run.
+        super(leftSwitch, rightSwitch, () -> DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L');
     }
 }

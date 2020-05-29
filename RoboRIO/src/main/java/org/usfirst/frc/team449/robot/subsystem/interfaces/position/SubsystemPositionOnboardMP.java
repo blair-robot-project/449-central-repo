@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.Subsyste
  * A SubsystemPosition that moves using motion profiles.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SubsystemPositionOnboardMP extends Subsystem implements SubsystemPosition, Updatable, SubsystemMP {
+public class SubsystemPositionOnboardMP implements Subsystem, SubsystemPosition, Updatable, SubsystemMP {
 
     /**
      * The Talon SRX this subsystem controls.
@@ -52,16 +52,6 @@ public class SubsystemPositionOnboardMP extends Subsystem implements SubsystemPo
         this.talon = talon;
         this.pathGenerator = pathGenerator;
         shouldStartProfile = false;
-    }
-
-    /**
-     * Initialize the default command for a subsystem By default subsystems have no default command, but if they do, the
-     * default command is set with this method. It is called on all Subsystems by CommandBase in the users program after
-     * all the Subsystems are created.
-     */
-    @Override
-    protected void initDefaultCommand() {
-        //Do nothing
     }
 
     /**

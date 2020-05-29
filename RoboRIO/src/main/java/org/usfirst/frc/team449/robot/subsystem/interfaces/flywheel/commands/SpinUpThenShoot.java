@@ -31,6 +31,7 @@ public class SpinUpThenShoot<T extends Subsystem & SubsystemFlywheel>
    * <p>Requires the subsystem.
    *
    * @param flywheel The subsystem to execute this command on.
+   * @param feeder
    */
   @JsonCreator
   public SpinUpThenShoot(

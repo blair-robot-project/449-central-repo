@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,16 +24,7 @@ public class ConditionalCommandScaleBased extends ConditionalCommand {
     @JsonCreator
     public ConditionalCommandScaleBased(@NotNull @JsonProperty(required = true) Command leftScale,
                                         @NotNull @JsonProperty(required = true) Command rightScale) {
-        super(leftScale, rightScale);
-    }
-
-    /**
-     * The Condition to test to determine which Command to run.
-     *
-     * @return true if m_onTrue should be run or false if m_onFalse should be run.
-     */
-    @Override
-    protected boolean condition() {
-        return DriverStation.getInstance().getGameSpecificMessage().charAt(1) == 'L';
+        //The BooleanSupplier returns true if m_onTrue should be run or false if m_onFalse should be run.
+        super(leftScale, rightScale, () -> DriverStation.getInstance().getGameSpecificMessage().charAt(1) == 'L');
     }
 }

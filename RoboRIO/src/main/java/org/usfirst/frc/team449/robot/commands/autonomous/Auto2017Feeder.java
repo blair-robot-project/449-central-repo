@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-addRequirements(import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
@@ -14,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Auto2017Feeder extends CommandGroup {
+public class Auto2017Feeder extends SequentialCommandGroup {
 
     /**
      * Default constructor.
@@ -42,26 +43,26 @@ public class Auto2017Feeder extends CommandGroup {
                           @NotNull @JsonProperty(required = true) Command driveForwardsBlue,
                           double waitBetweenProfiles) {
         waitBetweenProfiles = Math.max(.05, waitBetweenProfiles);
-        addSequential(runWallToPegProfile);
+        addCommands(runWallToPegProfile);
 
         //Only do this stuff if we drop the gear
         if (dropGearSwitch.get()) {
-            addSequential(dropGear);
+            addCommands(dropGear);
 
-            addSequential(new WaitCommand(waitBetweenProfiles));
+            addCommands(new WaitCommand(waitBetweenProfiles));
 
             if (allianceSwitch.get()) { //Red is true
-                addSequential(runRedBackupProfile);
+                addCommands(runRedBackupProfile);
             } else {
-                addSequential(runBlueBackupProfile);
+                addCommands(runBlueBackupProfile);
             }
 
-            addSequential(new WaitCommand(waitBetweenProfiles));
+            addCommands(new WaitCommand(waitBetweenProfiles));
 
             if (allianceSwitch.get()) {
-                addSequential(driveForwardsRed);
+                addCommands(driveForwardsRed);
             } else {
-                addSequential(driveForwardsBlue);
+                addCommands(driveForwardsBlue);
             }
         }
     }

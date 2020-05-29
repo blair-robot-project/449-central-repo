@@ -31,9 +31,10 @@ public class Auto2017Center extends SequentialCommandGroup {
             @NotNull @JsonProperty(required = true) Command dropGear,
             @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
             @NotNull @JsonProperty(required = true) Command driveBack) {
-        addCommands(runWallToPegProfile, driveBack);
+        addCommands(runWallToPegProfile);
         if (dropGearSwitch.get()) {
             addCommands(dropGear);
         }
+        addCommands(driveBack);
     }
 }
