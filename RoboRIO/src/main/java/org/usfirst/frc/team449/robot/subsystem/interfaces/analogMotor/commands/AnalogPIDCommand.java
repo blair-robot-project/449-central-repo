@@ -135,8 +135,7 @@ public class AnalogPIDCommand<T extends Subsystem & SubsystemAnalogMotor> extend
   }
 
   /**
-   * Whether or not the loop is on target. Use this instead of {@link
-   * PIDController}'s onTarget.
+   * Whether or not the loop is on target. Use this instead of {@link PIDController}'s onTarget.
    *
    * @return True if on target, false otherwise.
    */

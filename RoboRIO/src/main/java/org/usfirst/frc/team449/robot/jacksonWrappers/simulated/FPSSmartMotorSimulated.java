@@ -52,13 +52,16 @@ public class FPSSmartMotorSimulated implements SmartMotor, Updatable {
   private final double busVoltage = SimulatedMotor.NOMINAL_VOLTAGE;
   /** (Depends on mode) */
   @Log private double setpoint;
+
   @NotNull
   private final FPSSmartMotorSimulated.PID pid =
       new PID(MAX_INTEGRAL, () -> this.setpoint, 0, 0, 0);
+
   @NotNull private ControlMode controlMode = ControlMode.Disabled;
   @NotNull private Shiftable.PerGearSettings currentGearSettings;
   // Log the getters instead because logging the fields doesn't cause physics updates.
   private double percentOutput;
+
   @NotNull
   private final SimulatedMotor motor =
       new SimulatedMotor(() -> this.busVoltage * this.percentOutput);

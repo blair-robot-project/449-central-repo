@@ -20,7 +20,9 @@ public class SlaveSparkMax implements SlaveMotor, Loggable {
 
   @JsonCreator
   public SlaveSparkMax(
-      @JsonProperty(required = true) int port, @Nullable Boolean invert, @Nullable org.usfirst.frc.team449.robot.jacksonWrappers.PDP PDP) {
+      @JsonProperty(required = true) int port,
+      @Nullable Boolean invert,
+      @Nullable org.usfirst.frc.team449.robot.jacksonWrappers.PDP PDP) {
 
     this.slaveSpark = new CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless);
 

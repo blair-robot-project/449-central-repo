@@ -189,8 +189,7 @@ public abstract class PIDAngleCommand extends CommandBase implements Loggable {
   }
 
   /**
-   * Whether or not the loop is on target. Use this instead of {@link
-   * PIDController}'s onTarget.
+   * Whether or not the loop is on target. Use this instead of {@link PIDController}'s onTarget.
    *
    * @return True if on target, false otherwise.
    */

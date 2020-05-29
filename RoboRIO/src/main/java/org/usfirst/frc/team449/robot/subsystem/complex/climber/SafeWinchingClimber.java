@@ -18,17 +18,17 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.climber.SubsystemClimb
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 
 /**
- * Like <code>ClimberWinchingWithArm</code>(removed) with safety features
- * (stuff needs to be enabled to move)
+ * Like <code>ClimberWinchingWithArm</code>(removed) with safety features (stuff needs to be enabled
+ * to move)
  *
  * @author Nathan
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SafeWinchingClimber extends SubsystemBase
     implements SubsystemClimberWithArm,
-    SubsystemBinaryMotor,
-    SubsystemSolenoid,
-    Updatable,
+        SubsystemBinaryMotor,
+        SubsystemSolenoid,
+        Updatable,
         Loggable {
   private final ClimberCurrentLimited motorSubsystem;
   private final SubsystemSolenoid solenoidSubsystem;

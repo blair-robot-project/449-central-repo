@@ -57,6 +57,7 @@ public class MappedTalon implements SmartMotor {
   private final boolean fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen;
   /** The settings currently being used by this Talon. */
   @NotNull protected Shiftable.PerGearSettings currentGearSettings;
+
   Faults faults = new Faults();
   /**
    * The coefficient the output changes by after being measured by the encoder, e.g. this would be

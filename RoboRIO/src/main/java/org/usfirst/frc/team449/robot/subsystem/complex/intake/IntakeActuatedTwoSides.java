@@ -29,18 +29,14 @@ public class IntakeActuatedTwoSides extends IntakeTwoSidesSimple
    * @param piston The piston for actuating the intake.
    * @param leftMotor The left motor that this subsystem controls.
    * @param rightMotor The left motor that this subsystem controls.
-   * @param inSlowVel The velocity for the motor to go at for the IN_SLOW {@link
-   *     IntakeMode}, on [-1, 1]. Can be null to indicate that this intake doesn't
-   *     have/use IN_SLOW.
-   * @param inFastVel The velocity for the motor to go at for the IN_FAST {@link
-   *     IntakeMode}, on [-1, 1]. Can be null to indicate that this intake doesn't
-   *     have/use IN_FAST.
-   * @param outSlowVel The velocity for the motor to go at for the OUT_SLOW {@link
-   *     IntakeMode}, on [-1, 1]. Can be null to indicate that this intake doesn't
-   *     have/use OUT_SLOW.
-   * @param outFastVel The velocity for the motor to go at for the OUT_FAST {@link
-   *     IntakeMode}, on [-1, 1]. Can be null to indicate that this intake doesn't
-   *     have/use OUT_FAST.
+   * @param inSlowVel The velocity for the motor to go at for the IN_SLOW {@link IntakeMode}, on
+   *     [-1, 1]. Can be null to indicate that this intake doesn't have/use IN_SLOW.
+   * @param inFastVel The velocity for the motor to go at for the IN_FAST {@link IntakeMode}, on
+   *     [-1, 1]. Can be null to indicate that this intake doesn't have/use IN_FAST.
+   * @param outSlowVel The velocity for the motor to go at for the OUT_SLOW {@link IntakeMode}, on
+   *     [-1, 1]. Can be null to indicate that this intake doesn't have/use OUT_SLOW.
+   * @param outFastVel The velocity for the motor to go at for the OUT_FAST {@link IntakeMode}, on
+   *     [-1, 1]. Can be null to indicate that this intake doesn't have/use OUT_FAST.
    */
   @JsonCreator
   public IntakeActuatedTwoSides(

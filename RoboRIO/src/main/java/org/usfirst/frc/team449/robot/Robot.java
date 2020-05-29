@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
    * printed.
    */
   private static final MapErrorFormat MAP_REF_CHAIN_FORMAT = MapErrorFormat.TABLE;
+
   private static boolean isUnitTesting = false;
   private static boolean isTestingHasBeenCalled = false;
   /** The object constructed directly from the yaml map. */
@@ -98,8 +99,8 @@ public class Robot extends TimedRobot {
   /**
    * Whether robot code is being unit tested. Note that this is NOT the same as test mode.
    *
-   * <p>The return value will never change observably. {@link Robot#notifyTesting()} will thus
-   * throw an exception if it is first called after the first time that this method is called.
+   * <p>The return value will never change observably. {@link Robot#notifyTesting()} will thus throw
+   * an exception if it is first called after the first time that this method is called.
    *
    * @return whether the current run is a unit test
    */
@@ -113,7 +114,7 @@ public class Robot extends TimedRobot {
    *
    * @throws UnsupportedOperationException if the robot is not running in a simulation
    * @throws IllegalStateException if {@link Robot#isUnitTesting()} has already been called before
-   * this method is first called
+   *     this method is first called
    */
   public static void notifyTesting() throws UnsupportedOperationException, IllegalStateException {
     if (RobotBase.isReal()) {

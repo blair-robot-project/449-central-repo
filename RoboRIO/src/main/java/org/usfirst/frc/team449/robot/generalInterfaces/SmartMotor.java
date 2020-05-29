@@ -50,6 +50,7 @@ public interface SmartMotor extends SimpleMotor, Shiftable, Loggable {
   boolean SIMULATE = true;
   /** Whether to simulate sparks if they cause a HAL error when constructed. */
   boolean SIMULATE_SPARKS_IF_ERR = true;
+
   int LOG_WIDTH = 4, LOG_HEIGHT = 3;
 
   /**

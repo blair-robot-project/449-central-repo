@@ -7,14 +7,11 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import java.util.function.BooleanSupplier;
 
 /**
- * A mix-in for {@link Command} that annotates its constructor for
- * use with Jackson. Don't make sublasses of this.
+ * A mix-in for {@link Command} that annotates its constructor for use with Jackson. Don't make
+ * sublasses of this.
  */
 public abstract class ConditionalCommandMixIn {
-  /**
-   * @see ConditionalCommand#ConditionalCommand(Command,
-   *     Command, BooleanSupplier)
-   */
+  /** @see ConditionalCommand#ConditionalCommand(Command, Command, BooleanSupplier) */
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
   public ConditionalCommandMixIn(
       @JsonProperty(required = false) final Command onTrue,

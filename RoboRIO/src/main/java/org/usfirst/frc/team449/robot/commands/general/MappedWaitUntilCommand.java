@@ -6,19 +6,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
-/**
- * Waits until a certain in-game time.
- */
+/** Waits until a certain in-game time. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedWaitUntilCommand extends WaitUntilCommand {
 
-    /**
-     * Default constructor.
-     *
-     * @param time The time, in seconds after auto starts, to wait until.
-     */
-    @JsonCreator
-    public MappedWaitUntilCommand(@JsonProperty(required = true) double time) {
-        super(time);
-    }
+  /**
+   * Default constructor.
+   *
+   * @param time The time, in seconds after auto starts, to wait until.
+   */
+  @JsonCreator
+  public MappedWaitUntilCommand(@JsonProperty(required = true) double time) {
+    super(time);
+  }
 }

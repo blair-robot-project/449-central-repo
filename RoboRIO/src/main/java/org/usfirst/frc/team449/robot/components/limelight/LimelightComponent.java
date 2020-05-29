@@ -19,10 +19,10 @@ import org.jetbrains.annotations.NotNull;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class LimelightComponent implements DoubleSupplier {
 
-/** Whether the limelight has a valid target in sight. Will return 0 for no, 1 for yes */
+  /** Whether the limelight has a valid target in sight. Will return 0 for no, 1 for yes */
   private static final NetworkTableEntry tv =
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv");
-    /**
+  /**
    * Which value to ask from the limelight Can be: x: lateral offset from target, in degrees y:
    * vertical offset from target, in degrees area: area of the target (0% to 100% of the camera
    * screen) skew: rotation (-90 to 0, in degrees) of the target (as the limelight sees it) latency:
@@ -99,8 +99,7 @@ public class LimelightComponent implements DoubleSupplier {
    * @param index the index to set the pipeline to
    */
   public static void setPipeline(int index) {
-    LimelightComponent pipeline =
-        new LimelightComponent(ReturnValue.pipeIndex, 0);
+    LimelightComponent pipeline = new LimelightComponent(ReturnValue.pipeIndex, 0);
     pipeline.entry.setNumber(index);
   }
 

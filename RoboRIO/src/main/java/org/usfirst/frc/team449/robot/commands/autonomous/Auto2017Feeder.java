@@ -11,59 +11,61 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 
-/**
- * The autonomous routine to deliver a gear to the center gear.
- */
+/** The autonomous routine to deliver a gear to the center gear. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Auto2017Feeder extends SequentialCommandGroup {
 
-    /**
-     * Default constructor.
-     *
-     * @param runWallToPegProfile  The command for running the profile for going from the wall to the peg, which has
-     *                             already been loaded.
-     * @param dropGear             The command for dropping the held gear.
-     * @param dropGearSwitch       The switch deciding whether or not to drop the gear.
-     * @param allianceSwitch       The switch indicating which alliance we're on.
-     * @param runRedBackupProfile  The command for away from the peg, on the red side of the field.
-     * @param runBlueBackupProfile The command for moving away from the peg, on the blue side of the field.
-     * @param driveForwardsRed     The command for moving forwards towards the feeder station on the red side.
-     * @param driveForwardsBlue    The command for moving forwards towards the feeder station on the blue side.
-     * @param waitBetweenProfiles  How long to wait between each motion profile, in seconds. Defaults to .05 if less
-     *                             than .05.
-     */
-    @JsonCreator
-    public Auto2017Feeder(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
-                          @NotNull @JsonProperty(required = true) Command dropGear,
-                          @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
-                          @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
-                          @NotNull @JsonProperty(required = true) Command runRedBackupProfile,
-                          @NotNull @JsonProperty(required = true) Command runBlueBackupProfile,
-                          @NotNull @JsonProperty(required = true) Command driveForwardsRed,
-                          @NotNull @JsonProperty(required = true) Command driveForwardsBlue,
-                          double waitBetweenProfiles) {
-        waitBetweenProfiles = Math.max(.05, waitBetweenProfiles);
-        addCommands(runWallToPegProfile);
+  /**
+   * Default constructor.
+   *
+   * @param runWallToPegProfile The command for running the profile for going from the wall to the
+   *     peg, which has already been loaded.
+   * @param dropGear The command for dropping the held gear.
+   * @param dropGearSwitch The switch deciding whether or not to drop the gear.
+   * @param allianceSwitch The switch indicating which alliance we're on.
+   * @param runRedBackupProfile The command for away from the peg, on the red side of the field.
+   * @param runBlueBackupProfile The command for moving away from the peg, on the blue side of the
+   *     field.
+   * @param driveForwardsRed The command for moving forwards towards the feeder station on the red
+   *     side.
+   * @param driveForwardsBlue The command for moving forwards towards the feeder station on the blue
+   *     side.
+   * @param waitBetweenProfiles How long to wait between each motion profile, in seconds. Defaults
+   *     to .05 if less than .05.
+   */
+  @JsonCreator
+  public Auto2017Feeder(
+      @NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+      @NotNull @JsonProperty(required = true) Command dropGear,
+      @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
+      @NotNull @JsonProperty(required = true) Command runRedBackupProfile,
+      @NotNull @JsonProperty(required = true) Command runBlueBackupProfile,
+      @NotNull @JsonProperty(required = true) Command driveForwardsRed,
+      @NotNull @JsonProperty(required = true) Command driveForwardsBlue,
+      double waitBetweenProfiles) {
+    waitBetweenProfiles = Math.max(.05, waitBetweenProfiles);
+    addCommands(runWallToPegProfile);
 
-        //Only do this stuff if we drop the gear
-        if (dropGearSwitch.get()) {
-            addCommands(dropGear);
+    // Only do this stuff if we drop the gear
+    if (dropGearSwitch.get()) {
+      addCommands(dropGear);
 
-            addCommands(new WaitCommand(waitBetweenProfiles));
+      addCommands(new WaitCommand(waitBetweenProfiles));
 
-            if (allianceSwitch.get()) { //Red is true
-                addCommands(runRedBackupProfile);
-            } else {
-                addCommands(runBlueBackupProfile);
-            }
+      if (allianceSwitch.get()) { // Red is true
+        addCommands(runRedBackupProfile);
+      } else {
+        addCommands(runBlueBackupProfile);
+      }
 
-            addCommands(new WaitCommand(waitBetweenProfiles));
+      addCommands(new WaitCommand(waitBetweenProfiles));
 
-            if (allianceSwitch.get()) {
-                addCommands(driveForwardsRed);
-            } else {
-                addCommands(driveForwardsBlue);
-            }
-        }
+      if (allianceSwitch.get()) {
+        addCommands(driveForwardsRed);
+      } else {
+        addCommands(driveForwardsBlue);
+      }
     }
+  }
 }

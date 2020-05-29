@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public final class ToggleShooting<T extends Subsystem & SubsystemFlywheel>
     extends InstantCommand { // TODO What's with the generic constraint antics? Can't we just have
-                             // the subsystems extend Subsystem?
+  // the subsystems extend Subsystem?
   /**
    * Default constructor.
    *

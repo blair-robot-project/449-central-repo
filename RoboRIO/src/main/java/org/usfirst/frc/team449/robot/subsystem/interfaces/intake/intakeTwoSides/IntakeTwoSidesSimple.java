@@ -88,7 +88,8 @@ public class IntakeTwoSidesSimple extends SubsystemBase
    * @param mode
    * @param motor
    */
-  private void setMode(@NotNull final SubsystemIntake.IntakeMode mode, @NotNull final SimpleMotor motor) {
+  private void setMode(
+      @NotNull final SubsystemIntake.IntakeMode mode, @NotNull final SimpleMotor motor) {
     switch (mode) {
       case OFF:
         motor.setVelocity(0);
