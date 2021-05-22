@@ -2,30 +2,28 @@ package org.usfirst.frc.team449.robot.mixIn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
- * A mix-in for {@link edu.wpi.first.wpilibj.command.Subsystem} that adds JsonTypeInfo and then ignores any
- * getters/setters. Don't make sublasses of this.
+ * A mix-in for {@link Subsystem} that adds JsonTypeInfo and then
+ * ignores getters/setters. Don't make sublasses of this.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.CLASS,
+    include = JsonTypeInfo.As.WRAPPER_OBJECT,
+    property = "@class")
 public abstract class SubsystemMixIn {
 
-    @JsonIgnore
-    abstract Command getDefaultCommand();
+  /** @see Subsystem#getDefaultCommand() */
+  @JsonIgnore
+  abstract Command getDefaultCommand();
 
-    @JsonIgnore
-    abstract void setDefaultCommand(Command command);
+  /** @see Subsystem#setDefaultCommand(Command) */
+  @JsonIgnore
+  abstract void setDefaultCommand(Command command);
 
-    @JsonIgnore
-    abstract String getDefaultCommandName();
-
-    @JsonIgnore
-    abstract Command getCurrentCommand();
-
-    @JsonIgnore
-    abstract void setCurrentCommand(Command command);
-
-    @JsonIgnore
-    abstract String getCurrentCommandName();
+  /** @see Subsystem#getCurrentCommand() */
+  @JsonIgnore
+  abstract Command getCurrentCommand();
 }

@@ -1,131 +1,119 @@
 package org.usfirst.frc.team449.robot;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
-import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
-import org.usfirst.frc.team449.robot.other.DefaultCommand;
-import org.usfirst.frc.team449.robot.other.Logger;
+import org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.MotorContainer;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
+import org.usfirst.frc.team449.robot.jacksonWrappers.PDP;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-/**
- * The Jackson-compatible object representing the entire robot.
- */
+/** The Jackson-compatible object representing the entire robot. */
+@JsonIgnoreProperties({"CONSTANTS", "NAVIGATION"})
 public class RobotMap {
+  @NotNull private final List<Subsystem> subsystems;
 
-    /**
-     * The buttons for controlling this robot. This field only exists to prevent the list from deallocating itself.
-     */
-    @NotNull
-    private final List<CommandButton> buttons;
+  @NotNull private final MotorContainer motors = MotorContainer.getInstance();
 
-    /**
-     * The logger for recording events and telemetry data.
-     */
-    @NotNull
-    private final Logger logger;
+  //    /**
+  //     * The logger for recording events and telemetry data.
+  //     */
+  //    @NotNull
+  //    private final Logger logger;
 
-    /**
-     * A runnable that updates cached variables.
-     */
-    @NotNull
-    private final Runnable updater;
+  /** A runnable that updates cached variables. */
+  @NotNull private final Runnable updater;
 
-    /**
-     * A map of subsystems to commands that sets the default command for each subsystem to its corresponding command.
-     * This field only exists to prevent the list from deallocating itself.
-     */
-    @Nullable
-    private final List<DefaultCommand> defaultCommands;
+  @NotNull private final CommandContainer commands;
 
-    /**
-     * The command to be run when first enabled in autonomous mode.
-     */
-    @Nullable
-    private final Command autoStartupCommand;
+  @NotNull private final PDP pdp;
 
-    /**
-     * The command to be run when first enabled in teleoperated mode.
-     */
-    @Nullable
-    private final Command teleopStartupCommand;
+  /** Whether the camera server should be run. */
+  private final boolean useCameraServer;
 
-    /**
-     * The command to be run when first enabled.
-     */
-    @Nullable
-    private final Command startupCommand;
+  /**
+   * Default constructor.
+   *
+   * @param subsystems The robot's subsystems.
+   * @param pdp The PDP
+   * @param updater A runnable that updates cached variables.
+   * @param commands A container to hold all of the robot's commands.
+   * @param useCameraServer Whether the camera server should be run. Defaults to false.
+   */
+  @JsonCreator
+  public RobotMap(
+      @NotNull @JsonProperty(required = true) @JsonInclude(content = JsonInclude.Include.NON_NULL) final List<Subsystem> subsystems,
+      @NotNull @JsonProperty(required = true) final PDP pdp,
+      @NotNull @JsonProperty(required = true) final Runnable updater,
+      @NotNull @JsonProperty(required = true) final CommandContainer commands,
+      @Nullable final List<MappedJoystick> joysticks,
+      final boolean useCameraServer) {
+    this.updater = updater;
+    this.pdp = pdp;
+    this.useCameraServer = useCameraServer;
+    this.subsystems = subsystems;
+    this.commands = commands;
 
-    /**
-     * Default constructor.
-     *
-     * @param buttons              The buttons for controlling this robot. Can be null for an empty list.
-     * @param logger               The logger for recording events and telemetry data.
-     * @param updater              A runnable that updates cached variables.
-     * @param defaultCommands      The default commands for various subsystems.
-     * @param autoStartupCommand   The command to be run when first enabled in autonomous mode.
-     * @param teleopStartupCommand The command to be run when first enabled in teleoperated mode.
-     * @param startupCommand       The command to be run when first enabled.
-     */
-    @JsonCreator
-    public RobotMap(@Nullable List<CommandButton> buttons,
-                    @NotNull @JsonProperty(required = true) Logger logger,
-                    @NotNull @JsonProperty(required = true) MappedRunnable updater,
-                    @Nullable List<DefaultCommand> defaultCommands,
-                    @Nullable Command autoStartupCommand,
-                    @Nullable Command teleopStartupCommand,
-                    @Nullable Command startupCommand) {
-        this.buttons = buttons != null ? buttons : new ArrayList<>();
-        this.logger = logger;
-        this.updater = updater;
-        this.defaultCommands = defaultCommands;
-        this.autoStartupCommand = autoStartupCommand;
-        this.teleopStartupCommand = teleopStartupCommand;
-        this.startupCommand = startupCommand;
+  }
+
+  //    /**
+  //     * @return The logger for recording events and telemetry data.
+  //     */
+  //    @NotNull
+  //    public Logger getLogger() {
+  //        return logger;
+  //    }
+
+  /** @return The commands to be run when first enabled in autonomous mode. */
+  @Nullable
+  public Iterator<Command> getAutoStartupCommands() {
+    if (this.commands.getAutoStartupCommand() == null) {
+      return null;
     }
+    return this.commands.getAutoStartupCommand().iterator();
+  }
 
-    /**
-     * @return The logger for recording events and telemetry data.
-     */
-    @NotNull
-    public Logger getLogger() {
-        return logger;
+  /** @return The commands to be run when first enabled in teleoperated mode. */
+  @Nullable
+  public Iterator<Command> getTeleopStartupCommands() {
+    if (this.commands.getTeleopStartupCommand() == null) {
+      return null;
     }
+    return this.commands.getTeleopStartupCommand().iterator();
+  }
 
-    /**
-     * @return The command to be run when first enabled in autonomous mode.
-     */
-    @Nullable
-    public Command getAutoStartupCommand() {
-        return autoStartupCommand;
+  @Nullable
+  public Iterator<Command> getTestStartupCommands() {
+    if (this.commands.getTestStartupCommand() == null) {
+      return null;
     }
+    return this.commands.getTestStartupCommand().iterator();
+  }
 
-    /**
-     * @return The command to be run when first enabled in teleoperated mode.
-     */
-    @Nullable
-    public Command getTeleopStartupCommand() {
-        return teleopStartupCommand;
+  /** @return The commands to be run when first enabled. */
+  @Nullable
+  public Iterator<Command> getRobotStartupCommands() {
+    if (this.commands.getRobotStartupCommand() == null) {
+      return null;
     }
+    return this.commands.getRobotStartupCommand().iterator();
+  }
 
-    /**
-     * @return The command to be run when first enabled.
-     */
-    @Nullable
-    public Command getStartupCommand() {
-        return startupCommand;
-    }
+  /** @return A runnable that updates cached variables. */
+  @NotNull
+  public Runnable getUpdater() {
+    return this.updater;
+  }
 
-    /**
-     * @return A runnable that updates cached variables.
-     */
-    @NotNull
-    public Runnable getUpdater() {
-        return updater;
-    }
+  /** @return Whether the camera server should be run. */
+  public boolean useCameraServer() {
+    return this.useCameraServer;
+  }
 }
