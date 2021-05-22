@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Map;
 
 /**
- * A command that runs a command from a dictionary.
+ * A command that runs a command from a dictionary
  */
 public abstract class SelectCommand<T> extends Command {
 
