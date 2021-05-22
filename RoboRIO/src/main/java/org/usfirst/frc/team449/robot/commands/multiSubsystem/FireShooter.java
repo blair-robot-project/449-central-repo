@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetInt
 
 /**
  * Command group for firing the flywheel. Runs flywheel, runs static intake, stops dynamic intake, raises intake, and
- * runs feeder.
+ * runs feeder
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FireShooter<T extends Subsystem & SubsystemIntake> extends CommandGroup {
