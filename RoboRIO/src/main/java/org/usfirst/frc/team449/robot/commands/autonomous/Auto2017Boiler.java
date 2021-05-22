@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 
 /**
- * The autonomous routine to deliver a gear to the center gear.
+ * The autonomous routine to deliver a gear to the center gear
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Auto2017Boiler extends CommandGroup {
