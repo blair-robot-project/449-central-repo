@@ -1,6 +1,6 @@
 ---
 
-# IntelliJ supports Ctrl+clicking anchors to find usages and declarations... so, hyperlinks! Yooooooooo!
+# IntelliJ supports Ctrl+clicking anchors to find usages and declarations... so, hyperlinks!
 # Basically a table of contents; Ctrl+click on a heading in UPPER_SNAKE_CASE to jump back and forth between the
 # table of contents and actual location in the map.
 NAVIGATION:
