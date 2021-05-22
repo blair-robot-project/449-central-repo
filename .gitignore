@@ -1,6 +1,6 @@
 .gradle
 build/
-lib/
+bin/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -15,8 +15,8 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 # IntelliJ files
-.idea/
-*.idea
+.idea/*
+*.idea/*
 gen/
 classes/
 out/
@@ -25,6 +25,10 @@ build
 *.iml
 *.ipr
 *.iws
+
+# But do include certain IntelliJ run configurations
+!.idea/runConfigurations/deploy.xml
+!.idea/runConfigurations/test.xml
 
 # GradleRIO files
 robot2017.iml
@@ -45,4 +49,7 @@ logs/
 *Log*.csv
 
 #Generated profiles in the base-level directory
-*Profile.csv
+#*Profile.csv
+
+# GUI layout configuration for Robot Simulation GUI
+imgui.ini
