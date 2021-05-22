@@ -1,0 +1,268 @@
+---
+
+# IntelliJ supports Ctrl+clicking anchors to find usages and declarations... so, hyperlinks! Yooooooooo!
+# Basically a table of contents; Ctrl+click on a heading in UPPER_SNAKE_CASE to jump back and forth between the
+# table of contents and actual location in the map.
+NAVIGATION:
+  # The anchors that replace map key values must have the values of the keys that they replace.
+  - &PDP pdp
+  # This works magically because the anchor refers to the key of the mapping only, which is the string "subsystems".
+  - &SUBSYSTEMS subsystems:
+      # Other anchors, like these, become null list items and are explicitly ignored using @JsonInclude
+      - &DRIVE_SUBSYSTEM
+  - &COMMANDS commands:
+      - &BUTTONS buttons:
+          # TODO copy/paste from appropriate code if you want to do more than just drive around
+          # Same goes for if there are applicable default commands below, or subsystems above.
+      - &DEFAULT_COMMANDS defaultCommands:
+          - &DRIVE_DEFAULT_COMMAND
+  - &UPDATER updater
+
+# Anchors for transclusion into the rest of the map.
+# Ignored by Jackson (so is NAVIGATION); can contain any valid YAML suitable for organizational purposes.
+# Make sure there aren't any colons after the anchors; Jackson gives "Null key for a Map not allowed in JSON"
+CONSTANTS:
+  - MotorPorts:
+      # Drive system    # TODO update as needed for robot
+      - &leftMasterPort 1
+      - &leftMasterSlave1Port 3
+      - &leftMasterSlave2Port 5
+      - &rightMasterPort 2
+      - &rightMasterSlave1Port 4
+      - &rightMasterSlave2Port 6
+  - JoystickPorts:
+      - &driveJoystickPort 1
+      - &overrideJoystickPort 2
+  - DriverButtonNumbers:
+      - &driverIntakeOutOn 1 #intakeForward
+      - &driverIntakeOff 2 #intakeNeutralDeployed
+  - OverrideButtonNumbers:
+      # TODO you can add more buttons here if you want more functionality
+      # TODO if you do, consider making another section so kids have those controls too!
+      - &fullStop 1 # Holding A stops the robot from moving on the overrider
+  - MotorSpeeds:
+      - &driveScalar 0.25 # So that the robot drives really slowly and nobody gets hurt
+
+
+# Outright move the joystick classes up here so we don't have to keep figuring out where the first
+# usage is whenever we change the commands.
+joysticks:
+  - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+      '@id': driveJoystick
+      port: *driveJoystickPort
+  - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+      '@id': overrideJoystick
+      port: *overrideJoystickPort
+
+# WHETHER TO USE THE CAMERA SERVER
+useCameraServer: false
+
+
+########################################################################################################################
+*PDP:
+  org.usfirst.frc.team449.robot.jacksonWrappers.PDP:
+    '@id': PDP
+    canID: 0
+    voltagePerCurrentLinReg:
+      bufferSize: 250
+      rSquaredThreshhold: 0.75
+
+
+########################################################################################################################
+*SUBSYSTEMS:
+  - *DRIVE_SUBSYSTEM
+  - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalSimple:
+      '@id': drive
+      leftMotor:
+        org.usfirst.frc.team449.robot.generalInterfaces.SmartMotor:
+          &Left_Master
+          '@id': leftMaster
+          type: SPARK
+          name: left
+          port: *leftMasterPort
+          PDP:
+            org.usfirst.frc.team449.robot.jacksonWrappers.PDP: PDP
+          reverseOutput: true
+          enableBrakeMode: true
+          #          postEncoderGearing: 0.13333333333
+          unitPerRotation: 0.47877872 #meters per rotation
+          currentLimit: 50
+          enableVoltageComp: true
+          encoderCPR: 256
+          slaveSparks:
+            - port: *leftMasterSlave1Port
+              inverted: false
+            - port: *leftMasterSlave2Port
+              inverted: false
+      rightMotor:
+        org.usfirst.frc.team449.robot.generalInterfaces.SmartMotor:
+          <<: *Left_Master
+          '@id': rightMaster
+          type: SPARK
+          name: right
+          port: *rightMasterPort
+          reverseOutput: false
+          slaveSparks:
+            - port: *rightMasterSlave1Port
+              PDP: PDP
+              inverted: false
+            - port: *rightMasterSlave2Port
+              PDP: PDP
+              inverted: false
+
+*COMMANDS: # TODO feel free to copy/paste some buttons in from year's code. Make sure to also copy in the relevant navigation tabs.
+  ########################################################################################################################
+  *DEFAULT_COMMANDS:
+    #***********************************************************************************************************************
+    - *DRIVE_DEFAULT_COMMAND
+    - subsystem:
+        org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalSimple:
+          drive
+      command:
+        org.usfirst.frc.team449.robot.drive.unidirectional.commands.SimpleUnidirectionalDrive:
+          '@id': defaultDriveCommand
+          subsystem:
+            org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalSimple:
+              drive
+          oi:
+            org.usfirst.frc.team449.robot.oi.unidirectional.OIOutreach:
+              '@id': oi
+              overridenOI:
+                org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                  '@id': overriden
+                  gamepad:
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                      driveJoystick
+                  rotThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                      &orotThrottle
+                      '@id': orotThrottle
+                      stick: driveJoystick
+                      axis: 0
+                      smoothingTimeSecs: 0.04
+                      deadband: 0.08
+                      inverted: false
+                      polynomial:
+                        org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                          '@id': orotPoly
+                          powerToCoefficientMap: !!map
+                            1: .5
+                            3: .5
+                      scale: *driveScalar
+                  fwdThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSum:
+                      '@id': ofwdThrottle
+                      throttles:
+                        - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                            <<: *orotThrottle
+                            '@id': oposThrottle
+                            axis: 3
+                            inverted: false
+                            deadband: 0.05
+                            polynomial:
+                              org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                                '@id': oposPoly
+                                powerToCoefficientMap: !!map
+                                  1: 2
+                                  3: 1
+                        - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                            <<: *orotThrottle
+                            '@id': onegThrottle
+                            axis: 2
+                            inverted: true
+                            deadband: 0.05
+                            polynomial:
+                              org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                                '@id': onegPoly
+                                powerToCoefficientMap: !!map
+                                  1: 2
+                                  3: 1
+                  invertDPad: false
+                  dPadShift: 0.1
+                  turnInPlaceRotScale: 0.5
+                  rescaleOutputs: true
+                  scaleRotByFwdPoly:
+                    org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                      '@id': overridenScaleRotByFwdPoly
+                      powerToCoefficientMap: !!map
+                        #0.5: 0.6
+                        0: 0.2
+                        1: 0.75
+              overridingOI:
+                org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                  '@id': oiOverride
+                  gamepad:
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                      overrideJoystick
+                  rotThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                      &rotThrottle
+                      '@id': rotThrottle
+                      stick: overrideJoystick
+                      axis: 0
+                      smoothingTimeSecs: 0.04
+                      deadband: 0.08
+                      inverted: false
+                      polynomial:
+                        org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                          '@id': rotPoly
+                          powerToCoefficientMap: !!map
+                            1: .5
+                            3: .5
+                      scale: .7
+                  fwdThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSum:
+                      '@id': fwdThrottle
+                      throttles:
+                        - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                            <<: *rotThrottle
+                            '@id': posThrottle
+                            axis: 3
+                            inverted: false
+                            deadband: 0.05
+                            polynomial:
+                              org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                                '@id': posPoly
+                                powerToCoefficientMap: !!map
+                                  1: 2
+                                  3: 1
+                        - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                            <<: *rotThrottle
+                            '@id': negThrottle
+                            axis: 2
+                            inverted: true
+                            deadband: 0.05
+                            polynomial:
+                              org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                                '@id': negPoly
+                                powerToCoefficientMap: !!map
+                                  1: 2
+                                  3: 1
+                  invertDPad: false
+                  dPadShift: 0.1
+                  turnInPlaceRotScale: 1
+                  rescaleOutputs: true
+                  scaleRotByFwdPoly:
+                    org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                      '@id': scaleRotByFwdPoly
+                      powerToCoefficientMap: !!map
+                        0.5: 0.4
+                        0: 0.2
+                        #1 : 0.25
+                        #2: 0.25
+              stopButton:
+                org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+                  '@id': override
+                  joystick:
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                      driveJoystick
+                  buttonNumber: *fullStop
+
+########################################################################################################################
+*UPDATER:
+  org.usfirst.frc.team449.robot.other.Updater:
+    '@id': updater
+    updatables:
+      - org.usfirst.frc.team449.robot.jacksonWrappers.PDP: PDP
+      - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalSimple: drive
+      - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad: oi

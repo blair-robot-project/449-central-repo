@@ -1,0 +1,438 @@
+---
+
+# IntelliJ supports Ctrl+clicking anchors to find usages and declarations... so, hyperlinks! Yooooooooo!
+# Basically a table of contents; Ctrl+click on a heading in UPPER_SNAKE_CASE to jump back and forth between the
+# table of contents and actual location in the map.
+NAVIGATION:
+  # The anchors that replace map key values must have the values of the keys that they replace.
+  - &PDP pdp
+  # This works magically because the anchor refers to the key of the mapping only, which is the string "subsystems".
+  - &SUBSYSTEMS subsystems:
+      # Other anchors, like these, become null list items and are explicitly ignored using @JsonInclude
+      - &DRIVE_SUBSYSTEM
+      - &INTAKE_SUBSYSTEM
+  - &COMMANDS commands:
+      - &BUTTONS buttons:
+          - &DRIVE_COMMANDS
+          - &INTAKE_COMMANDS
+      - &DEFAULT_COMMANDS defaultCommands:
+          - &DRIVE_DEFAULT_COMMAND
+      - &AUTONOMOUS_COMMANDS autoStartupCommand:
+          - &SIMPLE_ROUTINE
+  - &UPDATER updater
+
+# Anchors for transclusion into the rest of the map.
+# Ignored by Jackson (so is NAVIGATION); can contain any valid YAML suitable for organizational purposes.
+# Make sure there aren't any colons after the anchors; Jackson gives "Null key for a Map not allowed in JSON"
+CONSTANTS:
+  - MotorPorts:
+      # Drive system    TODO update to match real robot
+      - &leftMasterPort 1
+      - &leftMasterSlave1Port 3
+      - &leftMasterSlave2Port 5
+      - &rightMasterPort 2
+      - &rightMasterSlave1Port 4
+      - &rightMasterSlave2Port 6
+      # Intake system    TODO add more systems, motors as necessary
+      - &intakeMotorPort 7
+  - SolenoidPorts:
+      # TODO update based on this year's solenoids etc.
+      - &intakeSolenoidForward 2
+      - &intakeSolenoidReverse 3
+  - DIOPorts:
+      # Drive input-output ports. Things like encoders go here.
+  - JoystickPorts:
+      # Don't touch
+      - &mechanismsJoystickPort 0
+      - &driveJoystickPort 1
+  - DriverButtonNumbers:
+      # TODO update for driver preferences
+      - &driverIntakeOutOn 1 #intakeForward
+      - &driverIntakeOff 2 #intakeNeutralDeployed
+      - &driverIntakeRev 3 #intakeReverse
+      - &driverIntakeInOff 4 #intakeNeutral
+  - MechsButtonNumbers:
+      # TODO decide mechs buttons
+  - MotorSpeeds:
+      # TODO use to save constants for motor speeds for easier adjusting
+  - Other:
+      # TODO misc navigation constants, same reason as for MotorSpeeds
+
+
+#Outright move the joystick classes up here so we don't have to keep figuring out where the first
+#usage is whenever we change the commands.
+joysticks:
+  - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+      '@id': mechanismsJoystick
+      port: *mechanismsJoystickPort
+  - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+      '@id': driveJoystick
+      port: *driveJoystickPort
+
+# WHETHER TO USE THE CAMERA SERVER TODO change to true if there is a drivercam on robot
+useCameraServer: false
+
+
+###########################################################################################
+# Keep this here, too, I think it's important ;)
+*PDP:
+  org.usfirst.frc.team449.robot.jacksonWrappers.PDP:
+    '@id': PDP
+    canID: 0
+    voltagePerCurrentLinReg:
+      bufferSize: 250
+      rSquaredThreshhold: 0.75
+
+
+###########################################################################################
+*SUBSYSTEMS:
+  - *DRIVE_SUBSYSTEM # This code should also stick year-to-year, unless y'all do swerve
+  - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+      '@id': drive
+      #Wheelbase: 2.14 TODO change if necessary. Useful to have written down.
+      leftMaster:
+        org.usfirst.frc.team449.robot.generalInterfaces.SmartMotor:
+          &Left_Master
+          '@id': leftMaster
+          type: SPARK
+          name: left
+          port: *leftMasterPort
+          PDP:
+            org.usfirst.frc.team449.robot.jacksonWrappers.PDP: PDP
+          reverseOutput: true
+          enableBrakeMode: true
+          #          postEncoderGearing: 0.13333333333
+          unitPerRotation: 0.47877872 #meters per rotation
+          currentLimit: 50
+          enableVoltageComp: true
+          encoderCPR: 256
+          startingGear: LOW
+          perGearSettings:
+            # TODO robot might need characterization. Ask abt it in Discord, once everything else is mostly done
+            - &Low_Gear
+              gear: LOW
+              postEncoderGearing: 0.0488998
+              maxSpeed: 2.3
+              kP: 0
+              feedForwardCalculator:
+                org.usfirst.frc.team449.robot.jacksonWrappers.FeedForwardCalculators.MappedFeedForwardCalculator:
+                  kS: 0.128
+                  kV: 5.23
+                  kA: 0.0698
+            - &High_Gear
+              gear: HIGH
+              postEncoderGearing: 0.12936611
+              maxSpeed: 5.2
+              kP: 0.000001
+              feedForwardCalculator:
+                org.usfirst.frc.team449.robot.jacksonWrappers.FeedForwardCalculators.MappedFeedForwardCalculator:
+                  kS: 0.156
+                  kV: 2.01
+                  kA: 0.154
+          slaveSparks:
+            - port: *leftMasterSlave1Port
+              inverted: false
+            - port: *leftMasterSlave2Port
+              inverted: false
+      rightMaster:
+        org.usfirst.frc.team449.robot.generalInterfaces.SmartMotor:
+          <<: *Left_Master
+          '@id': rightMaster
+          type: SPARK
+          name: right
+          port: *rightMasterPort
+          reverseOutput: false
+          perGearSettings:
+            # TODO robot might need characterization. Ask abt it in Discord, once everything else is mostly done
+            - <<: *Low_Gear
+              feedForwardCalculator:
+                org.usfirst.frc.team449.robot.jacksonWrappers.FeedForwardCalculators.MappedFeedForwardCalculator:
+                  kS: 0.139
+                  kV: 5.17
+                  kA: 0.0554
+            - <<: *High_Gear
+              feedForwardCalculator:
+                org.usfirst.frc.team449.robot.jacksonWrappers.FeedForwardCalculators.MappedFeedForwardCalculator:
+                  kS: 0.165
+                  kV: 2.01
+                  kA: 0.155
+          slaveSparks:
+            - port: *rightMasterSlave1Port
+              PDP: PDP
+              inverted: false
+            - port: *rightMasterSlave2Port
+              PDP: PDP
+              inverted: false
+      ahrs:
+        org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS:
+          '@id': navX
+          port: kMXP
+          invertYaw: true
+      trackWidthMeters: 0.61755
+
+  #****************************************************************************************
+  # TODO placeholder system, make a new one to match year
+  - *INTAKE_SUBSYSTEM
+  - org.usfirst.frc.team449.robot._2020.multiSubsystem.SolenoidSimple:
+      '@id': intakeSolenoid
+      piston:
+        '@id': intakeSolenoidImpl
+        forward: *intakeSolenoidForward
+        reverse: *intakeSolenoidReverse
+
+###########################################################################################
+*COMMANDS:
+  *BUTTONS:
+    #**************************************************************************************
+    # TODO add buttons for drive system, if applicable
+    - *DRIVE_COMMANDS
+    #**************************************************************************************
+    # TODO this is a placeholder, update as necessary
+    - *INTAKE_COMMANDS
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': driveIntakeStartButton
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              driveJoystick
+          buttonNumber: *driverIntakeOutOn
+      command:
+        edu.wpi.first.wpilibj2.command.ParallelCommandGroup:
+          '@id': runBumperAndTransitionWheel
+          commands:
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetSolenoidPose:
+                '@id': intakePistonOutGrouped
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.SolenoidSimple:
+                    intakeSolenoid
+                value: kForward
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeBumperStartCommand
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeBumper
+                mode: IN_FAST
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeTransitionWheelStartCommand
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeTransitionWheel
+                mode: IN_FAST
+      action: WHEN_PRESSED
+
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': driveIntakeStopButton
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              driveJoystick
+          buttonNumber: *driverIntakeOff
+      command:
+        edu.wpi.first.wpilibj2.command.ParallelCommandGroup:
+          '@id': intakeOffGroup
+          commands:
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeBumperOff
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeBumper
+                mode: "OFF"
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeTransitionWheelOff
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeTransitionWheel
+                mode: "OFF"
+      action: WHEN_PRESSED
+
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': driveIntakeInOffButton
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              driveJoystick
+          buttonNumber: *driverIntakeInOff
+      command:
+        edu.wpi.first.wpilibj2.command.ParallelCommandGroup:
+          '@id': intakePistonInOffGroup
+          commands:
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetSolenoidPose:
+                '@id': intakePistonInGrouped
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.SolenoidSimple:
+                    intakeSolenoid
+                value: kReverse
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeBumperStopCommand
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeBumper
+                mode: "OFF"
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeTransitionWheelStopCommand
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeTransitionWheel
+                mode: "OFF"
+      action: WHEN_PRESSED
+
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': intakeReverseButton
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              driveJoystick
+          buttonNumber: *driverIntakeRev
+      command:
+        edu.wpi.first.wpilibj2.command.ParallelCommandGroup:
+          '@id': intakeReverseCommandGroup
+          commands:
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeBumperReverseCommand
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeBumper
+                mode: OUT_SLOW
+            - org.usfirst.frc.team449.robot._2020.multiSubsystem.commands.SetIntakeMode:
+                '@id': intakeTransitionReverseCommand
+                subsystem:
+                  org.usfirst.frc.team449.robot._2020.multiSubsystem.IntakeSimple:
+                    intakeTransitionWheel
+                mode: OUT_SLOW
+      action: WHEN_PRESSED
+
+  #########################################################################################
+  *DEFAULT_COMMANDS:
+    #**************************************************************************************
+    # TODO edit inversions, scale, etc as necessary. Minor edits to constants, don't rewrite
+    # Also, check the tabbing, I'm not sure it copy/pasted right
+    - *DRIVE_DEFAULT_COMMAND
+    - subsystem:
+        org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+          drive
+      command:
+        org.usfirst.frc.team449.robot.drive.unidirectional.commands.UnidirectionalNavXShiftingDefaultDrive:
+          '@id': defaultDriveCommand
+          kP: 0.0
+          kI: 0.0
+          kD: 0.0
+          maximumOutput: 1
+          absoluteTolerance: 0
+          deadband: 2
+          maxAngularVelToEnterLoop: 3
+          inverted: false
+          highGearAngularCoefficient: 3
+          rampComponent:
+            org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampComponent:
+              maxIncreasePerSecond: 3
+              maxDecreasePerSecond: 3
+          driveStraightLoopEntryTimer:
+            '@id': driveStraightLoopEntryTimer
+            bufferTimeSeconds: 0.15
+          subsystem:
+            org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+              drive
+          oi:
+            org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+              '@id': oi
+              gamepad:
+                org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                  driveJoystick
+              rotThrottle:
+                org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                  &rotThrottle
+                  '@id': rotThrottle
+                  stick: driveJoystick
+                  axis: 0
+                  smoothingTimeSecs: 0.04
+                  deadband: 0.08
+                  inverted: false
+                  polynomial:
+                    org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                      '@id': rotPoly
+                      powerToCoefficientMap: !!map
+                        1: .5
+#                        3: .5
+                  scale: .7
+              fwdThrottle:
+                org.usfirst.frc.team449.robot.oi.throttles.ThrottleSum:
+                  '@id': fwdThrottle
+                  throttles:
+                    - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                        <<: *rotThrottle
+                        '@id': posThrottle
+                        axis: 3
+                        inverted: false
+                        deadband: 0.05
+                        polynomial:
+                          org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                            '@id': posPoly
+                            powerToCoefficientMap: !!map
+                              1: 2
+                              2: 1
+                    - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
+                        <<: *rotThrottle
+                        '@id': negThrottle
+                        axis: 2
+                        inverted: true
+                        deadband: 0.05
+                        polynomial:
+                          org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                            '@id': negPoly
+                            powerToCoefficientMap: !!map
+                              1: 2
+                              2: 1
+              invertDPad: false
+              dPadShift: 0.1
+              turnInPlaceRotScale: 1
+              rescaleOutputs: true
+              scaleRotByFwdPoly:
+                org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
+                  '@id': scaleRotByFwdPoly
+                  powerToCoefficientMap: !!map
+                    0.5: 0.4
+                    0: 0.2
+                    #1 : 0.25
+                    #2: 0.25
+          autoshiftComponent:
+            '@id': autoshiftComponent
+            upshiftSpeed: 100
+            downshiftSpeed: 1
+            upshiftDebouncer:
+              '@id': upshiftDebouncer
+              bufferTimeSeconds: 0.06
+            upshiftFwdThresh: 0.4
+    # TODO add other default commands as necessary
+
+  #########################################################################################
+  *AUTONOMOUS_COMMANDS:
+    #**************************************************************************************
+    # TODO create autonomous code
+    - *SIMPLE_ROUTINE
+    - edu.wpi.first.wpilibj2.command.SequentialCommandGroup:
+        # TODO once this is fully written out, consider making a subclass of AutonomousRoutine to clean up a little
+        '@id': basicRoutine
+        requiredSubsystems:
+          - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+              drive
+        commands:
+          - edu.wpi.first.wpilibj2.command.WaitCommand: # Just waiting. Remove if you have a full 15-sec sequence
+              seconds: 5
+          - org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed: # Drive at [velocity] for [seconds]
+              '@id': driveauto
+              subsystem:
+                org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+                  drive
+              velocity: # TODO
+              seconds: # TODO
+
+###########################################################################################
+# TODO add anything that updates
+*UPDATER:
+  org.usfirst.frc.team449.robot.other.Updater:
+    '@id': updater
+    updatables:
+      - org.usfirst.frc.team449.robot.jacksonWrappers.PDP: PDP
+      - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable: drive
+      - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad: oi
+      - org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS: navX
