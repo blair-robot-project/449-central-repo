@@ -87,7 +87,7 @@ public class FPSSmartMotorSimulated implements SmartMotor, Updatable {
       @Nullable final Integer currentLimit,
       final boolean enableVoltageComp,
       @Nullable final List<PerGearSettings> perGearSettings,
-      @Nullable final Shiftable.gear startingGear,
+      @Nullable final Shiftable.Gear startingGear,
       @Nullable final Integer startingGearNum,
       // Spark-specific
       @Nullable final HashMap<CANSparkMaxLowLevel.PeriodicFrame, Integer> sparkStatusFramesMap,
@@ -501,7 +501,7 @@ public class FPSSmartMotorSimulated implements SmartMotor, Updatable {
    * @param gear The gear to use the max speed from to scale the velocity.
    */
   @Override
-  public void setGearScaledVelocity(final double velocity, final gear gear) {
+  public void setGearScaledVelocity(final double velocity, final Gear gear) {
     this.setGearScaledVelocity(velocity, gear.getNumVal());
   }
 

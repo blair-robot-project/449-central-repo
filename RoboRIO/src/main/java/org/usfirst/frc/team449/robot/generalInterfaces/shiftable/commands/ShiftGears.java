@@ -39,9 +39,9 @@ public class ShiftGears extends InstantCommand {
   @Override
   public void execute() {
     subsystem.setGear(
-        subsystem.getGear() == Shiftable.gear.LOW.getNumVal()
-            ? Shiftable.gear.HIGH.getNumVal()
-            : Shiftable.gear.LOW.getNumVal());
+        subsystem.getGear() == Shiftable.Gear.LOW.getNumVal()
+            ? Shiftable.Gear.HIGH.getNumVal()
+            : Shiftable.Gear.LOW.getNumVal());
   }
 
   /** Log when this command ends */

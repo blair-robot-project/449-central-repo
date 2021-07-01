@@ -38,7 +38,7 @@ public class SwitchToHighGear extends InstantCommand {
   /** Switch to high gear */
   @Override
   public void execute() {
-    subsystem.setGear(Shiftable.gear.HIGH.getNumVal());
+    subsystem.setGear(Shiftable.Gear.HIGH.getNumVal());
   }
 
   /** Log when this command ends */

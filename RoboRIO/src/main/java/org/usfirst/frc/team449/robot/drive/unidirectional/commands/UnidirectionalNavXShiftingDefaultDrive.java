@@ -134,7 +134,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<
 
     // Gain schedule the loop if we shifted
     if (this.lastGear != this.subsystem.getGear()) {
-      if (this.subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
+      if (this.subsystem.getGear() == Shiftable.Gear.LOW.getNumVal()) {
         this.getController().setP(this.kP);
         this.getController().setI(this.kI);
         this.getController().setD(this.kD);

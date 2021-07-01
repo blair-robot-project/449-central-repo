@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.subsystem.intake.feeder2020;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.components.booleanSuppliers.IntakeSimple;
+import org.usfirst.frc.team449.robot.subsystem.intake.IntakeSimple;
 import org.usfirst.frc.team449.robot.generalInterfaces.motors.simple.SimpleMotor;
 
 import java.util.Map;

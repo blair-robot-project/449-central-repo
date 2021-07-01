@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
   @NotNull public static final String RESOURCES_PATH_SIMULATED = "./src/main/deploy/";
   /** The name of the map to read from. Should be overriden by a subclass to change the name. */
   @NotNull
-  public static final String mapName = "outreach.yml";
+  public static final String mapName = "map-template.yml";
   /**
    * The filepath to the resources folder containing the config files.
    */
@@ -62,6 +62,9 @@ public class Robot extends TimedRobot {
           (Map<?, ?>) new Yaml().load(new FileReader(RESOURCES_PATH + "/" + mapName));
 
       final YAMLMapper mapper = new YAMLMapper();
+
+      //Register Kotlin module
+      com.fasterxml.jackson.module.kotlin.ExtensionsKt.registerKotlinModule(mapper);
 
       // Turn the Map read by SnakeYaml into a String so Jackson can read it.
       final String fixed = mapper.writeValueAsString(normalized);

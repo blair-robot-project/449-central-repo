@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import io.github.oblarg.oblog.annotations.Log;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.subsystem.intake.SubsystemIntake;
-import org.usfirst.frc.team449.robot.subsystem.intake.intake2020.commands.SetIntakeMode;
+import org.usfirst.frc.team449.robot.subsystem.intake.commands.SetIntakeMode;
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.CLASS,

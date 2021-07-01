@@ -71,7 +71,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
   public ShiftWithSensorComponent(
       @NotNull @JsonProperty(required = true) final List<Shiftable> otherShiftables,
       @NotNull @JsonProperty(required = true) final DoubleSolenoid piston,
-      @Nullable final Shiftable.gear startingGear,
+      @Nullable final Shiftable.Gear startingGear,
       @NotNull @JsonProperty(required = true) final List<MappedDigitalInput> highGearSensors,
       @NotNull @JsonProperty(required = true) final List<MappedDigitalInput> lowGearSensors,
       @NotNull @JsonProperty(required = true) final List<SimpleMotor> motorsToDisable,
@@ -91,7 +91,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
   private void checkToReenable() {
     // Check if the piston is in correct position by making sure each sensor is reading correctly.
     this.pistonCorrect = true;
-    if (this.currentGear == Shiftable.gear.HIGH.getNumVal()) {
+    if (this.currentGear == Shiftable.Gear.HIGH.getNumVal()) {
       for (final MappedDigitalInput sensor : this.highGearSensors) {
         // The position is correct if all the sensors read true.
         this.pistonCorrect = this.pistonCorrect && sensor.get();

@@ -80,8 +80,8 @@ public class DriveUnidirectionalWithGyroShiftable extends DriveUnidirectionalWit
     // If we are shifting, scale by the high gear max speed to make acceleration smoother and
     // faster.
     else {
-      this.leftMaster.setGearScaledVelocity(left, gear.HIGH);
-      this.rightMaster.setGearScaledVelocity(right, gear.HIGH);
+      this.leftMaster.setGearScaledVelocity(left, Gear.HIGH);
+      this.rightMaster.setGearScaledVelocity(right, Gear.HIGH);
     }
   }
 

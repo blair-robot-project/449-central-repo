@@ -1,2 +1,55 @@
-!*Profile.csv
-!src/main/java/com/team254/lib
+.gradle
+build/
+bin/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+# IntelliJ files
+.idea/*
+*.idea/*
+gen/
+classes/
+out/
+build
+*build
+*.iml
+*.ipr
+*.iws
+
+# But do include certain IntelliJ run configurations
+!.idea/runConfigurations/deploy.xml
+!.idea/runConfigurations/test.xml
+
+# GradleRIO files
+robot2017.iml
+robot2017.ipr
+robot2017.iws
+
+# R workspace files
+*.RData
+*.Rhistory
+
+#Other
+.metadata/
+.DS_Store
+bash.exe.stackdump
+
+#Copied log files
+logs/
+*Log*.csv
+
+#Generated profiles in the base-level directory
+#*Profile.csv
+
+# GUI layout configuration for Robot Simulation GUI
+imgui.ini

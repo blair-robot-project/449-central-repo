@@ -37,7 +37,7 @@ public class ShiftComponent {
   public ShiftComponent(
       @NotNull @JsonProperty(required = true) final List<Shiftable> otherShiftables,
       @NotNull @JsonProperty(required = true) final DoubleSolenoid piston,
-      @Nullable final Shiftable.gear startingGear) {
+      @Nullable final Shiftable.Gear startingGear) {
     this.otherShiftables = otherShiftables;
     this.piston = piston;
 
@@ -47,8 +47,8 @@ public class ShiftComponent {
       // Get the starting gear from the piston's position if it's not provided
       this.currentGear =
           piston.get() == DoubleSolenoid.Value.kForward
-              ? Shiftable.gear.LOW.getNumVal()
-              : Shiftable.gear.HIGH.getNumVal();
+              ? Shiftable.Gear.LOW.getNumVal()
+              : Shiftable.Gear.HIGH.getNumVal();
     }
 
     // Set all the shiftables to the starting gear.
@@ -84,7 +84,7 @@ public class ShiftComponent {
    * @param gear The gear to shift to
    */
   protected void shiftPiston(final int gear) {
-    if (gear == Shiftable.gear.LOW.getNumVal()) {
+    if (gear == Shiftable.Gear.LOW.getNumVal()) {
       // Switch to the low gear pos
       this.piston.set(DoubleSolenoid.Value.kForward);
     } else {

@@ -38,7 +38,7 @@ public class SwitchToLowGear extends InstantCommand {
   /** Switch to low gear */
   @Override
   public void execute() {
-    subsystem.setGear(Shiftable.gear.LOW.getNumVal());
+    subsystem.setGear(Shiftable.Gear.LOW.getNumVal());
   }
 
   /** Log when this command ends */
