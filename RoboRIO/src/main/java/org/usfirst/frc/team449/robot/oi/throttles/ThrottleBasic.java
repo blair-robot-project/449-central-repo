@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import io.github.oblarg.oblog.annotations.Log;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /** A class representing a single axis on a joystick. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)

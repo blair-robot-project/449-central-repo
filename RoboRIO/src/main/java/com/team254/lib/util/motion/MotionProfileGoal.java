@@ -129,7 +129,7 @@ public class MotionProfileGoal {
      * VIOLATE_MAX_ABS_VEL - If the max velocity is just a general guideline and not a hard performance limit, it's
      * better to slightly exceed it to avoid skidding wheels.
      */
-    public static enum CompletionBehavior {
+    public enum CompletionBehavior {
         // Overshoot the goal if necessary (at a velocity greater than max_abs_vel) and come back.
         // Only valid if the goal velocity is 0.0 (otherwise VIOLATE_MAX_ACCEL will be used).
         OVERSHOOT,

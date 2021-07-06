@@ -44,7 +44,9 @@ public class DefaultFeederCommand extends CommandBase implements Loggable {
     private final FlywheelWithTimeout shooter;
 
     @NotNull
-    private final ConditionTimingComponentDecorator sensor1, sensor2, indexing, shooting, flywheelOn;
+    private final ConditionTimingComponentDecorator sensor1, indexing, shooting, flywheelOn;
+    @Nullable
+    private final ConditionTimingComponentDecorator sensor2;
 
     /**
      * Whether or not the feeder has picked up a ball yet.

@@ -13,11 +13,10 @@ import org.usfirst.frc.team449.robot.generalInterfaces.motors.SlaveMotor
 class SlaveSparkMax @JsonCreator constructor(
     @JsonProperty(required = true) port: Int,
     inverted: Boolean?,
-    PDP: PDP?
+    val PDP: PDP?
 ) : SlaveMotor, Loggable {
-    var slaveSpark: CANSparkMax
-    var PDP: PDP?
-    var inverted: Boolean
+    private val slaveSpark: CANSparkMax = CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless)
+    val inverted: Boolean = inverted ?: false
     fun setMasterSpark(masterController: CANSparkMax?, brakeMode: Boolean) {
         slaveSpark.follow(masterController, inverted)
         slaveSpark.idleMode = if (brakeMode) CANSparkMax.IdleMode.kBrake else CANSparkMax.IdleMode.kCoast
@@ -38,8 +37,6 @@ class SlaveSparkMax @JsonCreator constructor(
         get() = slaveSpark.appliedOutput
 
     init {
-        slaveSpark = CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless)
-        this.inverted = inverted ?: false
         slaveSpark
             .getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen)
             .enableLimitSwitch(false)
@@ -49,6 +46,5 @@ class SlaveSparkMax @JsonCreator constructor(
         slaveSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100)
         slaveSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 100)
         slaveSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100)
-        this.PDP = PDP
     }
 }

@@ -73,11 +73,6 @@ public class NavXTurnToAngleRelative<T extends Subsystem & DriveUnidirectional &
         timeout);
   }
 
-  @Override
-  public void execute() {
-    super.execute();
-  }
-
   /** Set up the start time and setpoint. */
   @Override
   public void initialize() {

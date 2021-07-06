@@ -126,7 +126,7 @@ class MappedTalon @JsonCreator constructor(
     private val revLimitSwitchNormallyOpen: Boolean
 
     /** The settings currently being used by this Talon.  */
-    protected var currentGearSettings: PerGearSettings
+    private var currentGearSettings: PerGearSettings
     var faults = Faults()
 
     /**

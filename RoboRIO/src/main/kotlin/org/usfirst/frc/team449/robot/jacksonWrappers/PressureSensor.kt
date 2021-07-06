@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj.AnalogInput
 /**
  * Wrapper for an [AnalogInput] pressure sensor that returns a voltage linearly proportional
  * to pressure.
+ *
+ * @param port The port of the sensor.
+ * @param oversampleBits The number of oversample bits.
+ * @param averageBits The number of averaging bits.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator::class)
 class PressureSensor @JsonCreator constructor(
@@ -17,7 +21,7 @@ class PressureSensor @JsonCreator constructor(
     @JsonProperty(required = true) averageBits: Int
 ) {
     /** The AnalogInput this is a wrapper on.  */
-    private val sensor: AnalogInput// these are constants given by REV, assuming 5.0V in
+    private val sensor: AnalogInput = AnalogInput(port)// these are constants given by REV, assuming 5.0V in
 
     /**
      * Returns the pressure measured by the sensor.
@@ -29,15 +33,7 @@ class PressureSensor @JsonCreator constructor(
                 - 25.0 // these are constants given by REV, assuming 5.0V in
                 )
 
-    /**
-     * Default constructor.
-     *
-     * @param port The port of the sensor.
-     * @param oversampleBits The number of oversample bits.
-     * @param averageBits The number of averaging bits.
-     */
     init {
-        sensor = AnalogInput(port)
         sensor.oversampleBits = oversampleBits
         sensor.averageBits = averageBits
     }

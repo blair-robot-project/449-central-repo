@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
     try {
       // Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
       final Map<?, ?> normalized =
-          (Map<?, ?>) new Yaml().load(new FileReader(RESOURCES_PATH + "/" + mapName));
+          new Yaml().load(new FileReader(RESOURCES_PATH + "/" + mapName));
 
       final YAMLMapper mapper = new YAMLMapper();
 

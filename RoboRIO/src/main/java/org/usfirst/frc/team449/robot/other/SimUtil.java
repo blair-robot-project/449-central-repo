@@ -2,12 +2,11 @@ package org.usfirst.frc.team449.robot.other;
 
 import edu.wpi.first.hal.HALValue;
 import edu.wpi.first.hal.SimValue;
+import java.util.Objects;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.function.Supplier;
 
 /** Helpers for using the {@link edu.wpi.first.hal.SimDevice} framework. */
 public class SimUtil {

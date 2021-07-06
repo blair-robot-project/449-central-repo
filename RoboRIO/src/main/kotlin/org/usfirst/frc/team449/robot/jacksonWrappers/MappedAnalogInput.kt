@@ -9,7 +9,15 @@ import io.github.oblarg.oblog.Loggable
 import io.github.oblarg.oblog.annotations.Log
 import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable
 
-/** A Jackson-friendly wrapper on WPILib's [AnalogInput].  */
+/**
+ * A Jackson-friendly wrapper on WPILib's [AnalogInput].
+ *
+ * @param port The analog input port this object reads analog voltage from.
+ * @param oversampleBits The sensor will be oversampled by 2^oversampleBits bits. Oversampling is
+ * kinda confusing, so just read the wikipedia page on it. Defaults to 0.
+ * @param averageBits The sensor output will be the average of 2^averageBits readings. Defaults to
+ * 0.
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator::class)
 class MappedAnalogInput @JsonCreator constructor(
     @JsonProperty(required = true) port: Int,
@@ -35,15 +43,6 @@ class MappedAnalogInput @JsonCreator constructor(
         percentValueCached = percentValue
     }
 
-    /**
-     * Default constructor.
-     *
-     * @param port The analog input port this object reads analog voltage from.
-     * @param oversampleBits The sensor will be oversampled by 2^oversampleBits bits. Oversampling is
-     * kinda confusing, so just read the wikipedia page on it. Defaults to 0.
-     * @param averageBits The sensor output will be the average of 2^averageBits readings. Defaults to
-     * 0.
-     */
     init {
         setOversampleBits(oversampleBits)
         setAverageBits(averageBits)

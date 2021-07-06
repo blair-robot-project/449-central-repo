@@ -30,11 +30,4 @@ public class SetIntakeModeAndOverriding<T extends Subsystem & SubsystemIntake> e
     super(subsystem, mode);
     this.subsystem = subsystem;
   }
-
-  /** Set the intake to the given mode. */
-  @Override
-  public void execute() {
-    super.execute();
-
-  }
 }

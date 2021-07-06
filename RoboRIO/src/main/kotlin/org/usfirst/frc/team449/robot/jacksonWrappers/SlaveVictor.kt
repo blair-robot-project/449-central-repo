@@ -11,11 +11,15 @@ import org.usfirst.frc.team449.robot.generalInterfaces.motors.SlaveMotor
 
 /**
  * A [VictorSPX] that will be slaved to another Victor or a [ ].
+ *
+ * @param port The CAN ID of this Victor SPX.
+ * @param invertType Whether to invert this relative to the master. Defaults to not inverting
+ * relative to master.
  */
 class SlaveVictor @JsonCreator constructor(@JsonProperty(required = true) port: Int, invertType: InvertType?) :
     SlaveMotor {
     /** The Victor this is a wrapper on.  */
-    private val victorSPX: VictorSPX
+    private val victorSPX: VictorSPX = VictorSPX(port)
 
     /**
      * Set this Victor to follow another CAN device.
@@ -46,15 +50,7 @@ class SlaveVictor @JsonCreator constructor(@JsonProperty(required = true) port: 
         victorSPX.follow(toFollow)
     }
 
-    /**
-     * Default constructor.
-     *
-     * @param port The CAN ID of this Victor SPX.
-     * @param invertType Whether to invert this relative to the master. Defaults to not inverting
-     * relative to master.
-     */
     init {
-        victorSPX = VictorSPX(port)
         victorSPX.setInverted(invertType ?: InvertType.FollowMaster)
         victorSPX.configPeakOutputForward(1.0, 0)
         victorSPX.configPeakOutputReverse(-1.0, 0)

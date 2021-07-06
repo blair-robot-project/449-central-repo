@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /** A Button triggered by pushing the D-pad to a specific angle. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)

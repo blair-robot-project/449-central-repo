@@ -11,11 +11,15 @@ import org.usfirst.frc.team449.robot.generalInterfaces.motors.SlaveMotor
 
 /**
  * A [TalonSRX] that will be slaved to another TalonSRX or a [ ].
+ *
+ * @param port The CAN ID of this Talon SRX.
+ * @param invertType Whether or not to invert this Talon. Defaults to FollowMaster , but can be
+ * changed to OpposeMaster.
  */
 class SlaveTalon @JsonCreator constructor(@JsonProperty(required = true) port: Int, invertType: InvertType?) :
     SlaveMotor, Loggable {
     /** The TalonSRX this object wraps.  */
-    private val talonSRX: TalonSRX
+    private val talonSRX: TalonSRX = TalonSRX(port)
 
     /** The PDP this talon runs on. Used for resistance logging purposes.  */
     private var PDP: PDP? = null
@@ -121,15 +125,7 @@ class SlaveTalon @JsonCreator constructor(@JsonProperty(required = true) port: I
         return if (linRegComponent != null && PDP != null) -linRegComponent!!.slope else Double.NaN
     }
 
-    /**
-     * Default constructor.
-     *
-     * @param port The CAN ID of this Talon SRX.
-     * @param invertType Whether or not to invert this Talon. Defaults to FollowMaster , but can be
-     * changed to OpposeMaster.
-     */
     init {
-        talonSRX = TalonSRX(port)
         // this.talonSRX.setInverted(inverted);
 
         // Turn off features we don't want a slave to have

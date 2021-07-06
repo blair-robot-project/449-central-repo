@@ -24,12 +24,12 @@ class MappedAHRS @JsonCreator constructor(
     @JsonProperty(required = true) port: SerialPort.Port, invertYaw: Boolean?
 ) : Updatable, Loggable {
     /** The AHRS this class is a wrapper on.  */
-    protected var ahrs: AHRS =
+    private var ahrs: AHRS =
         if (port == SerialPort.Port.kMXP) AHRS(SPI.Port.kMXP)
         else AHRS(port, SerialDataType.kProcessedData, 100.toByte())
 
     /** A multiplier for the yaw angle. -1 to invert, 1 to not.  */
-    protected val invertYaw =
+    private val invertYaw =
         if (invertYaw == null || invertYaw) -1
         else 1
 
@@ -157,7 +157,7 @@ class MappedAHRS @JsonCreator constructor(
          */
         @Contract(pure = true)
         @JvmStatic
-        protected fun gsToFeetPerSecondSquared(accelGs: Double): Double {
+        private fun gsToFeetPerSecondSquared(accelGs: Double): Double {
             return accelGs * 32.17 // Wolfram alpha said so
         }
     }

@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.subsystem.climber.climberWithArm2020.SafeWi
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class StartClimber extends SequentialCommandGroup {
 
-  SafeWinchingClimber climber;
+  private final SafeWinchingClimber climber;
 
   @JsonCreator
   public StartClimber(@JsonProperty(required = true) final SafeWinchingClimber climber) {

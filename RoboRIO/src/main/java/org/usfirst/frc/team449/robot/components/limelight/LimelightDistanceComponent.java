@@ -2,10 +2,10 @@ package org.usfirst.frc.team449.robot.components.limelight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.function.DoubleSupplier;
+
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.limelight.Limelight;
-
-import java.util.function.DoubleSupplier;
 
 /**
  * Determines the distance from the Limelight to a vision target, at an appropriate angle up or down

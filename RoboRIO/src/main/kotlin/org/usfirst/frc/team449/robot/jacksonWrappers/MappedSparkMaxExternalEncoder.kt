@@ -85,7 +85,7 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
 ) : SmartMotorExternalEncoder {
     /** The PDP this Spark is connected to.  */
     @Log.Exclude
-    protected val PDP: PDP?
+    private val PDP: PDP?
 
     /** The counts per rotation of the encoder being used, or null if there is no encoder.  */
     private val encoderCPR: Int?
@@ -129,7 +129,7 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
     private val pidController: PIDController
 
     /** The settings currently being used by this Spark.  */
-    protected var currentGearSettings: PerGearSettings
+    private var currentGearSettings: PerGearSettings
 
     /** The control mode of the motor  */
     private var currentControlMode: ControlType? = null
@@ -417,7 +417,7 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
         this.perGearSettings = HashMap()
 
         // If given no gear settings, use the default values.
-        if (perGearSettings == null || perGearSettings.size == 0) {
+        if (perGearSettings == null || perGearSettings.isEmpty()) {
             this.perGearSettings[0] = PerGearSettings()
         } else {
             for (settings in perGearSettings) {
@@ -447,17 +447,17 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
         this.postEncoderGearing = postEncoderGearing ?: 1.0
         encoderCPR = encoderCPR ?: 1
         this.encoderCPR = encoderCPR
-        encoder.setDistancePerPulse(1.0 / encoderCPR)
-        encoder.setSamplesToAverage(5)
+        encoder.distancePerPulse = 1.0 / encoderCPR
+        encoder.samplesToAverage = 5
 
         // Only enable the limit switches if it was specified if they're normally open or closed.
         if (fwdLimitSwitchNormallyOpen != null) {
-            if (remoteLimitSwitchID != null) {
+            forwardLimitSwitch = if (remoteLimitSwitchID != null) {
                 // set CANDigitalInput to other limit switch
-                forwardLimitSwitch = CANSparkMax(remoteLimitSwitchID, CANSparkMaxLowLevel.MotorType.kBrushless)
+                CANSparkMax(remoteLimitSwitchID, CANSparkMaxLowLevel.MotorType.kBrushless)
                     .getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen)
             } else {
-                forwardLimitSwitch = spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen)
+                spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen)
             }
             this.fwdLimitSwitchNormallyOpen = fwdLimitSwitchNormallyOpen
         } else {

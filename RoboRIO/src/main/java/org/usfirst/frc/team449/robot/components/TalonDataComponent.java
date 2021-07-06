@@ -2,10 +2,8 @@ package org.usfirst.frc.team449.robot.components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedTalon;
-
 import java.util.function.DoubleSupplier;
+import org.jetbrains.annotations.NotNull;
 
 public class TalonDataComponent implements DoubleSupplier {
   @NotNull private final MappedTalon talon;

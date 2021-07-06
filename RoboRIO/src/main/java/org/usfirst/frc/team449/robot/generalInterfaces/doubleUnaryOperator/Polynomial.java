@@ -3,12 +3,11 @@ package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleUnaryOperator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** A polynomial of a single variable. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)

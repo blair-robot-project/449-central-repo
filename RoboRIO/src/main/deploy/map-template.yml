@@ -91,7 +91,7 @@ useCameraServer: false
       '@id': drive
       #Wheelbase: 2.14 TODO change if necessary. Useful to have written down.
       leftMaster:
-        org.usfirst.frc.team449.robot.generalInterfaces.SmartMotor:
+        org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.SmartMotor:
           &Left_Master
           '@id': leftMaster
           type: SPARK
@@ -135,7 +135,7 @@ useCameraServer: false
             - port: *leftMasterSlave2Port
               inverted: false
       rightMaster:
-        org.usfirst.frc.team449.robot.generalInterfaces.SmartMotor:
+        org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.SmartMotor:
           <<: *Left_Master
           '@id': rightMaster
           type: SPARK

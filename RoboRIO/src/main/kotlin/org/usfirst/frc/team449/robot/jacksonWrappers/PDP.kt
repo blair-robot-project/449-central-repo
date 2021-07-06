@@ -13,15 +13,16 @@ import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable
  * An object representing the [PowerDistributionPanel] that logs power, current, and
  * resistance.
  * @param canID CAN ID of the PDP. Defaults to 0.
+ * @param voltagePerCurrentLinReg The component for doing linear regression to find the resistance.
+ *
+ * @property voltagePerCurrentLinReg The component for doing linear regression to find the resistance.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator::class)
-class PDP @JsonCreator constructor(canID: Int, voltagePerCurrentLinReg: RunningLinRegComponent?) :
+class PDP @JsonCreator constructor(canID: Int, private val voltagePerCurrentLinReg: RunningLinRegComponent?) :
     Loggable, Updatable {
     /** The WPILib PDP this is a wrapper on.  */
     private val PDP: PowerDistributionPanel = PowerDistributionPanel(canID)
 
-    /** The component for doing linear regression to find the resistance.  */
-    private val voltagePerCurrentLinReg: RunningLinRegComponent? = voltagePerCurrentLinReg
     /**
      * Query the input voltage of the PDP.
      *

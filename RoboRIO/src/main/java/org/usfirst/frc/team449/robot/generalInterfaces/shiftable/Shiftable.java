@@ -74,7 +74,7 @@ public interface Shiftable {
      * WPI object for calculating feed forward constants given a max achievable velocity and
      * acceleration
      */
-    public SimpleMotorFeedforward feedForwardCalculator;
+    public final SimpleMotorFeedforward feedForwardCalculator;
 
     /**
      * Default constructor.

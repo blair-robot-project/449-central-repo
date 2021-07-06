@@ -205,7 +205,7 @@ public interface SmartMotor extends SimpleMotor, Shiftable, Loggable {
       for (final Object frame : statusFrameRatesMillis.keySet()) {
         if (frame instanceof String) {
           // Must put it in quotes so Jackson recognizes it as a string.
-          final String toBeParsed = "\"" + frame.toString() + "\"";
+          final String toBeParsed = "\"" + frame + "\"";
           try {
             if (actualType == Type.TALON) {
               talonStatusFramesMap.put(

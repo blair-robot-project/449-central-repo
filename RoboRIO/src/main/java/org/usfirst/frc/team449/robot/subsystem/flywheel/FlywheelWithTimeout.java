@@ -30,7 +30,7 @@ public class FlywheelWithTimeout extends SubsystemBase implements SubsystemFlywh
   private boolean isFlywheelOn;
 
   /**
-   * @param implementation
+   * @param implementation The actual flywheel that is being wrapped
    * @param timeoutOverride The override for the timeout value shooting condition to be reached
    * before signalling that it is ready to shoot regardless.
    */

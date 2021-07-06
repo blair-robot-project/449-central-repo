@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.generalInterfaces.motors.simple.SimpleMotor;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 
 /** A simple unidirectional drive with no encoders. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
