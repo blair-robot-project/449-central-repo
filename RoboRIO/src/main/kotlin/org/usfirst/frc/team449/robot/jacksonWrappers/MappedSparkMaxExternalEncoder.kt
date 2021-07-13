@@ -152,8 +152,7 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
     }
 
     override fun setPercentVoltage(percentVoltage: Double) {
-        var percentVoltage = percentVoltage
-        currentControlMode = ControlType.kVoltage
+        this.currentControlMode = ControlType.kVoltage
         // Warn the user if they're setting Vbus to a number that's outside the range of values.
         if (Math.abs(percentVoltage) > 1.0) {
             Shuffleboard.addEventMarker(
@@ -163,10 +162,11 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
             )
             // Logger.addEvent("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVoltage,
             // this.getClass());
-            percentVoltage = Math.signum(percentVoltage)
+            this.setpoint = Math.signum(percentVoltage)
+        } else {
+            this.setpoint = percentVoltage
         }
-        setpoint = percentVoltage
-        spark.set(percentVoltage)
+        this.spark.set(this.setpoint)
     }
 
     @Log
@@ -382,7 +382,6 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
     override fun getEncoder(): Encoder = encoder
 
     init {
-        var encoderCPR = encoderCPR
         spark = CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless)
         spark.restoreFactoryDefaults()
         encoder = if (encoderDIO1 != null && encoderDIO2 != null) {
@@ -445,9 +444,8 @@ class MappedSparkMaxExternalEncoder @JsonCreator constructor(
         this.gear = currentGear
         // postEncoderGearing defaults to 1
         this.postEncoderGearing = postEncoderGearing ?: 1.0
-        encoderCPR = encoderCPR ?: 1
-        this.encoderCPR = encoderCPR
-        encoder.distancePerPulse = 1.0 / encoderCPR
+        this.encoderCPR = encoderCPR ?: 1
+        encoder.distancePerPulse = 1.0 / this.encoderCPR
         encoder.samplesToAverage = 5
 
         // Only enable the limit switches if it was specified if they're normally open or closed.

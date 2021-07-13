@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.CommandContainer;
 import org.usfirst.frc.team449.robot.RobotMap;
 import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalSimple;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyro;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 import org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.SmartMotor;
@@ -112,13 +114,11 @@ public class MapTemplate {
                         .build()))
             .build();
     var drive =
-        new DriveUnidirectionalWithGyroShiftable(
+        new DriveUnidirectionalWithGyro(
             leftMaster,
             rightMaster,
             navx,
-            0.61755,
-            null, // TODO
-            false);
+            0.61755);
 
     var subsystems = List.<Subsystem>of(drive);
 

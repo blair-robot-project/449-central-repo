@@ -138,7 +138,6 @@ class MappedSparkMax @JsonCreator constructor(
     }
 
     override fun setPercentVoltage(percentVoltage: Double) {
-        this.setpoint = percentVoltage
         this.currentControlMode = ControlType.kVoltage
         // Warn the user if they're setting Vbus to a number that's outside the range of values.
         if (Math.abs(percentVoltage) > 1.0) {
@@ -150,6 +149,8 @@ class MappedSparkMax @JsonCreator constructor(
             // Logger.addEvent("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVoltage,
             // this.getClass());
             this.setpoint = Math.signum(percentVoltage)
+        } else {
+            this.setpoint = percentVoltage
         }
         this.spark.set(this.setpoint)
     }

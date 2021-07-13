@@ -10,7 +10,6 @@ import io.github.oblarg.oblog.annotations.Log
 class MappedPIDController @JsonCreator constructor(
     Kp: Double, Ki: Double, Kd: Double, name: String?
 ) : PIDController(Kp, Ki, Kd), Loggable {
-    private val name: String
 
     @get:Log
     var measurement = 0.0
@@ -40,10 +39,6 @@ class MappedPIDController @JsonCreator constructor(
     }
 
     init {
-        var name = name
-        if (name == null) {
-            name = "PIDController"
-        }
-        this.name = name
+        this.name = name ?: "PIDController"
     }
 }

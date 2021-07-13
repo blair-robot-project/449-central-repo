@@ -157,7 +157,6 @@ class MappedTalon @JsonCreator constructor(
      */
     override fun setPercentVoltage(percentVoltage: Double) {
         // Warn the user if they're setting Vbus to a number that's outside the range of values.
-        var percentVoltage = percentVoltage
         if (Math.abs(percentVoltage) > 1.0) {
             Shuffleboard.addEventMarker(
                 "WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT $percentVoltage",
@@ -166,10 +165,11 @@ class MappedTalon @JsonCreator constructor(
             )
             // Logger.addEvent("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVoltage,
             // this.getClass());
-            percentVoltage = Math.signum(percentVoltage)
+            this.setpoint = Math.signum(percentVoltage)
+        } else {
+            this.setpoint = percentVoltage
         }
-        setpoint = percentVoltage
-        canTalon[ControlMode.PercentOutput] = percentVoltage
+        canTalon[ControlMode.PercentOutput] = this.setpoint
     }
 
     /** @return The gear this subsystem is currently in.
