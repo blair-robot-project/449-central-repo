@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
@@ -12,24 +13,18 @@ import java.util.TreeMap;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MapInterpolationComponent {
 
-  /**
-   * LINEAR, COSINE, or CUBIC
-   */
-  private InterpolationMethod currentMethod;
-
-  /**
-   * LookUpTable, the table of experimentally optimized values
-   */
+  /** LookUpTable, the table of experimentally optimized values */
   private final TreeMap<Double, Double> LUT;
-
-  /**
-   * Upper and lower limits of an interpolation calc
-   */
+  /** LINEAR, COSINE, or CUBIC */
+  private InterpolationMethod currentMethod;
+  /** Upper and lower limits of an interpolation calc */
   private Map.Entry<Double, Double> upper;
+
   private Map.Entry<Double, Double> lower;
 
   /**
    * Default constructor
+   *
    * @param method the interpolation method
    * @param entries the list of experimentally derived values for the LUT
    */
@@ -44,15 +39,14 @@ public class MapInterpolationComponent {
     }
   }
 
-  /**
-   * Changes the interpolation method
-   */
+  /** Changes the interpolation method */
   public void updateMethod(InterpolationMethod method) {
     currentMethod = method;
   }
 
   /**
    * Calculates the appropriate value from distance x
+   *
    * @param x the distance from the target
    * @return the shooter velocity from distance x
    */
@@ -81,6 +75,7 @@ public class MapInterpolationComponent {
 
   /**
    * Sets the upper and lower bounds of the interpolation from distance x
+   *
    * @param x the distance from the target
    */
   private void setBounds(double x) {
@@ -91,6 +86,7 @@ public class MapInterpolationComponent {
 
   /**
    * Linear interpolation method
+   *
    * @param x the distance from the target
    * @return the shooter vel
    */
@@ -100,6 +96,7 @@ public class MapInterpolationComponent {
 
   /**
    * Cosine interpolation method
+   *
    * @param x the distance from the target
    * @return the shooter vel
    */
@@ -110,30 +107,31 @@ public class MapInterpolationComponent {
 
   /**
    * Cubic interpolation method
+   *
    * @param x the distance from the target
    * @return the shooter vel
    */
   private double cubic(double x) {
-    //The entries above higher and below lower
+    // The entries above higher and below lower
     Map.Entry<Double, Double> highUpper = LUT.higherEntry(upper.getKey());
     Map.Entry<Double, Double> lowLower = LUT.lowerEntry(lower.getKey());
-    //Use linear if the segment is on the end
-    if(highUpper == null || lowLower == null){
+    // Use linear if the segment is on the end
+    if (highUpper == null || lowLower == null) {
       return linear(x);
     }
-    //Some weird coefficients to simplify calculations
+    // Some weird coefficients to simplify calculations
     double c1, c2, c3, c4;
     c1 = highUpper.getValue() + lower.getValue() - upper.getValue() - lowLower.getValue();
     c2 = lowLower.getValue() - lower.getValue() - c1;
     c3 = upper.getValue() - lowLower.getValue();
     c4 = lower.getValue();
-    return (c1*Math.pow(x, 3) + c2*Math.pow(x, 2) + c3*x + c4);
+    return (c1 * Math.pow(x, 3) + c2 * Math.pow(x, 2) + c3 * x + c4);
   }
 
   // http://paulbourke.net/miscellaneous/interpolation/
   enum InterpolationMethod {
     LINEAR,
     COSINE,
-    CUBIC //this one is a bit sketchy...
+    CUBIC // this one is a bit sketchy...
   }
 }

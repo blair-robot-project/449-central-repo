@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.rumbleable.Rumbleable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.other.Clock;
+
+import java.util.List;
 
 /** A component to rumble controllers based off the jerk measurements from an AHRS. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
@@ -86,7 +88,7 @@ public class AHRSRumbleComponent implements Runnable {
   /** Read the NavX jerk data and rumble the joysticks based off of it. */
   @Override
   public void run() {
-    //TODO Both branches of this if statement are the exact same!
+    // TODO Both branches of this if statement are the exact same!
     if (this.yIsFrontBack) {
       // Put an abs() here because we can't differentiate front vs back when rumbling, so we only
       // care about

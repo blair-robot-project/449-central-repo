@@ -17,9 +17,9 @@ public class StartClimber extends SequentialCommandGroup {
   @JsonCreator
   public StartClimber(@JsonProperty(required = true) final SafeWinchingClimber climber) {
     this.climber = climber;
-    addCommands(new SetClimberWithArmState(climber, SetClimberWithArmState.ClimberState.LOWER),
+    addCommands(
+        new SetClimberWithArmState(climber, SetClimberWithArmState.ClimberState.LOWER),
         new WaitCommand(2),
         new TurnMotorOn(climber));
   }
-
 }

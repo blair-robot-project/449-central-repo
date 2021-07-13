@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import io.github.oblarg.oblog.annotations.Log
 import org.jetbrains.annotations.Contract
 import org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.SmartMotorExternalEncoder
-import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.PerGearSettings
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.Gear
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.PerGearSettings
 import org.usfirst.frc.team449.robot.other.Clock
 
 /**

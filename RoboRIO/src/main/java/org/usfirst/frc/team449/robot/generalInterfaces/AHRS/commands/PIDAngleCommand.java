@@ -17,7 +17,9 @@ import org.usfirst.frc.team449.robot.other.Debouncer;
     use = JsonTypeInfo.Id.CLASS,
     include = JsonTypeInfo.As.WRAPPER_OBJECT,
     property = "@class")
-public abstract class PIDAngleCommand extends CommandBase { //implements Loggable { TODO Logging causes the drive subsystem to be logged twice according to Oblog.
+public abstract class PIDAngleCommand
+    extends CommandBase { // implements Loggable { TODO Logging causes the drive subsystem to be
+                          // logged twice according to Oblog.
 
   /** The subsystem to execute this command on. */
   @NotNull @Log.Exclude protected final SubsystemAHRS subsystem;
@@ -209,5 +211,4 @@ public abstract class PIDAngleCommand extends CommandBase { //implements Loggabl
   public PIDController getController() {
     return this.pidController;
   }
-
 }

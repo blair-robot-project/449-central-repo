@@ -89,5 +89,4 @@ public abstract class OITank implements OIUnidirectional {
     leftRightOutputCached = getLeftRightOutput();
     fwdRotOutputCached = getFwdRotOutput();
   }
-
 }

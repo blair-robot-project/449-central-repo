@@ -104,10 +104,10 @@ public class Limelight extends SubsystemBase implements Loggable {
   public void periodic() {
     pipeIndex = (int) pipeTable.getDouble(driverPipeline);
     validTarget = validTargetTable.getDouble(-1);
-    if (true/*pipeIndex != driverPipeline*/) {
+    if (true /*pipeIndex != driverPipeline*/) {
       x = xTable.getDouble(0);
       y = yTable.getDouble(0);
-        //System.out.println("X = " + x + ", y = " + y);
+      // System.out.println("X = " + x + ", y = " + y);
       //            area = areaTable.getDouble(0);
       //            skew = skewTable.getDouble(0);
       //            latency = latencyTable.getDouble(0);

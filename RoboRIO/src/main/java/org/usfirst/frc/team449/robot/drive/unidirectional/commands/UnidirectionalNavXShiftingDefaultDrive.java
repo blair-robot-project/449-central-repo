@@ -1,15 +1,10 @@
 package org.usfirst.frc.team449.robot.drive.unidirectional.commands;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import io.github.oblarg.oblog.annotations.Log;
-import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
@@ -20,6 +15,8 @@ import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.RampC
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.Debouncer;
+
+import java.util.Objects;
 
 /**
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to

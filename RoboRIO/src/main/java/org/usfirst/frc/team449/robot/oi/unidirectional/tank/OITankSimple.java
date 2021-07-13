@@ -83,5 +83,4 @@ public class OITankSimple extends OITank {
     return Math.abs(getLeftRightOutputCached()[0] - getLeftRightOutputCached()[1])
         <= commandingStraightTolerance;
   }
-
 }

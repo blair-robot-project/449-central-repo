@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 
 /** A button triggered off of a digital input switch on the RoboRIO. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)

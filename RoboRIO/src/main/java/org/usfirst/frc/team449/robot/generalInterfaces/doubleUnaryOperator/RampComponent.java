@@ -2,10 +2,11 @@ package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.function.DoubleUnaryOperator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.Clock;
+
+import java.util.function.DoubleUnaryOperator;
 
 /** A component for limiting the rate of change of a value. */
 public class RampComponent implements DoubleUnaryOperator, Cloneable {
@@ -59,14 +60,11 @@ public class RampComponent implements DoubleUnaryOperator, Cloneable {
   /**
    * Get an a copy of this object.
    *
-   * @return a new {@link
-   *     RampComponent} with the
-   *     same max change per second
+   * @return a new {@link RampComponent} with the same max change per second
    */
   @Override
   @NotNull
   public RampComponent clone() {
-    return new RampComponent(
-        maxIncreasePerMillis * 1000., maxDecreasePerMillis * 1000.);
+    return new RampComponent(maxIncreasePerMillis * 1000., maxDecreasePerMillis * 1000.);
   }
 }

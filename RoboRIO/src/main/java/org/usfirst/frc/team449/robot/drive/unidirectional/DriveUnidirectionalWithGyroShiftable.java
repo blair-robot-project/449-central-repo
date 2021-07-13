@@ -101,5 +101,4 @@ public class DriveUnidirectionalWithGyroShiftable extends DriveUnidirectionalWit
   public void setGear(final int gear) {
     this.shiftComponent.shiftToGear(gear);
   }
-
 }

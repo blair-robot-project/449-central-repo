@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.other;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+
 import java.util.LinkedList;
 
 /** Debouncer that takes the average of the samples in a limited-length buffer. */

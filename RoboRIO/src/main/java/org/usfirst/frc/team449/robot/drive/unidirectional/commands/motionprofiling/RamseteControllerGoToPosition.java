@@ -1,10 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.unidirectional.commands.motionprofiling;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -15,9 +11,11 @@ import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import io.github.oblarg.oblog.Loggable;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyro;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedPIDController;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyro;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 @JsonTypeInfo(
@@ -31,8 +29,8 @@ public class RamseteControllerGoToPosition extends CommandBase implements Loggab
   private final MappedPIDController rightPidController;
   private final Pose2d endingPose;
   private final List<Translation2d> translations;
-  private RamseteCommand wrappedCommand;
   private final TrajectoryConfig config;
+  private RamseteCommand wrappedCommand;
 
   @JsonCreator
   public RamseteControllerGoToPosition(

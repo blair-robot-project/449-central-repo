@@ -1,17 +1,15 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers.simulated;
 
-import java.awt.Color;
-import java.awt.GridLayout;
+import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /**
  * Class that extends {@link MappedJoystick} that does not rely on the existence of actual hardware.

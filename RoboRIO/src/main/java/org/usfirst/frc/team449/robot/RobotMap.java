@@ -49,7 +49,8 @@ public class RobotMap {
    */
   @JsonCreator
   public RobotMap(
-      @NotNull @JsonProperty(required = true) @JsonInclude(content = JsonInclude.Include.NON_NULL) final List<Subsystem> subsystems,
+      @NotNull @JsonProperty(required = true) @JsonInclude(content = JsonInclude.Include.NON_NULL)
+          final List<Subsystem> subsystems,
       @NotNull @JsonProperty(required = true) final PDP pdp,
       @NotNull @JsonProperty(required = true) final Runnable updater,
       @NotNull @JsonProperty(required = true) final CommandContainer commands,

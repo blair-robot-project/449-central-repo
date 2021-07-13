@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /** An exponentially-scaled throttle. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)

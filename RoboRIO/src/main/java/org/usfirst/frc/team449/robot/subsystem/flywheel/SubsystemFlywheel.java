@@ -19,12 +19,12 @@ public interface SubsystemFlywheel extends SubsystemConditional {
   /** Turn the flywheel off. */
   void turnFlywheelOff();
 
-//  /** @return The current state of the flywheel. */
-//  @NotNull
-//  FlywheelState getFlywheelState();
-//
-//  /** @param state The state to switch the flywheel to. */
-//  void setFlywheelState(@NotNull FlywheelState state);
+  //  /** @return The current state of the flywheel. */
+  //  @NotNull
+  //  FlywheelState getFlywheelState();
+  //
+  //  /** @param state The state to switch the flywheel to. */
+  //  void setFlywheelState(@NotNull FlywheelState state);
 
   /** @return Expected time from giving the flywheel voltage to being ready to fire, in seconds. */
   double getSpinUpTimeSecs();
@@ -42,13 +42,13 @@ public interface SubsystemFlywheel extends SubsystemConditional {
     return Optional.empty();
   }
 
-//  /** An enum for the possible states of the flywheel. */
-//  enum FlywheelState {
-//    // Both flywheel and feeder off
-//    OFF,
-//    // Feeder off, flywheel on
-//    SPINNING_UP,
-//    // Both flywheel and feeder on
-//    SHOOTING
-//  }
+  //  /** An enum for the possible states of the flywheel. */
+  //  enum FlywheelState {
+  //    // Both flywheel and feeder off
+  //    OFF,
+  //    // Feeder off, flywheel on
+  //    SPINNING_UP,
+  //    // Both flywheel and feeder on
+  //    SHOOTING
+  //  }
 }

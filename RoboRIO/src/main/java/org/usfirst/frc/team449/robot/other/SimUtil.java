@@ -2,11 +2,12 @@ package org.usfirst.frc.team449.robot.other;
 
 import edu.wpi.first.hal.HALValue;
 import edu.wpi.first.hal.SimValue;
-import java.util.Objects;
-import java.util.function.Supplier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /** Helpers for using the {@link edu.wpi.first.hal.SimDevice} framework. */
 public class SimUtil {
@@ -95,7 +96,8 @@ public class SimUtil {
     if (Boolean.class.equals(value.getClass())) return HALValue.makeBoolean((Boolean) value);
     if (Double.class.equals(value.getClass())) return HALValue.makeDouble((Double) value);
     if (Integer.class.equals(value.getClass())) return HALValue.makeInt((Integer) value);
-    if (Enum.class.isAssignableFrom(value.getClass())) return HALValue.makeEnum(((Enum<?>) value).ordinal());
+    if (Enum.class.isAssignableFrom(value.getClass()))
+      return HALValue.makeEnum(((Enum<?>) value).ordinal());
     if (Long.class.equals(value.getClass())) return HALValue.makeLong((Long) value);
     throw new IllegalArgumentException("value must be Boolean, Double, Integer, Enum, or Long.");
   }

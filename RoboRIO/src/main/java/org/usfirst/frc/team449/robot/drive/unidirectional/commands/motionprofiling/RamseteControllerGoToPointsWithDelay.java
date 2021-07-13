@@ -9,13 +9,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyro;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedPIDController;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Go to a bunch of positions, but stop a while each time.
- * WARNING: THIS CODE IS UNTESTED!! DON'T EXPECT IT TO WORK FLAWLESSLY!
+ * Go to a bunch of positions, but stop a while each time. WARNING: THIS CODE IS UNTESTED!! DON'T
+ * EXPECT IT TO WORK FLAWLESSLY!
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RamseteControllerGoToPointsWithDelay extends SequentialCommandGroup {
@@ -31,9 +32,17 @@ public class RamseteControllerGoToPointsWithDelay extends SequentialCommandGroup
       @JsonProperty(required = true) MappedPIDController rightPidController,
       @JsonProperty(required = true) List<Pose2d> poses,
       boolean reversed) {
-    super(intersperseWithWaitCommands(drivetrain, maxSpeedMeters, maxAccelMeters,
-        maxCentripetalAcceleration, waitSeconds, leftPidController, rightPidController, poses,
-        reversed));
+    super(
+        intersperseWithWaitCommands(
+            drivetrain,
+            maxSpeedMeters,
+            maxAccelMeters,
+            maxCentripetalAcceleration,
+            waitSeconds,
+            leftPidController,
+            rightPidController,
+            poses,
+            reversed));
     addRequirements(drivetrain);
   }
 
@@ -49,24 +58,23 @@ public class RamseteControllerGoToPointsWithDelay extends SequentialCommandGroup
       boolean reversed) {
     int numPoses = poses.size();
     Command[] res = new Command[poses.size() * 2];
-//    Command waitCommand = new WaitCommand(waitSeconds);
+    //    Command waitCommand = new WaitCommand(waitSeconds);
 
     for (int i = 0; i < numPoses; i++) {
-      res[i * 2] = new RamseteControllerGoToPosition(
-          drivetrain,
-          maxSpeedMeters,
-          maxAccelMeters,
-          maxCentripetalAcceleration,
-          leftPidController,
-          rightPidController,
-          poses.get(i),
-          Collections.emptyList(),
-          reversed
-      );
-      res[i * 2 + 1] = new WaitCommand(waitSeconds);//waitCommand;
+      res[i * 2] =
+          new RamseteControllerGoToPosition(
+              drivetrain,
+              maxSpeedMeters,
+              maxAccelMeters,
+              maxCentripetalAcceleration,
+              leftPidController,
+              rightPidController,
+              poses.get(i),
+              Collections.emptyList(),
+              reversed);
+      res[i * 2 + 1] = new WaitCommand(waitSeconds); // waitCommand;
     }
 
     return res;
   }
-
 }

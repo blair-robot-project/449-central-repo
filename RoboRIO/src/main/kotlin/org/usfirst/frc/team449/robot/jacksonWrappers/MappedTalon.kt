@@ -13,8 +13,8 @@ import io.github.oblarg.oblog.annotations.Log
 import org.jetbrains.annotations.Contract
 import org.usfirst.frc.team449.robot.components.RunningLinRegComponent
 import org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.SmartMotor
-import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.PerGearSettings
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.Gear
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.PerGearSettings
 
 /**
  * Component wrapper on the CTRE [TalonSRX], with unit conversions to/from FPS built in. Every

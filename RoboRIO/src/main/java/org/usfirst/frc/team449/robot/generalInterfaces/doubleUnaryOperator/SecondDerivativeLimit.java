@@ -2,8 +2,9 @@ package org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.function.DoubleUnaryOperator;
 import org.usfirst.frc.team449.robot.other.Clock;
+
+import java.util.function.DoubleUnaryOperator;
 
 /**
  * A component for limiting the second and first derivatives of a value. UNFINISHED DOESN'T ACTUALLY

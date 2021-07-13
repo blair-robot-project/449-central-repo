@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyro;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedTranslationSet;
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.CLASS,

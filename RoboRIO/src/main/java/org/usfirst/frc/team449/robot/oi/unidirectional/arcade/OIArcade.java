@@ -17,9 +17,9 @@ public abstract class OIArcade implements OIUnidirectional {
   /** Whether or not to scale the left and right outputs so the max output is 1. */
   private final boolean rescaleOutputs;
   /** Cached forwards and rotational output. */
-  private double @Nullable[] fwdRotOutputCached;
+  private double @Nullable [] fwdRotOutputCached;
   /** Cached left-right output values */
-  private double @Nullable[] leftRightOutputCached;
+  private double @Nullable [] leftRightOutputCached;
 
   /**
    * Default constructor.
@@ -50,7 +50,7 @@ public abstract class OIArcade implements OIUnidirectional {
    *     for the right, both from [-1, 1].
    */
   @Override
-  public double @NotNull[] getLeftRightOutput() {
+  public double @NotNull [] getLeftRightOutput() {
     fwdRotOutputCached = getFwdRotOutput();
 
     // Unscaled, unclipped values for left and right output.
@@ -87,7 +87,7 @@ public abstract class OIArcade implements OIUnidirectional {
    *     for the right, both from [-1, 1].
    */
   @Override
-  public double @NotNull[] getLeftRightOutputCached() {
+  public double @NotNull [] getLeftRightOutputCached() {
     return leftRightOutputCached != null
         ? leftRightOutputCached
         : (leftRightOutputCached = getLeftRightOutput());
@@ -100,7 +100,7 @@ public abstract class OIArcade implements OIUnidirectional {
    *     the rotational, both from [-1, 1]
    */
   @Override
-  public double @NotNull[] getFwdRotOutputCached() {
+  public double @NotNull [] getFwdRotOutputCached() {
     return fwdRotOutputCached != null
         ? fwdRotOutputCached
         : (fwdRotOutputCached = getFwdRotOutput());
@@ -112,5 +112,4 @@ public abstract class OIArcade implements OIUnidirectional {
     fwdRotOutputCached = getFwdRotOutput();
     leftRightOutputCached = getLeftRightOutput();
   }
-
 }

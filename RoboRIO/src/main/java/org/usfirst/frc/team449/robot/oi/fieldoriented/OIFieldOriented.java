@@ -64,5 +64,4 @@ public abstract class OIFieldOriented implements OI {
     cachedVel = getVel();
     cachedTheta = getTheta();
   }
-
 }

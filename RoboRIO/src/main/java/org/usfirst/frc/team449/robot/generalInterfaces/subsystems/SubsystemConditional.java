@@ -28,10 +28,9 @@ public interface SubsystemConditional extends Updatable, Loggable {
    * Gets the state of the condition when {@link SubsystemConditional#update()} was last called.
    *
    * @return {@code false} if the condition was met when cached, {@code false} otherwise
-   *
    * @implNote See documentation for {@link SubsystemConditional#update()}
    * @implSpec Both this method and {@link SubsystemConditional#update()} must be overridden
-   * together.
+   *     together.
    */
   default boolean isConditionTrueCached() {
     return MixinImpl.isConditionTrueCached(this);
@@ -41,10 +40,10 @@ public interface SubsystemConditional extends Updatable, Loggable {
    * Updates the cached value of the condition.
    *
    * @implNote The default implementation caches the return value of {@link
-   * SubsystemConditional#isConditionTrue()} in a {@link ConcurrentHashMap} of instances of this
-   * interface.
+   *     SubsystemConditional#isConditionTrue()} in a {@link ConcurrentHashMap} of instances of this
+   *     interface.
    * @implSpec Both this method and {@link SubsystemConditional#isConditionTrueCached()} must be
-   * overridden together.
+   *     overridden together.
    */
   @Override
   default void update() {
@@ -54,9 +53,10 @@ public interface SubsystemConditional extends Updatable, Loggable {
 
 @SuppressWarnings("ClassNameDiffersFromFileName")
 final class MixinImpl {
-  private static final ConcurrentMap<SubsystemConditional, Boolean> cachedConditions = new ConcurrentHashMap<>();
+  private static final ConcurrentMap<SubsystemConditional, Boolean> cachedConditions =
+      new ConcurrentHashMap<>();
 
-  private MixinImpl() { }
+  private MixinImpl() {}
 
   static boolean isConditionTrueCached(final SubsystemConditional self) {
     final Boolean cached = cachedConditions.get(self);

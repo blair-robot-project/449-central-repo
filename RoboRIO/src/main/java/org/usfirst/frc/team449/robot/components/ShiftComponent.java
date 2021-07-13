@@ -1,15 +1,12 @@
 package org.usfirst.frc.team449.robot.components;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
+
+import java.util.List;
 
 /** A component that a subsystem can use to handle shifting gears. */
 @JsonTypeInfo(

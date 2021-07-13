@@ -29,10 +29,10 @@ public class FlywheelCluster extends SubsystemBase implements SubsystemFlywheel,
   /**
    * @param flywheels the flywheels that make up this cluster
    * @param maxAbsSpeedRange max range of speeds of flywheels in cluster (in the units of {@link
-   * SubsystemFlywheel#getSpeed()}) at which the cluster is ready to shoot; {@code null} to not
-   * impose such a requirement
+   *     SubsystemFlywheel#getSpeed()}) at which the cluster is ready to shoot; {@code null} to not
+   *     impose such a requirement
    * @param maxRelSpeedRange Similar to {@code maxAbsSpeedRange}, but specified as a fraction of the
-   * mean speed. At most one of these two argumrelatients can be non-null.
+   *     mean speed. At most one of these two argumrelatients can be non-null.
    */
   @JsonCreator
   public FlywheelCluster(
@@ -41,7 +41,8 @@ public class FlywheelCluster extends SubsystemBase implements SubsystemFlywheel,
       @Nullable final Double maxRelSpeedRange) {
 
     if (maxAbsSpeedRange != null && maxRelSpeedRange != null)
-      throw new IllegalArgumentException("Can't specify both absolute and relative max speed range.");
+      throw new IllegalArgumentException(
+          "Can't specify both absolute and relative max speed range.");
 
     this.flywheels = List.of(flywheels);
     this.maxAbsSpeedRange = maxAbsSpeedRange;
@@ -64,18 +65,18 @@ public class FlywheelCluster extends SubsystemBase implements SubsystemFlywheel,
     this.flywheels.forEach(SubsystemFlywheel::turnFlywheelOff);
   }
 
-//  /** @return The current state of the cluster. */
-//  @Override
-//  public @NotNull FlywheelState getFlywheelState() {
-//    return this.state;
-//  }
-//
-//  /** @param state The state to switch the cluster to. */
-//  @Override
-//  public void setFlywheelState(@NotNull final FlywheelState state) {
-//    this.state = state;
-//    this.flywheels.forEach(x -> x.setFlywheelState(state));
-//  }
+  //  /** @return The current state of the cluster. */
+  //  @Override
+  //  public @NotNull FlywheelState getFlywheelState() {
+  //    return this.state;
+  //  }
+  //
+  //  /** @param state The state to switch the cluster to. */
+  //  @Override
+  //  public void setFlywheelState(@NotNull final FlywheelState state) {
+  //    this.state = state;
+  //    this.flywheels.forEach(x -> x.setFlywheelState(state));
+  //  }
 
   /** @return Longest spin-up time of any flywheel in the cluster. */
   @Override
@@ -88,7 +89,7 @@ public class FlywheelCluster extends SubsystemBase implements SubsystemFlywheel,
 
   /**
    * @return Whether all flywheels in the cluster individually are ready to shoot and the speed
-   * range requirement of the cluster, if active, is met.
+   *     range requirement of the cluster, if active, is met.
    */
   @Override
   @Log

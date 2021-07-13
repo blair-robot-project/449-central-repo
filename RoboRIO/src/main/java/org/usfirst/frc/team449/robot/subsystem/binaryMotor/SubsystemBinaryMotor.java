@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * A subsystem with a motor that only needs to be run at one speed, e.g. a flywheel multiSubsystem
  * or simple intake.
  *
- * Example: ClimberWinchingWithArm
+ * <p>Example: ClimberWinchingWithArm
  */
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.CLASS,
