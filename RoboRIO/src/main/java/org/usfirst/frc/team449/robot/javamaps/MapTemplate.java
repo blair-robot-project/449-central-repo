@@ -7,9 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.CommandContainer;
 import org.usfirst.frc.team449.robot.RobotMap;
 import org.usfirst.frc.team449.robot.components.RunningLinRegComponent;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalSimple;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyro;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;
 import org.usfirst.frc.team449.robot.generalInterfaces.motors.smart.SmartMotor;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
@@ -20,9 +18,9 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.PDP;
 import org.usfirst.frc.team449.robot.jacksonWrappers.SlaveSparkMax;
 import org.usfirst.frc.team449.robot.javamaps.builders.PerGearSettingsBuilder;
 import org.usfirst.frc.team449.robot.javamaps.builders.SmartMotorBuilder;
+import org.usfirst.frc.team449.robot.javamaps.builders.ThrottlePolynomialBuilder;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
-import org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial;
 import org.usfirst.frc.team449.robot.oi.throttles.ThrottleSum;
 import org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad;
 import org.usfirst.frc.team449.robot.other.DefaultCommand;
@@ -59,42 +57,48 @@ public class MapTemplate {
 
     var navx = new MappedAHRS(SerialPort.Port.kMXP, true);
 
-    var driveMasterPrototype = new SmartMotorBuilder()
-        .type(SmartMotor.Type.SPARK)
-        .enableBrakeMode(true)
-        .pdp(pdp)
-        .unitPerRotation(0.47877872)
-        .currentLimit(50)
-        .enableVoltageComp(true)
-        .startingGear(Shiftable.Gear.LOW)
-        .encoderCPR(256);
-    var lowGear = new PerGearSettingsBuilder()
-        .gear(Shiftable.Gear.LOW)
-        .postEncoderGearing(0.0488998)
-        .maxSpeed(2.3)
-        .kP(0);
-    var highGear = new PerGearSettingsBuilder()
-        .gear(Shiftable.Gear.HIGH)
-        .postEncoderGearing(0.12936611)
-        .maxSpeed(5.2)
-        .kP(0.000001);
+    var driveMasterPrototype =
+        new SmartMotorBuilder()
+            .type(SmartMotor.Type.SPARK)
+            .enableBrakeMode(true)
+            .pdp(pdp)
+            .unitPerRotation(0.47877872)
+            .currentLimit(50)
+            .enableVoltageComp(true)
+            .startingGear(Shiftable.Gear.LOW)
+            .encoderCPR(256);
+    var lowGear =
+        new PerGearSettingsBuilder()
+            .gear(Shiftable.Gear.LOW)
+            .postEncoderGearing(0.0488998)
+            .maxSpeed(2.3)
+            .kP(0);
+    var highGear =
+        new PerGearSettingsBuilder()
+            .gear(Shiftable.Gear.HIGH)
+            .postEncoderGearing(0.12936611)
+            .maxSpeed(5.2)
+            .kP(0.000001);
 
-    //TODO call .copy() to make it clearer this and rightMaster make different instances?
-    var leftMaster = driveMasterPrototype
-        .port(leftMasterPort)
-        .name("left")
-        .reverseOutput(true)
-        .slaveSparks(List.of(
-            new SlaveSparkMax(leftMasterSlave1Port, false, pdp),
-            new SlaveSparkMax(leftMasterSlave2Port, false, pdp)))
-        .perGearSettings(List.of(
-            lowGear
-                .feedForwardCalculator(new MappedFeedForwardCalculator(0.128, 5.23, 0.0698))
-                .build(),
-            highGear
-                .feedForwardCalculator(new MappedFeedForwardCalculator(0.156, 2.01, 0.154))
-                .build()))
-        .build();
+    // TODO call .copy() to make it clearer this and rightMaster make different instances?
+    var leftMaster =
+        driveMasterPrototype
+            .port(leftMasterPort)
+            .name("left")
+            .reverseOutput(true)
+            .slaveSparks(
+                List.of(
+                    new SlaveSparkMax(leftMasterSlave1Port, false, pdp),
+                    new SlaveSparkMax(leftMasterSlave2Port, false, pdp)))
+            .perGearSettings(
+                List.of(
+                    lowGear
+                        .feedForwardCalculator(new MappedFeedForwardCalculator(0.128, 5.23, 0.0698))
+                        .build(),
+                    highGear
+                        .feedForwardCalculator(new MappedFeedForwardCalculator(0.156, 2.01, 0.154))
+                        .build()))
+            .build();
     var rightMaster =
         driveMasterPrototype
             .name("right")
@@ -113,56 +117,41 @@ public class MapTemplate {
                         .feedForwardCalculator(new MappedFeedForwardCalculator(0.165, 2.01, 0.155))
                         .build()))
             .build();
-    var drive =
-        new DriveUnidirectionalWithGyro(
-            leftMaster,
-            rightMaster,
-            navx,
-            0.61755);
+    var drive = new DriveUnidirectionalWithGyro(leftMaster, rightMaster, navx, 0.61755);
 
     var subsystems = List.<Subsystem>of(drive);
 
-    var smoothingTimeSecs = 0.04;
-    var scale = 0.7;
+    var throttlePrototype =
+        new ThrottlePolynomialBuilder().stick(driveJoystick).smoothingTimeSecs(0.04).scale(0.7);
     var rotThrottle =
-        new ThrottlePolynomial(
-            driveJoystick,
-            0,
-            0.08,
-            smoothingTimeSecs,
-            false,
-            new Polynomial(
-                //We can't use just Map.of because we a mutable Map is needed
-                new HashMap<>(Map.of(1., 0.5)),
-                null),
-            scale);
+        throttlePrototype
+            .axis(0)
+            .deadband(0.08)
+            .inverted(false)
+            .polynomial(
+                new Polynomial(
+                    // We can't use just Map.of because we a mutable Map is needed
+                    new HashMap<>(Map.of(1., 0.5)), null))
+            .build();
     var fwdThrottle =
         new ThrottleSum(
             new Throttle[] {
-              new ThrottlePolynomial(
-                  driveJoystick,
-                  3,
-                  0.05,
-                  smoothingTimeSecs,
-                  false,
-                  new Polynomial(
-                      new HashMap<>(Map.of(
-                          1., 2.,
-                          2., 1.)),
-                      null),
-                  scale),
-              new ThrottlePolynomial(
-                  driveJoystick,
-                  2,
-                  0.05,
-                  smoothingTimeSecs,
-                  true,
-                  new Polynomial(
-                      new HashMap<>(Map.of(
-                          1., 2.,
-                          2., 1.)),
-                      null),
-                  scale)
+              throttlePrototype
+                  .axis(3)
+                  .deadband(0.05)
+                  .inverted(false)
+                  .polynomial(
+                      new Polynomial(
+                          new HashMap<>(
+                              Map.of(
+                                  1., 2.,
+                                  2., 1.)),
+                          null))
+                  .build(),
+              throttlePrototype
+                  .axis(2)
+                  .inverted(true)
+                  .build()
             });
     var oi =
         new OIArcadeWithDPad(
@@ -172,9 +161,10 @@ public class MapTemplate {
             false,
             driveJoystick,
             new Polynomial(
-                new HashMap<>(Map.of(
-                    0.5, 0.4,
-                    0., 0.2)),
+                new HashMap<>(
+                    Map.of(
+                        0.5, 0.4,
+                        0., 0.2)),
                 null),
             1.0,
             true);
