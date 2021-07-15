@@ -56,36 +56,10 @@ public class Robot extends TimedRobot {
 
   /** The method that runs when the robot is turned on. Initializes all subsystems from the map. */
   public static @Nullable RobotMap loadMap() {
-    return MapTemplate.createRobotMap();
-    /*
     try {
-      // Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
-      final Map<?, ?> normalized = new Yaml().load(new FileReader(RESOURCES_PATH + "/" + mapName));
-
-      final YAMLMapper mapper = new YAMLMapper();
-
-      // Register Kotlin module
-      com.fasterxml.jackson.module.kotlin.ExtensionsKt.registerKotlinModule(mapper);
-
-      // Turn the Map read by SnakeYaml into a String so Jackson can read it.
-      final String fixed = mapper.writeValueAsString(normalized);
-
-      // Use a parameter name module so we don't have to specify name for every field.
-      mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
-
-      // Add mix-ins
-      mapper.registerModule(new WPIModule());
-      mapper.registerModule(new JavaModule());
-
-      // Deserialize the map into an object.
-      return mapper.readValue(fixed, RobotMap.class);
-
-    } catch (final IOException ex) {
-      // The map file is either absent from the file system or improperly formatted.
-      System.out.println("Config file is bad/nonexistent!");
-
-      formatAndPrintMapException(ex);
-
+      return MapTemplate.createRobotMap();
+    } catch (final RuntimeException ex) {
+      ex.printStackTrace();
       // Prevent watchdog from restarting by looping infinitely but only when on the robot is in a
       // simulation in order not to hang unit tests.
       if (RobotBase.isSimulation()) return null;
@@ -93,7 +67,6 @@ public class Robot extends TimedRobot {
       //noinspection InfiniteLoopStatement,StatementWithEmptyBody
       while (true) {}
     }
-    */
   }
 
   /**

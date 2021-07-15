@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'idea'
     id 'edu.wpi.first.GradleRIO' version '2021.3.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.20'
 }
 
 def ROBOT_MAIN_CLASS = "org.usfirst.frc.team449.robot.Main"
@@ -76,7 +75,6 @@ dependencies {
     // simulation wpi.deps.sim.ws_client(wpi.platforms.desktop, false)
 
     testImplementation 'junit:junit:4.12'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 repositories{
@@ -104,13 +102,3 @@ wrapper {
 
 compileJava.options.compilerArgs.add '-parameters'
 compileJava.options.compilerArgs.add '-Xlint'
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-}
