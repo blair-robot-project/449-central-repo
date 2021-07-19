@@ -102,5 +102,4 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
     calcValues();
     return vel;
   }
-
 }

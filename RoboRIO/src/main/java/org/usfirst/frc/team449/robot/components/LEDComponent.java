@@ -14,9 +14,9 @@ import org.jetbrains.annotations.Nullable;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class LEDComponent {
 
-  AddressableLED LEDStrip;
+  private final AddressableLED LEDStrip;
 
-  AddressableLEDBuffer buffer;
+  private final AddressableLEDBuffer buffer;
 
   // todo array to hold HSV values of each LED
 

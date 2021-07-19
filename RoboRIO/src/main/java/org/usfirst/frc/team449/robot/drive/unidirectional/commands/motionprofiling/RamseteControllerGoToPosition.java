@@ -29,8 +29,8 @@ public class RamseteControllerGoToPosition extends CommandBase implements Loggab
   private final MappedPIDController rightPidController;
   private final Pose2d endingPose;
   private final List<Translation2d> translations;
-  private RamseteCommand wrappedCommand;
   private final TrajectoryConfig config;
+  private RamseteCommand wrappedCommand;
 
   @JsonCreator
   public RamseteControllerGoToPosition(

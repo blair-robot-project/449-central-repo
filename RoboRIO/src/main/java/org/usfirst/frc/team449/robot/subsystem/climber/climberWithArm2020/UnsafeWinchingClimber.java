@@ -15,16 +15,14 @@ import org.usfirst.frc.team449.robot.subsystem.solenoid.SubsystemSolenoid;
 
 import static org.usfirst.frc.team449.robot.other.Util.getLogPrefix;
 
-/**
- * Like {@link SafeWinchingClimber} but without safety features.
- */
+/** Like {@link SafeWinchingClimber} but without safety features. */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class UnsafeWinchingClimber extends SubsystemBase
     implements SubsystemClimberWithArm,
-    SubsystemBinaryMotor,
-    SubsystemSolenoid,
-    Updatable,
-    Loggable {
+        SubsystemBinaryMotor,
+        SubsystemSolenoid,
+        Updatable,
+        Loggable {
   private final SubsystemBinaryMotor motorSubsystem;
   private final SubsystemSolenoid solenoidSubsystem;
 
@@ -80,7 +78,6 @@ public class UnsafeWinchingClimber extends SubsystemBase
     this.motorSubsystem.turnMotorOn();
   }
 
-
   /** Turn off the winch */
   @Override
   public void turnMotorOff() {
@@ -94,5 +91,5 @@ public class UnsafeWinchingClimber extends SubsystemBase
   }
 
   @Override
-  public void update() { }
+  public void update() {}
 }

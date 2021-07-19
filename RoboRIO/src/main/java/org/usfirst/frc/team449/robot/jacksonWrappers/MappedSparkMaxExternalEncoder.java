@@ -38,7 +38,7 @@ public class MappedSparkMaxExternalEncoder implements SmartMotorExternalEncoder 
    * The coefficient the output changes by after being measured by the encoder, e.g. this would be
    * 1/70 if there was a 70:1 gearing between the encoder and the final output.
    */
-  private final double postEncoderGearing;
+  @Log private final double postEncoderGearing;
   /**
    * The number of feet travelled per rotation of the motor this is attached to, or null if there is
    * no encoder.
@@ -132,7 +132,7 @@ public class MappedSparkMaxExternalEncoder implements SmartMotorExternalEncoder 
       @Nullable final Integer currentLimit,
       final boolean enableVoltageComp,
       @Nullable final List<PerGearSettings> perGearSettings,
-      @Nullable final Shiftable.gear startingGear,
+      @Nullable final Shiftable.Gear startingGear,
       @Nullable final Integer startingGearNum,
       @Nullable final Map<PeriodicFrame, Integer> statusFrameRatesMillis,
       @Nullable final Integer controlFrameRateMillis,
@@ -502,7 +502,7 @@ public class MappedSparkMaxExternalEncoder implements SmartMotorExternalEncoder 
   }
 
   @Override
-  public void setGearScaledVelocity(final double velocity, final gear gear) {
+  public void setGearScaledVelocity(final double velocity, final Gear gear) {
     this.setGearScaledVelocity(velocity, gear.getNumVal());
   }
 

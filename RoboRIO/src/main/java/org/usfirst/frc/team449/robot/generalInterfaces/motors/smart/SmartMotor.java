@@ -125,7 +125,7 @@ public interface SmartMotor extends SimpleMotor, Shiftable, Loggable {
       @Nullable final Integer currentLimit,
       final boolean enableVoltageComp,
       @Nullable final List<PerGearSettings> perGearSettings,
-      @Nullable final Shiftable.gear startingGear,
+      @Nullable final Shiftable.Gear startingGear,
       @Nullable final Integer startingGearNum,
       // Spark-specific
       @Nullable final Integer controlFrameRateMillis,
@@ -205,7 +205,7 @@ public interface SmartMotor extends SimpleMotor, Shiftable, Loggable {
       for (final Object frame : statusFrameRatesMillis.keySet()) {
         if (frame instanceof String) {
           // Must put it in quotes so Jackson recognizes it as a string.
-          final String toBeParsed = "\"" + frame.toString() + "\"";
+          final String toBeParsed = "\"" + frame + "\"";
           try {
             if (actualType == Type.TALON) {
               talonStatusFramesMap.put(
@@ -522,7 +522,7 @@ public interface SmartMotor extends SimpleMotor, Shiftable, Loggable {
    *     gear.
    * @param gear The gear to use the max speed from to scale the velocity.
    */
-  void setGearScaledVelocity(double velocity, gear gear);
+  void setGearScaledVelocity(double velocity, Gear gear);
 
   /** @return Feedforward calculator for this gear */
   SimpleMotorFeedforward getCurrentGearFeedForward();

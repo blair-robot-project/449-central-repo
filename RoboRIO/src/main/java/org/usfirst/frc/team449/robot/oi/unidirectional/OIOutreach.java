@@ -123,5 +123,4 @@ public class OIOutreach implements OIUnidirectional {
     this.cachedLeftRightOutput = this.getLeftRightOutput();
     this.cachedFwdRotOutput = this.getFwdRotOutput();
   }
-
 }

@@ -10,10 +10,11 @@ import java.util.IdentityHashMap;
  * @implNote ID begins at {@code 1} and increments by {@code 1}.
  */
 public final class RegistrationOrderIDUtil {
-  private RegistrationOrderIDUtil() { throw new AssertionError("Utility class."); }
-
-  private static int CURRENT_ID = 0;
   @NotNull private static final IdentityHashMap<Object, Integer> IDs = new IdentityHashMap<>();
+  private static int CURRENT_ID = 0;
+  private RegistrationOrderIDUtil() {
+    throw new AssertionError("Utility class.");
+  }
 
   /**
    * Associates an ID with the specified object. Does nothing if the specified object has already
@@ -36,7 +37,6 @@ public final class RegistrationOrderIDUtil {
    *
    * @param instance the object instance to retrieve the ID of
    * @return the ID associated with the object
-   *
    * @throws IllegalStateException if the specified object has never been registered
    */
   public static int getExistingID(final Object instance) throws IllegalStateException {

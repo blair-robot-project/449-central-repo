@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * An interface for a motor that has an infinite number of modes, whether those modes are
  * velocities, voltages, or positions.
  *
- * Example: an IntakeSimple
+ * <p>Example: an IntakeSimple
  */
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.CLASS,

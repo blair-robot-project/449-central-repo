@@ -24,13 +24,13 @@ public interface Shiftable {
    */
   void setGear(int gear);
 
-  enum gear {
+  enum Gear {
     LOW(1),
     HIGH(2);
 
     private final int numVal;
 
-    gear(int numVal) {
+    Gear(int numVal) {
       this.numVal = numVal;
     }
 
@@ -74,7 +74,7 @@ public interface Shiftable {
      * WPI object for calculating feed forward constants given a max achievable velocity and
      * acceleration
      */
-    public SimpleMotorFeedforward feedForwardCalculator;
+    public final SimpleMotorFeedforward feedForwardCalculator;
 
     /**
      * Default constructor.
@@ -113,7 +113,7 @@ public interface Shiftable {
     @JsonCreator
     public PerGearSettings(
         int gearNum,
-        @Nullable Shiftable.gear gear,
+        @Nullable Shiftable.Gear gear,
         @Nullable Double fwdPeakOutputVoltage,
         @Nullable Double revPeakOutputVoltage,
         @Nullable Double fwdNominalOutputVoltage,

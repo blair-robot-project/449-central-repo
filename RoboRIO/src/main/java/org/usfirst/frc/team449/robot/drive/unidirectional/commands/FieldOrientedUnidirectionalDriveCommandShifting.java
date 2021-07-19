@@ -23,7 +23,7 @@ import java.util.List;
     property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FieldOrientedUnidirectionalDriveCommandShifting<
-    T extends DriveUnidirectionalWithGyro & Subsystem & SubsystemAHRS & DriveShiftable>
+        T extends DriveUnidirectionalWithGyro & Subsystem & SubsystemAHRS & DriveShiftable>
     extends FieldOrientedUnidirectionalDriveCommand<T> {
 
   /** The drive to execute this command on. */
@@ -121,7 +121,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<
 
     // Gain schedule the loop if we shifted
     if (this.lastGear != this.subsystem.getGear()) {
-      if (this.subsystem.getGear() == Shiftable.gear.LOW.getNumVal()) {
+      if (this.subsystem.getGear() == Shiftable.Gear.LOW.getNumVal()) {
         this.getController().setP(this.kP);
         this.getController().setI(this.kI);
         this.getController().setD(this.kD);

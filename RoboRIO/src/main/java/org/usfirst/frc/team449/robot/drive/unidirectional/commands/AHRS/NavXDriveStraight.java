@@ -103,7 +103,7 @@ public class NavXDriveStraight<T extends Subsystem & DriveUnidirectional & Subsy
     output = this.getOutput();
 
     // Set throttle to the specified stick.
-    //TODO Both branches of this if statement are the exact same!
+    // TODO Both branches of this if statement are the exact same!
     if (useLeft) {
       subsystem.setOutput(
           oi.getLeftRightOutputCached()[0] - output, oi.getLeftRightOutputCached()[1] + output);

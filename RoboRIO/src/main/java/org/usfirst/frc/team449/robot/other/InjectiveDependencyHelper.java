@@ -14,39 +14,49 @@ import java.util.function.Predicate;
  * <em>dependent</em> object within a set of criteria specified on a per-dependency basis.
  * Dependencies are registered by either dependent or depended instances.
  *
- * <p>
- * In other words, asserts that the function mapping instances of depended objects to instances of
- * dependent objects is injective for each intersection of the set of all dependent objects and the
- * sets for which each dependency-specified predicate returns {@code true}.
- * </p>
+ * <p>In other words, asserts that the function mapping instances of depended objects to instances
+ * of dependent objects is injective for each intersection of the set of all dependent objects and
+ * the sets for which each dependency-specified predicate returns {@code true}.
  */
 public final class InjectiveDependencyHelper {
+  private static final Multimap<Object, Object> mappings =
+      Multimaps.newMultimap(new HashMap<>(), LinkedList::new);
+
   private InjectiveDependencyHelper() {}
 
-  private static final Multimap<Object, Object> mappings = Multimaps.newMultimap(new HashMap<>(), LinkedList::new);
-
-  public static void assertInjective(@NotNull final Object dependent,
-                                     @NotNull final Object depended) throws IllegalStateException {
+  public static void assertInjective(
+      @NotNull final Object dependent, @NotNull final Object depended)
+      throws IllegalStateException {
     assertInjective(dependent, depended, dependent.getClass());
   }
 
-  public static void assertInjective(@NotNull final Object dependent,
-                                     @NotNull final Object depended,
-                                     @NotNull final Class<?> instanceOf) throws IllegalStateException {
+  public static void assertInjective(
+      @NotNull final Object dependent,
+      @NotNull final Object depended,
+      @NotNull final Class<?> instanceOf)
+      throws IllegalStateException {
     assertInjective(dependent, depended, instanceOf::isInstance);
   }
 
-  public static void assertInjective(@NotNull final Object dependent,
-                                     @NotNull final Object depended,
-                                     @NotNull final Predicate<Object> dependentClass) throws IllegalStateException {
+  public static void assertInjective(
+      @NotNull final Object dependent,
+      @NotNull final Object depended,
+      @NotNull final Predicate<Object> dependentClass)
+      throws IllegalStateException {
     if (dependentIsDuplicate(dependent, depended, dependentClass)) {
-      throw new IllegalStateException("Non-injective dependency of " + dependent + " on " + depended + " (multiple instances of former depend on one instance of latter)");
+      throw new IllegalStateException(
+          "Non-injective dependency of "
+              + dependent
+              + " on "
+              + depended
+              + " (multiple instances of former depend on one instance of latter)");
     }
   }
 
-  private static boolean dependentIsDuplicate(@NotNull final Object dependent,
-                                              @NotNull final Object depended,
-                                              @NotNull final Predicate<Object> dependentClass) {
+  private static boolean dependentIsDuplicate(
+      @NotNull final Object dependent,
+      @NotNull final Object depended,
+      @NotNull final Predicate<Object> dependentClass) {
     final Collection<Object> dependents = mappings.get(depended);
     final boolean dependentIsDuplicate = dependents.stream().anyMatch(dependentClass);
     dependents.add(dependent);

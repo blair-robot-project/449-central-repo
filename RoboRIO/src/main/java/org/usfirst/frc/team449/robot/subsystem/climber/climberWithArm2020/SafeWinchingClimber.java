@@ -35,7 +35,7 @@ public class SafeWinchingClimber extends SubsystemBase
   private final long extensionTimeMillis;
   @Log private boolean armIsExtending = false;
   @Log private long extensionStartTime = 0L;
-  @Log private boolean enableArm = true;
+  @Log private final boolean enableArm = true;
   @Log private boolean reallySure = false;
 
   @JsonCreator
@@ -100,13 +100,13 @@ public class SafeWinchingClimber extends SubsystemBase
    */
   @Override
   public void turnMotorOn() {
-//    if (this.armIsUp()) {
-//      if (!this.reallySure) {
-//        this.reallySure = true;
-//      } else {
-//        this.enableArm = false;
-//      }
-//    }
+    //    if (this.armIsUp()) {
+    //      if (!this.reallySure) {
+    //        this.reallySure = true;
+    //      } else {
+    //        this.enableArm = false;
+    //      }
+    //    }
     this.setSolenoid(DoubleSolenoid.Value.kReverse);
     Timer.delay(3.);
     this.motorSubsystem.turnMotorOn();

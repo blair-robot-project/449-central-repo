@@ -20,8 +20,9 @@ public class SetSolenoidPose extends InstantCommand {
    * @param value The value to set the subsystem to.
    */
   @JsonCreator
-  public SetSolenoidPose(@NotNull @JsonProperty(required = true) final SolenoidSimple subsystem,
-                         @NotNull @JsonProperty(required = true) final DoubleSolenoid.Value value) {
+  public SetSolenoidPose(
+      @NotNull @JsonProperty(required = true) final SolenoidSimple subsystem,
+      @NotNull @JsonProperty(required = true) final DoubleSolenoid.Value value) {
     super(() -> subsystem.setSolenoid(value), subsystem);
   }
 }

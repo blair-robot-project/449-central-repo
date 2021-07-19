@@ -13,13 +13,10 @@ import java.util.function.BooleanSupplier;
  */
 public abstract class ConditionalCommandMixIn {
 
-  /**
-   * @see ConditionalCommand#ConditionalCommand(Command, Command, BooleanSupplier)
-   */
+  /** @see ConditionalCommand#ConditionalCommand(Command, Command, BooleanSupplier) */
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
   public ConditionalCommandMixIn(
       @JsonProperty(value = "onTrue", required = true) final Command onTrue,
       @JsonProperty(value = "onFalse", required = true) final Command onFalse,
-      @JsonProperty(value = "condition", required = true) final BooleanSupplier condition) {
-  }
+      @JsonProperty(value = "condition", required = true) final BooleanSupplier condition) {}
 }

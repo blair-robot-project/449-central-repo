@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.javamaps.MapTemplate;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.yaml.snakeyaml.Yaml;
 
@@ -37,18 +38,17 @@ public class Robot extends TimedRobot {
    */
   @NotNull public static final String RESOURCES_PATH_SIMULATED = "./src/main/deploy/";
   /** The name of the map to read from. Should be overriden by a subclass to change the name. */
+  @NotNull public static final String mapName = "map-template.yml";
+  /** The filepath to the resources folder containing the config files. */
   @NotNull
-  public static final String mapName = "outreach.yml";
-  /**
-   * The filepath to the resources folder containing the config files.
-   */
-  @NotNull
-  public static final String RESOURCES_PATH = RobotBase.isReal() ? RESOURCES_PATH_REAL : RESOURCES_PATH_SIMULATED;
+  public static final String RESOURCES_PATH =
+      RobotBase.isReal() ? RESOURCES_PATH_REAL : RESOURCES_PATH_SIMULATED;
   /**
    * Format for the reference chain (place in the map where the error occurred) when a map error is
    * printed.
    */
   private static final MapErrorFormat MAP_REF_CHAIN_FORMAT = MapErrorFormat.TABLE;
+
   private static boolean isUnitTesting = false;
   private static boolean isTestingHasBeenCalled = false;
   /** The object constructed directly from the yaml map. */
@@ -57,31 +57,9 @@ public class Robot extends TimedRobot {
   /** The method that runs when the robot is turned on. Initializes all subsystems from the map. */
   public static @Nullable RobotMap loadMap() {
     try {
-      // Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
-      final Map<?, ?> normalized =
-          (Map<?, ?>) new Yaml().load(new FileReader(RESOURCES_PATH + "/" + mapName));
-
-      final YAMLMapper mapper = new YAMLMapper();
-
-      // Turn the Map read by SnakeYaml into a String so Jackson can read it.
-      final String fixed = mapper.writeValueAsString(normalized);
-
-      // Use a parameter name module so we don't have to specify name for every field.
-      mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
-
-      // Add mix-ins
-      mapper.registerModule(new WPIModule());
-      mapper.registerModule(new JavaModule());
-
-      // Deserialize the map into an object.
-      return mapper.readValue(fixed, RobotMap.class);
-
-    } catch (final IOException ex) {
-      // The map file is either absent from the file system or improperly formatted.
-      System.out.println("Config file is bad/nonexistent!");
-
-      formatAndPrintMapException(ex);
-
+      return MapTemplate.createRobotMap();
+    } catch (final RuntimeException ex) {
+      ex.printStackTrace();
       // Prevent watchdog from restarting by looping infinitely but only when on the robot is in a
       // simulation in order not to hang unit tests.
       if (RobotBase.isSimulation()) return null;
@@ -94,8 +72,8 @@ public class Robot extends TimedRobot {
   /**
    * Whether robot code is being unit tested. Note that this is NOT the same as test mode.
    *
-   * <p>The return value will never change observably. {@link Robot#notifyTesting()} will thus
-   * throw an exception if it is called after the first time that this method is called.
+   * <p>The return value will never change observably. {@link Robot#notifyTesting()} will thus throw
+   * an exception if it is called after the first time that this method is called.
    *
    * @return whether the current run is a unit test
    */
@@ -109,7 +87,7 @@ public class Robot extends TimedRobot {
    *
    * @throws UnsupportedOperationException if the robot is not running in a simulation
    * @throws IllegalStateException if {@link Robot#isUnitTesting()} has already been called before
-   * this method is called
+   *     this method is called
    */
   public static void notifyTesting() throws UnsupportedOperationException, IllegalStateException {
     if (RobotBase.isReal())

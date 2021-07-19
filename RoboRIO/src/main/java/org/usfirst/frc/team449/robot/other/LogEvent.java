@@ -46,6 +46,6 @@ public class LogEvent {
    */
   @NotNull
   public String toString() {
-    return timeCalled + "," + caller.toString() + "," + message;
+    return timeCalled + "," + caller + "," + message;
   }
 }

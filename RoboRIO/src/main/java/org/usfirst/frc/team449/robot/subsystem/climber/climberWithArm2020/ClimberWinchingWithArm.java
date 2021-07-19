@@ -118,11 +118,7 @@ public class ClimberWinchingWithArm extends SubsystemBase
     return this.solenoidSubsystem.getSolenoidPosition();
   }
 
-  /**
-   * Whether or not the winch up command is enabled
-   *
-   * @return
-   */
+  /** Whether or not the winch up command is enabled */
   public boolean winchUpEnabled() {
     return manualControlEnabled || armState == ArmState.UP;
   }
@@ -130,17 +126,13 @@ public class ClimberWinchingWithArm extends SubsystemBase
   /**
    * Set the manualControlEnabled field
    *
-   * @param manualControlEnabled
+   * @param manualControlEnabled Whether or not manual control should be enabled
    */
   public void setManualControl(boolean manualControlEnabled) {
     this.manualControlEnabled = manualControlEnabled;
   }
 
-  /**
-   * Whether or not manual control is enabled
-   *
-   * @return
-   */
+  /** Whether or not manual control is enabled */
   public boolean isManualControlEnabled() {
     return manualControlEnabled;
   }

@@ -43,6 +43,7 @@ public class DriveUnidirectionalWithGyro extends SubsystemBase
   private boolean overrideGyro;
   /** Cached values for various sensor readings. */
   private double cachedLeftVel = Double.NaN;
+
   private double cachedRightVel = Double.NaN;
   private double cachedLeftPos = Double.NaN;
   private double cachedRightPos = Double.NaN;

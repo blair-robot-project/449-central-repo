@@ -32,7 +32,7 @@ public class SwitchToGear extends InstantCommand {
   public SwitchToGear(
       @NotNull @JsonProperty(required = true) Shiftable subsystem,
       int switchToNum,
-      @Nullable Shiftable.gear switchTo) {
+      @Nullable Shiftable.Gear switchTo) {
     this.subsystem = subsystem;
     if (switchTo != null) {
       this.switchTo = switchTo.getNumVal();

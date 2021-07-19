@@ -102,5 +102,4 @@ public class OIArcadeWithDPad extends OIArcade {
       return new double[] {fwd, rotThrottle.getValue()};
     }
   }
-
 }

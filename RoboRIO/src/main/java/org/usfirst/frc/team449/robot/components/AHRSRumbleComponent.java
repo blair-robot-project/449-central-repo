@@ -88,7 +88,7 @@ public class AHRSRumbleComponent implements Runnable {
   /** Read the NavX jerk data and rumble the joysticks based off of it. */
   @Override
   public void run() {
-    //TODO Both branches of this if statement are the exact same!
+    // TODO Both branches of this if statement are the exact same!
     if (this.yIsFrontBack) {
       // Put an abs() here because we can't differentiate front vs back when rumbling, so we only
       // care about

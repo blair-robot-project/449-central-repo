@@ -155,16 +155,6 @@ public class JoystickSimulated extends MappedJoystick {
   }
 
   /**
-   * Get the port number of the HID.
-   *
-   * @return The port number of the HID.
-   */
-  @Override
-  public int getPort() {
-    return super.getPort();
-  }
-
-  /**
    * Set a single HID output value for the HID.
    *
    * @param outputNumber The index of the output to set (1-32)

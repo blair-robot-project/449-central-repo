@@ -7,8 +7,10 @@ import org.usfirst.frc.team449.robot.generalInterfaces.limelight.Limelight;
 
 import java.util.function.DoubleSupplier;
 
-/** Determines the diagonal distance from the Limelight to a vision target, on the field plane.
- *  Ignores height */
+/**
+ * Determines the diagonal distance from the Limelight to a vision target, on the field plane.
+ * Ignores height
+ */
 public class LimelightDistanceComponentDiagonal implements DoubleSupplier {
 
   /** The limelight being used */
@@ -32,11 +34,11 @@ public class LimelightDistanceComponentDiagonal implements DoubleSupplier {
    */
   @JsonCreator
   public LimelightDistanceComponentDiagonal(
-          @NotNull @JsonProperty(required = true) Limelight limelight,
-          @JsonProperty(required = true) double limelightHeight,
-          double limelightAngleRight,
-          double limelightAngleUp,
-          @JsonProperty(required = true) double targetHeight) {
+      @NotNull @JsonProperty(required = true) Limelight limelight,
+      @JsonProperty(required = true) double limelightHeight,
+      double limelightAngleRight,
+      double limelightAngleUp,
+      @JsonProperty(required = true) double targetHeight) {
     this.limelight = limelight;
     this.limelightHeight = limelightHeight;
     this.limelightAngleRight = limelightAngleRight;
@@ -47,8 +49,9 @@ public class LimelightDistanceComponentDiagonal implements DoubleSupplier {
   /** @return Gets the distance from the robot to the vision target, at an angle above the field */
   @Override
   public double getAsDouble() {
-    LimelightDistanceComponent distance = new LimelightDistanceComponent(limelight, limelightHeight, limelightAngleUp, targetHeight);
+    LimelightDistanceComponent distance =
+        new LimelightDistanceComponent(limelight, limelightHeight, limelightAngleUp, targetHeight);
     return distance.getAsDouble()
-            * Math.cos(Math.toRadians(limelightAngleRight + limelight.getX()));
+        * Math.cos(Math.toRadians(limelightAngleRight + limelight.getX()));
   }
 }

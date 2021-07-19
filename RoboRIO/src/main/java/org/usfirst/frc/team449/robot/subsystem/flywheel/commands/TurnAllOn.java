@@ -1,19 +1,20 @@
-package org.usfirst.frc.team449.robot.subsystem.flywheel.commands;//package org.usfirst.frc.team449.robot.subsystems.flywheels.commands;
+package org.usfirst.frc.team449.robot.subsystem.flywheel.commands; // package
+                                                                   // org.usfirst.frc.team449.robot.subsystems.flywheels.commands;
 //
-//import com.fasterxml.jackson.annotation.JsonCreator;
-//import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-//import com.fasterxml.jackson.annotation.JsonProperty;
-//import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-//import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj2.command.InstantCommand;
-//import io.github.oblarg.oblog.annotations.Log;
-//import org.jetbrains.annotations.NotNull;
-//import org.usfirst.frc.team449.robot.subsystems.flywheels.SubsystemFlywheel;
+// import com.fasterxml.jackson.annotation.JsonCreator;
+// import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+// import com.fasterxml.jackson.annotation.JsonProperty;
+// import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+// import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import io.github.oblarg.oblog.annotations.Log;
+// import org.jetbrains.annotations.NotNull;
+// import org.usfirst.frc.team449.robot.subsystems.flywheels.SubsystemFlywheel;
 //
-///** Turn on the flywheel and the feeder. */
-//@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-//public class TurnAllOn extends InstantCommand {
+/// ** Turn on the flywheel and the feeder. */
+// @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+// public class TurnAllOn extends InstantCommand {
 //
 //  /** The subsystem to execute this command on. */
 //  @NotNull @Log.Exclude private final SubsystemFlywheel subsystem;
@@ -52,4 +53,4 @@ package org.usfirst.frc.team449.robot.subsystem.flywheel.commands;//package org.
 //    Shuffleboard.addEventMarker(
 //        "TurnAllOn end.", this.getClass().getSimpleName(), EventImportance.kNormal);
 //  }
-//}
+// }

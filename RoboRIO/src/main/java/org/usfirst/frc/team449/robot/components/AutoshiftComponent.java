@@ -152,9 +152,9 @@ public class AutoshiftComponent {
   public void autoshift(
       double forwardThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
     if (shouldDownshift(forwardThrottle, leftVel, rightVel)) {
-      shift.accept(Shiftable.gear.LOW.getNumVal());
+      shift.accept(Shiftable.Gear.LOW.getNumVal());
     } else if (shouldUpshift(forwardThrottle, leftVel, rightVel)) {
-      shift.accept(Shiftable.gear.HIGH.getNumVal());
+      shift.accept(Shiftable.Gear.HIGH.getNumVal());
     }
   }
 }

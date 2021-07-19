@@ -27,19 +27,21 @@ public class FlywheelWithTimeout extends SubsystemBase implements SubsystemFlywh
 
   /** Time from giving the multiSubsystem voltage to being ready to fire, in seconds. */
   private final double timeout;
+
   private boolean isFlywheelOn;
 
   /**
-   * @param implementation
+   * @param implementation The actual flywheel that is being wrapped
    * @param timeoutOverride The override for the timeout value shooting condition to be reached
-   * before signalling that it is ready to shoot regardless.
+   *     before signalling that it is ready to shoot regardless.
    */
   @JsonCreator
   public FlywheelWithTimeout(
       @NotNull @JsonProperty(required = true) final SubsystemFlywheel implementation,
       @Nullable final Double timeoutOverride) {
     this.implementation = implementation;
-    this.timeout = Objects.requireNonNullElse(timeoutOverride, this.implementation.getSpinUpTimeSecs());
+    this.timeout =
+        Objects.requireNonNullElse(timeoutOverride, this.implementation.getSpinUpTimeSecs());
 
     this.speedConditionTimer = new ConditionTimingComponentObserver(false);
   }
@@ -79,7 +81,9 @@ public class FlywheelWithTimeout extends SubsystemBase implements SubsystemFlywh
   @Override
   public void update() {
     this.implementation.update();
-    this.speedConditionTimer.update(Clock.currentTimeSeconds(), this.isFlywheelOn && !this.implementation.isConditionTrueCached());
+    this.speedConditionTimer.update(
+        Clock.currentTimeSeconds(),
+        this.isFlywheelOn && !this.implementation.isConditionTrueCached());
 
     SubsystemFlywheel.super.update();
   }

@@ -12,14 +12,14 @@ import org.usfirst.frc.team449.robot.subsystem.climber.climberWithArm2020.SafeWi
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class StartClimber extends SequentialCommandGroup {
 
-  SafeWinchingClimber climber;
+  private final SafeWinchingClimber climber;
 
   @JsonCreator
   public StartClimber(@JsonProperty(required = true) final SafeWinchingClimber climber) {
     this.climber = climber;
-    addCommands(new SetClimberWithArmState(climber, SetClimberWithArmState.ClimberState.LOWER),
+    addCommands(
+        new SetClimberWithArmState(climber, SetClimberWithArmState.ClimberState.LOWER),
         new WaitCommand(2),
         new TurnMotorOn(climber));
   }
-
 }

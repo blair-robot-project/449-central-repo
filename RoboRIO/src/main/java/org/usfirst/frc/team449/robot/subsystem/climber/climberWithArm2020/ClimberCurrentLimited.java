@@ -33,6 +33,7 @@ public class ClimberCurrentLimited extends SubsystemBase
    * The bufferTimer controlling how long we can be above the power limit before we stop climbing.
    */
   @NotNull private final Debouncer powerLimitTimer;
+
   private final double percentVoltage;
   /** Whether or not the motor is currently spinning. */
   private boolean motorSpinning;

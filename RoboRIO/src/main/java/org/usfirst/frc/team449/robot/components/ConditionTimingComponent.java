@@ -37,8 +37,7 @@ public abstract class ConditionTimingComponent implements Loggable {
   }
 
   /**
-   * Updates the current state of the condition and acts as if condition changed even if it did
-   * not.
+   * Updates the current state of the condition and acts as if condition changed even if it did not.
    *
    * @param now the current time
    */
@@ -60,9 +59,9 @@ public abstract class ConditionTimingComponent implements Loggable {
    *
    * <p>Returns {@link Double#NaN} if the condition has never become true.
    *
-   * @return the time supplied to the most recent call to {@link ConditionTimingComponent#update(double,
-   * boolean)} where the value supplied to the method was true and the previous state of the
-   * condition was false.
+   * @return the time supplied to the most recent call to {@link
+   *     ConditionTimingComponent#update(double, boolean)} where the value supplied to the method
+   *     was true and the previous state of the condition was false.
    */
   @Contract(pure = true)
   public double lastBecameTrueTime() {
@@ -80,9 +79,9 @@ public abstract class ConditionTimingComponent implements Loggable {
    *
    * <p>Returns {@link Double#NaN} if the condition has never become false.
    *
-   * @return the time supplied to the most recent call to {@link ConditionTimingComponent#update(double,
-   * boolean)} where the value supplied to the method was false and the previous state of the
-   * condition was true.
+   * @return the time supplied to the most recent call to {@link
+   *     ConditionTimingComponent#update(double, boolean)} where the value supplied to the method
+   *     was false and the previous state of the condition was true.
    */
   @Contract(pure = true)
   public double lastBecameFalseTime() {
@@ -95,22 +94,14 @@ public abstract class ConditionTimingComponent implements Loggable {
     return this.lastBecameFalseTime();
   }
 
-  /**
-   * <p>
-   * Returns {@link Double#NaN} if not currently true.
-   * </p>
-   */
+  /** Returns {@link Double#NaN} if not currently true. */
   @Contract(pure = true)
   public double timeSinceBecameTrue() {
     if (!this.current) return Double.NaN;
     return this.timeSinceLastBecameTrue();
   }
 
-  /**
-   * <p>
-   * Returns {@link Double#NaN} if not currently false.
-   * </p>
-   */
+  /** Returns {@link Double#NaN} if not currently false. */
   @Contract(pure = true)
   public double timeSinceBecameFalse() {
     if (this.current) return Double.NaN;
@@ -133,9 +124,7 @@ public abstract class ConditionTimingComponent implements Loggable {
     return this.now;
   }
 
-  /**
-   * @implNote returns max(lastBecameTrue(), lastBecameFalse())
-   */
+  /** @implNote returns max(lastBecameTrue(), lastBecameFalse()) */
   @Contract(pure = true)
   public double lastChangeTime() {
     // Should be max, as time increases over time.

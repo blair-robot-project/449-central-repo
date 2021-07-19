@@ -137,7 +137,7 @@ public class MappedTalon implements SmartMotor {
       @Nullable final Integer encoderCPR,
       final boolean reverseSensor,
       @Nullable final List<PerGearSettings> perGearSettings,
-      @Nullable final Shiftable.gear startingGear,
+      @Nullable final Shiftable.Gear startingGear,
       @Nullable final Integer startingGearNum,
       @Nullable final Map<StatusFrameEnhanced, Integer> statusFrameRatesMillis,
       @Nullable final Map<ControlFrame, Integer> controlFrameRatesMillis,
@@ -691,7 +691,7 @@ public class MappedTalon implements SmartMotor {
    * @param gear The gear to use the max speed from to scale the velocity.
    */
   @Override
-  public void setGearScaledVelocity(final double velocity, final gear gear) {
+  public void setGearScaledVelocity(final double velocity, final Gear gear) {
     this.setGearScaledVelocity(velocity, gear.getNumVal());
   }
 

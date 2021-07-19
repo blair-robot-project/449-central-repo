@@ -84,5 +84,4 @@ public class ThrottleBasic implements Throttle {
   public String configureLogName() {
     return "Throttle " + stick.getName() + " axis " + axis;
   }
-
 }

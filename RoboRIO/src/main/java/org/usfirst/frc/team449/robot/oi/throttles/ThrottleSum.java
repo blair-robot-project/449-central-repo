@@ -69,5 +69,4 @@ public class ThrottleSum implements Throttle {
   public void update() {
     cachedValue = getValue();
   }
-
 }

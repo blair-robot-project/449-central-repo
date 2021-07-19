@@ -38,7 +38,7 @@ public class IntakeSimple extends SubsystemBase
    *
    * @param motor The motor this subsystem controls.
    * @param velocities The velocity for the motor to go at for each {@link IntakeMode}, on the
-   * interval [-1, 1]. Modes can be missing to indicate that this intake doesn't have/use them.
+   *     interval [-1, 1]. Modes can be missing to indicate that this intake doesn't have/use them.
    */
   @JsonCreator
   public IntakeSimple(
@@ -87,11 +87,11 @@ public class IntakeSimple extends SubsystemBase
       this.motor.enable();
       this.motor.setVelocity(this.velocities.get(mode));
     } else {
-//      System.err.println(getLogPrefix(this) + "Warning: use of undefined mode " + mode);
-//      Shuffleboard.addEventMarker(
-//          "Undefined " + getLogPrefix(this) + "mode used",
-//          "mode: " + mode,
-//          EventImportance.kCritical);
+      //      System.err.println(getLogPrefix(this) + "Warning: use of undefined mode " + mode);
+      //      Shuffleboard.addEventMarker(
+      //          "Undefined " + getLogPrefix(this) + "mode used",
+      //          "mode: " + mode,
+      //          EventImportance.kCritical);
 
       DriverStation.reportError("Mode not defined for instance: " + mode, false);
     }
