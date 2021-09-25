@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.javamaps.builders;
+package org.usfirst.frc.team449.robot.javaMaps.builders;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.javamaps.builders;
+package org.usfirst.frc.team449.robot.javaMaps.builders;
 
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable.PerGearSettings;

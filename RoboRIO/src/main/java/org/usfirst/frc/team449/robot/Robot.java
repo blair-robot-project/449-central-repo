@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.javamaps.MapTemplate;
+import org.usfirst.frc.team449.robot.javaMaps.MapTemplate;
 import org.usfirst.frc.team449.robot.other.Clock;
 
 import java.io.IOException;
@@ -95,107 +95,6 @@ public class Robot extends TimedRobot {
 
     System.out.println("ROBOT UNIT TESTING");
     isUnitTesting = true;
-  }
-
-  /**
-   * Formats and prints the stack trace of an exception raised by Jackson due to a problem with the
-   * map
-   *
-   * @param ex the exception to format and print
-   */
-  private static void formatAndPrintMapException(final IOException ex) {
-    final var out = new StringWriter();
-    ex.printStackTrace(new PrintWriter(out));
-    final String[] lines = out.toString().split("[\\r\\n]");
-
-    for (final String line : lines) {
-      if (line.length() == 0) continue;
-
-      final String SEP = "->";
-
-      if (MAP_REF_CHAIN_FORMAT == MapErrorFormat.NONE || !line.contains(SEP)) {
-        System.err.println(line);
-        continue;
-      }
-
-      final String[] links = line.split(SEP);
-
-      // Remove the prefix from the first link and print it separately.
-      final int prefixEndIndex = links[0].lastIndexOf(':');
-      final String prefix = links[0].substring(0, prefixEndIndex + 1);
-      links[0] = links[0].substring(prefixEndIndex + 2);
-      System.err.println(prefix);
-
-      // Remove the suffix (a closing parenthesis) from the last link.
-      final String lastLink = links[links.length - 1];
-      links[links.length - 1] = lastLink.substring(0, lastLink.length() - 1);
-
-      switch (MAP_REF_CHAIN_FORMAT) {
-        case LEFT_ALIGN:
-        case RIGHT_ALIGN:
-          final Optional<String> longest =
-              Arrays.stream(links).max(Comparator.comparingInt(String::length));
-
-          final int maxLinkLength = longest.get().length();
-          final String linkFormat =
-              "\t\t->%"
-                  + (MAP_REF_CHAIN_FORMAT == MapErrorFormat.LEFT_ALIGN ? "" : maxLinkLength)
-                  + "s\n";
-
-          for (final String s : links) {
-            System.err.format(linkFormat, s);
-          }
-          break;
-
-        case TABLE:
-          final List<List<String>> formattedLinks = new ArrayList<>(links.length);
-
-          for (final String link : links) {
-            // Each link is of the format className[location]
-            final int locationBegin = link.lastIndexOf('[');
-
-            final String location = link.substring(locationBegin + 1, link.length() - 1);
-            final String className = link.substring(0, locationBegin);
-
-            formattedLinks.add(List.of(String.format("\t\t-> %s", location), className));
-          }
-
-          System.err.print(formatTable(formattedLinks));
-          break;
-      }
-    }
-  }
-
-  /**
-   * Converts a {@code String[][]} representation of a table to its {@code String} representation
-   * where every column is the same width as the widest cell in that column.
-   *
-   * @param rows a {@code String[][]} containing the data of the table stored in row-major order
-   * @return a {@code String} containing the result of formatting the table
-   */
-  private static String formatTable(final List<List<String>> rows) {
-    final int columnCount = rows.get(0).size();
-
-    final StringBuilder sb = new StringBuilder();
-
-    // Make each column the same width as the widest cell in it.
-    final int[] maxColumnWidths = new int[columnCount];
-    for (final var row : rows) {
-      for (int column = 0; column < columnCount; column++) {
-        maxColumnWidths[column] = Math.max(maxColumnWidths[column], row.get(column).length() + 1);
-      }
-    }
-
-    // Write to the StringBuilder row by row.
-    for (final var row : rows) {
-      for (int column = 0; column < columnCount; column++) {
-        // Use the thin vertical box-drawing character.
-        sb.append(String.format("%-" + maxColumnWidths[column] + "s", row.get(column)));
-      }
-      sb.append("\n");
-    }
-
-    return sb.toString();
   }
 
   @Override

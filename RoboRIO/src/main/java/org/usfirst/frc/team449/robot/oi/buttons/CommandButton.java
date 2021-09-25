@@ -48,7 +48,7 @@ public class CommandButton implements Loggable {
   }
 
   /** The possible actions for the button to do to the command. */
-  enum Action {
+  public enum Action {
     WHEN_PRESSED,
     WHILE_HELD,
     WHEN_RELEASED,

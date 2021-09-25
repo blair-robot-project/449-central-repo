@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.javamaps.builders;
+package org.usfirst.frc.team449.robot.javaMaps.builders;
 
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial;

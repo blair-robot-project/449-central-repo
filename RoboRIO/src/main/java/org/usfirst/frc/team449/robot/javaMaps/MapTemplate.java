@@ -1,7 +1,9 @@
-package org.usfirst.frc.team449.robot.javamaps;
+package org.usfirst.frc.team449.robot.javaMaps;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.CommandContainer;
@@ -16,19 +18,26 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.jacksonWrappers.PDP;
 import org.usfirst.frc.team449.robot.jacksonWrappers.SlaveSparkMax;
-import org.usfirst.frc.team449.robot.javamaps.builders.PerGearSettingsBuilder;
-import org.usfirst.frc.team449.robot.javamaps.builders.SmartMotorBuilder;
-import org.usfirst.frc.team449.robot.javamaps.builders.ThrottlePolynomialBuilder;
+import org.usfirst.frc.team449.robot.javaMaps.builders.PerGearSettingsBuilder;
+import org.usfirst.frc.team449.robot.javaMaps.builders.SmartMotorBuilder;
+import org.usfirst.frc.team449.robot.javaMaps.builders.ThrottlePolynomialBuilder;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
+import org.usfirst.frc.team449.robot.oi.buttons.SimpleButton;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
 import org.usfirst.frc.team449.robot.oi.throttles.ThrottleSum;
 import org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad;
 import org.usfirst.frc.team449.robot.other.DefaultCommand;
 import org.usfirst.frc.team449.robot.other.Updater;
+import org.usfirst.frc.team449.robot.subsystem.intake.IntakeSimple;
+import org.usfirst.frc.team449.robot.subsystem.intake.SubsystemIntake;
+import org.usfirst.frc.team449.robot.subsystem.intake.commands.SetIntakeMode;
+import org.usfirst.frc.team449.robot.subsystem.solenoid.SolenoidSimple;
+import org.usfirst.frc.team449.robot.subsystem.solenoid.commands.SetSolenoidPose;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MapTemplate {
 
@@ -48,6 +57,26 @@ public class MapTemplate {
 
   @NotNull
   public static RobotMap createRobotMap() {
+    // Motor ports
+    int leftMasterPort = 1,
+        leftMasterSlave1Port = 3,
+        leftMasterSlave2Port = 5,
+        rightMasterPort = 2,
+        rightMasterSlave1Port = 4,
+        rightMasterSlave2Port = 6,
+        intakeMotorPort = 7;
+    // Solenoid ports
+    int intakeSolenoidForward = 2, intakeSolenoidReverse = 3;
+    // Drive input-output ports. Things like encoders go here
+
+    // Joystick ports
+    int mechanismsJoystickPort = 0, driveJoystickPort = 1;
+    // Driver button numbers
+    int driverIntakeOutOn = 1, driverIntakeOff = 2, driverIntakeRev = 3, driverIntakeInOff = 4;
+    // Mechs button numbers
+
+    // Motor speeds
+
     var useCameraServer = false;
     var pdp = new PDP(0, new RunningLinRegComponent(250, 0.75));
 
@@ -130,7 +159,7 @@ public class MapTemplate {
             .inverted(false)
             .polynomial(
                 new Polynomial(
-                    // We can't use just Map.of because we a mutable Map is needed
+                    // We can't use just Map.of because a mutable Map is needed
                     new HashMap<>(Map.of(1., 0.5)), null))
             .build();
     var fwdThrottle =
@@ -148,10 +177,7 @@ public class MapTemplate {
                                   2., 1.)),
                           null))
                   .build(),
-              throttlePrototype
-                  .axis(2)
-                  .inverted(true)
-                  .build()
+              throttlePrototype.axis(2).inverted(true).build()
             });
     var oi =
         new OIArcadeWithDPad(
@@ -169,10 +195,24 @@ public class MapTemplate {
             1.0,
             true);
 
+    var intakeSolenoid = new SolenoidSimple(new DoubleSolenoid(intakeSolenoidForward, intakeSolenoidReverse));
+
     var updater = new Updater(List.of(pdp, drive, oi, navx));
 
     var defaultCommands = List.<DefaultCommand>of();
-    var buttons = List.<CommandButton>of();
+
+    var buttons = List.of(
+        //Run bumper and transition wheel
+        new CommandButton(
+            new SimpleButton(driveJoystick, driverIntakeOutOn),
+            new ParallelCommandGroup(
+                new SetSolenoidPose(intakeSolenoid, DoubleSolenoid.Value.kForward)
+                //todo more commands in this parallel command
+            ),
+            CommandButton.Action.WHEN_PRESSED
+        )
+    );
+
     var robotStartupCommands = List.<Command>of();
     var autoStartupCommands = List.<Command>of();
     var teleopStartupCommands = List.<Command>of();
